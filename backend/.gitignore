@@ -1,0 +1,7 @@
+#common git ignore patterns for node.js projects
+node_modules/
+.env
+*.log
+.DS_Store
+*.env.local
+*.env.*.local
