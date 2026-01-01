@@ -10,7 +10,7 @@ app.use(express.json());
 security(app);
 
 // Routes
-app.use('/api/appointment', appointmentRoutes);
+app.use('/V1/appointment', appointmentRoutes);
 
 // Sync Database and Start
 sequelize.sync().then(() => {

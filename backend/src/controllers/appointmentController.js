@@ -115,7 +115,7 @@ const appointmentController = {
   },
 
   // 5. DOCTOR: Save clinical findings after session
-  saveNote: async (req, res) => {
+  addClinicalNotes: async (req, res) => {
     try {
       const { appointmentId, notes } = req.body;
       const appt = await Appointment.findByPk(appointmentId);
@@ -134,7 +134,45 @@ const appointmentController = {
     } catch (error) {
       res.status(500).json({ error: 'Failed to save clinical notes.' });
     }
+  },
+  getDoctorQueue : async (req, res) => {
+  try {
+    // 1. Define the time window (Today)
+    const startOfToday = moment().startOf('day').toDate();
+    const endOfToday = moment().endOf('day').toDate();
+
+    // 2. Query the database
+    const queue = await Appointment.findAll({
+      where: {
+        doctorId: req.user.id, // Securely identified from JWT
+        status: 'confirmed',   // Only show paid/confirmed visits
+        scheduledAt: {
+          [Op.between]: [startOfToday, endOfToday] // Only today's queue
+        }
+      },
+      // 3. Include related data so the doctor sees WHO they are meeting
+      include: [
+        { 
+          model: User, 
+          as: 'patient', 
+          attributes: ['fullName', 'phone'] // Don't send sensitive passwords/hashes
+        },
+        { 
+          model: MedicalAttachment, 
+          as: 'labResults',
+          attributes: ['id', 'fileName'] // Show list of files available to view
+        }
+      ],
+      // 4. Sort by time so the next patient is at the top
+      order: [['scheduledAt', 'ASC']]
+    });
+
+    res.status(200).json(queue);
+  } catch (error) {
+    console.error("Queue Error:", error);
+    res.status(500).json({ error: 'Could not retrieve today\'s queue.' });
   }
+}
 };
 
 module.exports = appointmentController;

@@ -10,10 +10,10 @@ Appointment.belongsTo(User, { foreignKey: 'patientId', as: 'patient' });
 User.hasMany(Appointment, { foreignKey: 'doctorId', as: 'doctorAppointment' });
 Appointment.belongsTo(User, { foreignKey: 'doctorId', as: 'doctor' });
 
-Appointment.hasMany(MedicalAttachment, { as: 'labResults', foreignKey: 'appointmentId' });
-MedicalAttachment.belongsTo(Appointment, { foreignKey: 'appointmentId' });
-
 Appointment.hasOne(Payment, { foreignKey: 'appointmentId' });
 Payment.belongsTo(Appointment, { foreignKey: 'appointmentId' });
+
+Appointment.hasMany(MedicalAttachment, { as: 'labResults', foreignKey: 'appointmentId' });
+MedicalAttachment.belongsTo(Appointment, { foreignKey: 'appointmentId' });
 
 module.exports = { User, Appointment, Payment };
