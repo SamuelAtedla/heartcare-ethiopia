@@ -186,8 +186,8 @@ exports.getAvailableSlots = async (req, res) => {
     const { date, doctorId } = req.query; // e.g., 2024-06-01
     const slotDuration = 30; // 30-minute sessions
 
-    // 1. Fetch all confirmed appointments for this doctor on this day
-    const appointments = await Appointment.findAll({
+    // 1. Fetch all confirmed appointment for this doctor on this day
+    const appointment = await Appointment.findAll({
       where: {
         doctorId,
         status: 'confirmed',
@@ -210,7 +210,7 @@ exports.getAvailableSlots = async (req, res) => {
         const slotTime = moment(date).hour(hour).minute(min).second(0);
         
         // Check if this slot conflicts with an existing appointment
-        const isTaken = appointments.some(appt => 
+        const isTaken = appointment.some(appt => 
           moment(appt.scheduledAt).isSame(slotTime)
         );
 

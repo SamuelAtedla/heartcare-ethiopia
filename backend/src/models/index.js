@@ -4,10 +4,10 @@ const MedicalAttachment = require('./MedicalAttachment');
 const Payment = require('./Payment');
 
 // Relationships
-User.hasMany(Appointment, { foreignKey: 'patientId', as: 'patientAppointments' });
+User.hasMany(Appointment, { foreignKey: 'patientId', as: 'patientAppointment' });
 Appointment.belongsTo(User, { foreignKey: 'patientId', as: 'patient' });
 
-User.hasMany(Appointment, { foreignKey: 'doctorId', as: 'doctorAppointments' });
+User.hasMany(Appointment, { foreignKey: 'doctorId', as: 'doctorAppointment' });
 Appointment.belongsTo(User, { foreignKey: 'doctorId', as: 'doctor' });
 
 Appointment.hasMany(MedicalAttachment, { as: 'labResults', foreignKey: 'appointmentId' });

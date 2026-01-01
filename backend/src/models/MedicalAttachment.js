@@ -8,7 +8,7 @@ const MedicalAttachment = sequelize.define('MedicalAttachment', {
     type: DataTypes.UUID,
     allowNull: false,
     references: {
-      model: 'Appointments', // Name of the target table
+      model: 'Appointment', // Name of the target table
       key: 'id'              // Column in the target table
     },
     onDelete: 'CASCADE'      // If appointment is deleted, delete files too

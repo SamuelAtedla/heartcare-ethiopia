@@ -4,7 +4,7 @@ import api from '../api/axiosConfig';
 export default function BookingPage() {
   const handleBooking = async (slot) => {
     try {
-      const response = await api.post('/appointments/book', { slot });
+      const response = await api.post('/appointment/book', { slot });
       // Redirect to Ethiopian Payment Gateway (Chapa/Telebirr)
       window.location.href = response.data.payment_url; 
     } catch (err) {

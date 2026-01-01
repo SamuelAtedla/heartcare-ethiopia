@@ -7,9 +7,9 @@ const upload = require('../middleware/upload'); // Your multer config
 // --- PUBLIC ---
 router.get('/availability', appointmentController.getAvailableSlots);
 
-// --- PATIENT ONLY ---
+// --- PATIENT
 router.post('/book', authenticate, appointmentController.createPendingAppointment);
-router.get('/my-appointments', authenticate, appointmentController.getPatientHistory);
+router.get('/my-appointment', authenticate, appointmentController.getPatientHistory);
 */
 
 router.post(
