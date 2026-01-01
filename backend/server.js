@@ -1,7 +1,7 @@
 const express = require('express');
 const security = require('./src/middleware/security');
 const sequelize = require('./src/config/database');
-const appointmentRoutes = require('./src/routes/appointments');
+const appointmentRoutes = require('./src/routes/appointmentRoutes');
 
 const app = express();
 app.use(express.json());
