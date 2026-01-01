@@ -5,7 +5,7 @@ const appointmentRoutes = require('./src/routes/appointments');
 
 const app = express();
 app.use(express.json());
-//why
+
 // Apply Security
 security(app);
 
