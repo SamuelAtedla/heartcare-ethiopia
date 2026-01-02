@@ -1,21 +1,15 @@
-import AppointmentCard from './components/AppointmentCard'
-import './App.css'
+import Button from "./components/Button";
+import { Eye } from "lucide-react";
+import "./App.css";
 
 function App() {
-
-
   return (
     <>
-    <div className="App">
-      <AppointmentCard 
-  patientName="Abebe Bikila" 
-  caseType="Cardiac Checkup" 
-  time="10:30 AM" 
-  status="confirmed" 
-/>
-</div>
+      <Button variant="outline" size="sm">
+        <Eye size={14} className="mr-1" /> View Receipt
+      </Button>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

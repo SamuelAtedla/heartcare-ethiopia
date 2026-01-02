@@ -1,4 +1,4 @@
-export const Input = ({ label, error, type = 'text', ...props }) => (
+const Input = ({ label, error, type = 'text', ...props }) => (
   <div className="w-full mb-4">
     {label && <label className="block text-sm font-medium text-slate-700 mb-1.5">{label}</label>}
     <input 
@@ -10,3 +10,4 @@ export const Input = ({ label, error, type = 'text', ...props }) => (
     {error && <span className="text-xs text-red-600 mt-1">{error}</span>}
   </div>
 );
+export default Input;

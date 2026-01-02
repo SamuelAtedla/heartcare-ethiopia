@@ -1,4 +1,4 @@
-export const Button = ({ children, variant = 'primary', size = 'md', className = '', ...props }) => {
+const Button = ({ children, variant = 'primary', size = 'md', className = '', ...props }) => {
   const baseStyles = "inline-flex items-center justify-center font-semibold transition-all rounded-lg active:scale-95";
   
   const variants = {
@@ -20,3 +20,4 @@ export const Button = ({ children, variant = 'primary', size = 'md', className =
     </button>
   );
 };
+export default Button;
