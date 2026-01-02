@@ -1,18 +1,49 @@
+require('dotenv').config();
 const express = require('express');
-const security = require('./src/v1/middleware/security');
+const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const sequelize = require('./src/config/database');
-const appointmentRoutes = require('./src/routes/appointmentRoutes');
+
+// Import the Version 1 Router
+const v1Router = require('./src/v1/routes/index');
 
 const app = express();
-app.use(express.json());
 
-// Apply Security
-security(app);
+// --- GLOBAL MIDDLEWARE & SECURITY ---
+app.use(helmet()); // Protects headers
+app.use(cors());   // Allows React frontend to connect
+app.use(express.json()); // Parses JSON bodies
 
-// Routes
-app.use('/V1/appointment', appointmentRoutes);
-
-// Sync Database and Start
-sequelize.sync().then(() => {
-  app.listen(5000, () => console.log('Heart Care Backend Securely Running on Port 5000'));
+// DDoS & Brute Force Protection
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per window
+  message: "Too many requests from this IP, please try again after 15 minutes."
 });
+app.use('/', limiter);
+
+// --- API VERSIONING ---
+// All routes will now start with /api/v1/
+app.use('/v1', v1Router);
+
+// Root health check
+app.get('/', (req, res) => {
+  res.send('Heart Care Ethiopia API (v1) is running securely.');
+});
+
+// --- DATABASE & SERVER START ---
+const PORT = process.env.PORT || 5000;
+
+sequelize.sync({ alter: false }) // 'alter: true' during dev, 'false' in prod
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`-----------------------------------------------`);
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(`📡 Version 1 API: http://localhost:${PORT}/api/v1`);
+      console.log(`-----------------------------------------------`);
+    });
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
