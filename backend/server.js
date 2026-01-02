@@ -1,3 +1,5 @@
+//import dotenv from 'dotenv';
+//import express from 'express';
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -17,10 +19,10 @@ app.use(express.json()); // Parses JSON bodies
 
 // DDoS & Brute Force Protection
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per window
+  windowMs: 15 * 60 * 1000, 
+  max: 100, 
   message: "Too many requests from this IP, please try again after 15 minutes."
-});
+});// 15 minutes Limit each IP to 100 requests per window
 app.use('/', limiter);
 
 // --- API VERSIONING ---
@@ -35,7 +37,7 @@ app.get('/', (req, res) => {
 // --- DATABASE & SERVER START ---
 const PORT = process.env.PORT || 5000;
 
-sequelize.sync({ alter: false }) // 'alter: true' during dev, 'false' in prod
+sequelize.sync({ alter: true }) // 'alter: true' during dev, 'false' in prod
   .then(() => {
     app.listen(PORT, () => {
       console.log(`-----------------------------------------------`);
