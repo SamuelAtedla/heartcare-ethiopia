@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
-import api from '../api/axiosConfig';
+//import api from '../api/axiosConfig';
 import { PlayCircle, Clock, FileText } from 'lucide-react';
 
 export default function DoctorDashboard() {
   const [appointments, setAppointments] = useState([]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     // Fetch appointments for the logged-in specialist
     api.get('/doctor/appointments').then(res => setAppointments(res.data));
   }, []);
-
+*/
   return (
     <div className="bg-slate-50 min-h-screen p-8">
       <header className="flex justify-between items-center mb-8">
