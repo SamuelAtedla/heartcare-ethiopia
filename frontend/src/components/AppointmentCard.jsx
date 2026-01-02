@@ -6,6 +6,7 @@ export const AppointmentCard = ({ name, time, status, phone, onAction, actionLab
       <div className="flex items-start gap-3">
         <div className="bg-red-50 p-3 rounded-full hidden xs:block">
           <Clock className="text-red-600 w-5 h-5" />
+          <span>{time || "Time not set"}</span>
         </div>
         <div>
           <h4 className="font-bold text-slate-900 leading-tight">{name}</h4>
