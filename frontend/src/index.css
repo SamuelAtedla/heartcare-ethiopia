@@ -1,5 +1,6 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Set Noto Sans Ethiopic as a fallback for all text */
+  font-family: 'Inter', 'Noto Sans Ethiopic', sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -12,7 +13,11 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+/* Specific styling for Amharic text to improve readability */
+[lang="am"] {
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+}
 a {
   font-weight: 500;
   color: #646cff;
