@@ -3,8 +3,14 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 module.exports =sequelize.define('Payment', {
-  tx_ref: { type: DataTypes.STRING, primaryKey: true }, // The unique transaction reference
-  amount: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
-  currency: { type: DataTypes.STRING, defaultValue: 'ETB' },
-  status: { type: DataTypes.ENUM('initiated', 'success', 'failed'), defaultValue: 'initiated' }
+  tx_ref: { type: DataTypes.STRING, primaryKey: true },
+  method: { 
+    type: DataTypes.ENUM('gateway', 'manual_transfer'), 
+    defaultValue: 'gateway' 
+  },
+  receiptPath: { type: DataTypes.STRING }, // Path to the screenshot of the bank receipt
+  status: { 
+    type: DataTypes.ENUM('initiated', 'pending_verification', 'success', 'failed'), 
+    defaultValue: 'initiated' 
+  }
 });
