@@ -1,3 +1,4 @@
+@import "tailwindcss";
 :root {
   /* Set Noto Sans Ethiopic as a fallback for all text */
   font-family: 'Inter', 'Noto Sans Ethiopic', sans-serif;
