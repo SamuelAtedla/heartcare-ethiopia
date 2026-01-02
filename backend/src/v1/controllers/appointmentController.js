@@ -3,7 +3,7 @@
 //const axios = require('axios');
 //const { v4: uuidv4 } = require('uuid');
 
-const { Appointment, User, MedicalAttachment, Payment } = require('../models');
+const { Appointment, User, MedicalAttachment, Payment } = require('../../models');
 const { Op } = require('sequelize');
 const moment = require('moment'); // Use moment for easier time manipulation
 

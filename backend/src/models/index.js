@@ -16,4 +16,4 @@ Payment.belongsTo(Appointment, { foreignKey: 'appointmentId' });
 Appointment.hasMany(MedicalAttachment, { as: 'labResults', foreignKey: 'appointmentId' });
 MedicalAttachment.belongsTo(Appointment, { foreignKey: 'appointmentId' });
 
-module.exports = { User, Appointment, Payment };
+module.exports = { User, Appointment, Payment, MedicalAttachment };

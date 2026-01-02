@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { Appointment, Payment } = require('../models');
+const { Appointment, Payment } = require('../../models');
 
 exports.handleChapaWebhook = async (req, res) => {
   // 1. Verify Chapa Hash (Security Guard)

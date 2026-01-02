@@ -1,6 +1,6 @@
-import { Appointment, User } from '../models';
+import { Appointment, User } from '../../models/index.js';
 
-exports.getPatientHistory = async (req, res) => {
+const getPatientHistory = async (req, res) => {
   try {
     const history = await Appointment.findAll({
       where: { patientId: req.user.id },
@@ -12,4 +12,7 @@ exports.getPatientHistory = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Could not fetch history' });
   }
+};
+export {
+  getPatientHistory
 };

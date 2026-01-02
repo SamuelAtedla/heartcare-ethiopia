@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { authenticate, authorize } = require('../v1/middleware/auth');
+const { authenticate, authorize } = require('../middleware/auth');
 const appointmentController = require('../controllers/appointmentController');
-const upload = require('../v1/middleware/upload'); // Your multer config
+const upload = require('../middleware/upload'); // Your multer config
 
 // --- PUBLIC ---
 router.get('/availability', appointmentController.getAvailableSlots);

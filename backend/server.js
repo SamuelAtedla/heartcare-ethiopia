@@ -40,7 +40,7 @@ sequelize.sync({ alter: false }) // 'alter: true' during dev, 'false' in prod
     app.listen(PORT, () => {
       console.log(`-----------------------------------------------`);
       console.log(`🚀 Server running on http://localhost:${PORT}`);
-      console.log(`📡 Version 1 API: http://localhost:${PORT}/api/v1`);
+      console.log(`📡 Version 1 API: http://localhost:${PORT}/v1`);
       console.log(`-----------------------------------------------`);
     });
   })
