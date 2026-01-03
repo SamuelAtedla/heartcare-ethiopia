@@ -31,7 +31,7 @@ const Header = ({ scrollToSection }) => {
                             {t('navHome', 'Home')}
                         </button>
                         <button
-                            onClick={() => scrollToSection('register-section')}
+                            onClick={() => navigate('/services')}
                             className="hover:text-red-600 transition"
                         >
                             {t('navServices', 'Services')}
