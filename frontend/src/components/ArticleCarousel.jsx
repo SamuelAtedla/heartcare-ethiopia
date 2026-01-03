@@ -4,7 +4,7 @@ import { ArrowRight, PauseCircle, PlayCircle } from 'lucide-react';
 import { getArticles } from '../api/mockData';
 
 const ArticleCarousel = () => {
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [articles, setArticles] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
@@ -37,8 +37,8 @@ const ArticleCarousel = () => {
             <div className="max-w-7xl mx-auto px-4 relative z-10">
                 <div className="flex justify-between items-end mb-12">
                     <div>
-                        <h2 className="text-3xl font-bold mb-2">{isAm ? "የጤና ምክሮች" : "Health Insights"}</h2>
-                        <p className="text-gray-400">{isAm ? "ከባለሙያዎቻችን የተመረጡ ጽሁፎች" : "Curated articles from our specialists"}</p>
+                        <h2 className="text-3xl font-bold mb-2">{t('healthInsights', 'Health Insights')}</h2>
+                        <p className="text-gray-400">{t('teamIntro', 'Curated articles from our specialists')}</p>
                     </div>
                     <div className="flex gap-2">
                         <button onClick={() => setIsPaused(!isPaused)} className="text-gray-400 hover:text-white transition">
@@ -64,7 +64,7 @@ const ArticleCarousel = () => {
                         </div>
                         <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
                             <span className="text-red-500 font-bold tracking-widest text-xs uppercase mb-3">
-                                {isAm ? "አዲስ ጽሁፍ" : "Latest Article"}
+                                {t('latestArticle', 'Latest Article')}
                             </span>
                             <h3 className="text-2xl md:text-4xl font-bold mb-4 leading-tight">
                                 {isAm ? currentArticle.title_am : currentArticle.title_en}
@@ -76,7 +76,7 @@ const ArticleCarousel = () => {
                                 onClick={() => setExpandedArticle(currentArticle)}
                                 className="group flex items-center gap-2 text-white font-bold hover:text-red-500 transition w-fit"
                             >
-                                <span>{isAm ? "ሙሉውን ያንብቡ" : "Read Full Article"}</span>
+                                <span>{t('readFull', 'Read Full Article')}</span>
                                 <ArrowRight size={20} className="group-hover:translate-x-1 transition" />
                             </button>
                         </div>

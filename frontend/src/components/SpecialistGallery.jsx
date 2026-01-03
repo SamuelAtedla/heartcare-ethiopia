@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { doctors } from '../api/mockData';
 import { User, Award, BookOpen } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const SpecialistGallery = () => {
+    const { t } = useTranslation();
     const [selectedDoctor, setSelectedDoctor] = useState(null);
 
     // Handle Escape Key to close modal
@@ -21,11 +23,11 @@ const SpecialistGallery = () => {
             <div className="max-w-7xl mx-auto px-4">
                 <div className="text-center mb-16">
                     <span className="bg-blue-50 text-blue-600 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4 inline-block">
-                        Our Team
+                        {t('galleryBadge', 'Our Team')}
                     </span>
-                    <h2 className="text-4xl font-bold text-gray-900 mb-4">Meet Our Specialists</h2>
+                    <h2 className="text-4xl font-bold text-gray-900 mb-4">{t('galleryTitle', 'Meet Our Specialists')}</h2>
                     <p className="text-gray-600 max-w-2xl mx-auto">
-                        World-class cardiologists dedicated to your heart health.
+                        {t('galleryDesc', 'World-class cardiologists dedicated to your heart health.')}
                     </p>
                 </div>
 
@@ -44,7 +46,7 @@ const SpecialistGallery = () => {
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                                     <span className="text-white font-bold flex items-center gap-2">
-                                        <BookOpen size={18} /> View Profile
+                                        <BookOpen size={18} /> {t('viewProfile', 'View Profile')}
                                     </span>
                                 </div>
                             </div>
@@ -53,7 +55,7 @@ const SpecialistGallery = () => {
                                 <p className="text-blue-600 font-medium text-sm mb-4">{doc.specialty}</p>
                                 <div className="flex items-center gap-2 text-xs text-gray-500 font-bold bg-gray-50 w-fit px-3 py-1 rounded-full">
                                     <Award size={14} />
-                                    <span>Verified Specialist</span>
+                                    <span>{t('verifiedSpecialist', 'Verified Specialist')}</span>
                                 </div>
                             </div>
                         </div>
@@ -85,12 +87,12 @@ const SpecialistGallery = () => {
                             <h3 className="text-3xl font-bold text-gray-900 mb-2">{selectedDoctor.name}</h3>
                             <p className="text-blue-600 font-bold mb-6 text-lg">{selectedDoctor.specialty}</p>
 
-                            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">About</h4>
+                            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{t('about', 'About')}</h4>
                             <p className="text-gray-600 mb-6 leading-relaxed whitespace-pre-line text-sm md:text-base">
                                 {selectedDoctor.bio}
                             </p>
 
-                            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Credentials</h4>
+                            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{t('credentials', 'Credentials')}</h4>
                             <div className="bg-gray-50 p-4 rounded-xl flex items-start gap-3">
                                 <Award className="text-red-500 shrink-0 mt-0.5" size={20} />
                                 <p className="text-gray-800 font-medium text-sm">{selectedDoctor.credentials}</p>

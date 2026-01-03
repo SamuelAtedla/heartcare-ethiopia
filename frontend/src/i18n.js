@@ -47,6 +47,19 @@ i18n
                     footTerms: "Terms of Service",
                     footContact: "Contact Us",
                     alertFill: "Please fill in all required fields.",
+                    // Gallery & Content
+                    galleryBadge: "Our Team",
+                    galleryTitle: "Meet Our Specialists",
+                    galleryDesc: "World-class cardiologists dedicated to your heart health.",
+                    viewProfile: "View Profile",
+                    verifiedSpecialist: "Verified Specialist",
+                    about: "About",
+                    credentials: "Credentials",
+                    btnLoginHero: "Patient & Doctor Login",
+                    healthInsights: "Health Insights",
+                    latestArticle: "Latest Article",
+                    readFull: "Read Full Article",
+                    teamIntro: "Curated articles from our specialists",
                 }
             },
             am: {
@@ -88,7 +101,20 @@ i18n
                     footPrivacy: "የግላዊነት ፖሊሲ",
                     footTerms: "የአጠቃቀም ደንቦች",
                     footContact: "ያግኙን",
-                    alertFill: "እባክዎን ሁሉንም አስፈላጊ ቦታዎች ይሙሉ"
+                    alertFill: "እባክዎን ሁሉንም አስፈላጊ ቦታዎች ይሙሉ",
+                    // Gallery & Content
+                    galleryBadge: "የህክምና ቡድናችን",
+                    galleryTitle: "የልብ ህክምና ባለሙያዎቻችንን ይወቁ",
+                    galleryDesc: "ለልብዎ ጤና የሚተጉ አለም አቀፍ የልብ ህክምና ባለሙያዎች።",
+                    viewProfile: "ዝርዝር ይመልከቱ",
+                    verifiedSpecialist: "የተረጋገጠ ባለሙያ",
+                    about: "ስለ እሳቸው",
+                    credentials: "የትምህርት እና የሙያ ማስረጃ",
+                    btnLoginHero: "ታካሚ እና ዶክተር መግቢያ",
+                    healthInsights: "የጤና ምክሮች",
+                    latestArticle: "አዲስ ጽሁፍ",
+                    readFull: "ሙሉውን ያንብቡ",
+                    teamIntro: "ከባለሙያዎቻችን የተመረጡ ጽሁፎች",
                 }
             }
         },
