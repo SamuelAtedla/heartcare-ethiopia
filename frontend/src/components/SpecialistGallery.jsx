@@ -1,9 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { doctors } from '../api/mockData';
 import { User, Award, BookOpen } from 'lucide-react';
 
 const SpecialistGallery = () => {
     const [selectedDoctor, setSelectedDoctor] = useState(null);
+
+    // Handle Escape Key to close modal
+    useEffect(() => {
+        const handleEsc = (e) => {
+            if (e.key === 'Escape') setSelectedDoctor(null);
+        };
+        if (selectedDoctor) {
+            window.addEventListener('keydown', handleEsc);
+        }
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, [selectedDoctor]);
 
     return (
         <section className="py-20 bg-white">
@@ -54,16 +65,19 @@ const SpecialistGallery = () => {
             {selectedDoctor && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
                     <div
-                        className="bg-white rounded-3xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row animate-in slide-in-from-bottom-8 duration-300"
+                        className="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl flex flex-col md:flex-row animate-in slide-in-from-bottom-8 duration-300"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <div className="md:w-2/5 relative">
-                            <img src={selectedDoctor.image} alt="Detail" className="w-full h-full object-cover min-h-[300px]" />
+                        {/* Image Side - Hidden on small screens if content is long, or fixed height */}
+                        <div className="md:w-2/5 md:h-auto h-48 relative shrink-0">
+                            <img src={selectedDoctor.image} alt="Detail" className="w-full h-full object-cover" />
                         </div>
-                        <div className="md:w-3/5 p-8 md:p-12 relative">
+
+                        {/* Content Side - Scrollable */}
+                        <div className="md:w-3/5 p-8 md:p-12 relative overflow-y-auto">
                             <button
                                 onClick={() => setSelectedDoctor(null)}
-                                className="absolute top-6 right-6 text-gray-400 hover:text-gray-900 transition"
+                                className="absolute top-6 right-6 p-2 bg-gray-100/80 rounded-full text-gray-400 hover:text-gray-900 transition z-10"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" x2="6" y1="6" y2="18" /><line x1="6" x2="18" y1="6" y2="18" /></svg>
                             </button>
@@ -72,7 +86,7 @@ const SpecialistGallery = () => {
                             <p className="text-blue-600 font-bold mb-6 text-lg">{selectedDoctor.specialty}</p>
 
                             <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">About</h4>
-                            <p className="text-gray-600 mb-6 leading-relaxed">
+                            <p className="text-gray-600 mb-6 leading-relaxed whitespace-pre-line text-sm md:text-base">
                                 {selectedDoctor.bio}
                             </p>
 
