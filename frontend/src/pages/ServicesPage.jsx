@@ -3,46 +3,49 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Heart, Activity, Stethoscope, ClipboardCheck, UserCheck, ShieldCheck, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const ServicesPage = () => {
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
+    const isAm = i18n.language === 'am';
 
     const services = [
         {
             icon: Stethoscope,
-            title: "Expert Cardiac Consultation",
-            desc: "Comprehensive evaluation by specialized cardiologists. We treat conditions such as Chest Pain, Palpitations, Shortness of Breath, and Dizziness.",
-            features: ["Detailed Physical Exam", "Symptom Analysis", "Medication Review"]
+            title: isAm ? "የልብ ህክምና የምክር አገልግሎት" : "Expert Cardiac Consultation",
+            desc: isAm ? "በልዩ የልብ ሐኪሞች የሚሰጥ ዝርዝር ምርመራ። የደረት ህመም፣ የልብ ምት መዛባት፣ የትንፋሽ ማጠር እና የማዞር ስሜት ህክምና እንሰጣለን።" : "Comprehensive evaluation by specialized cardiologists. We treat conditions such as Chest Pain, Palpitations, Shortness of Breath, and Dizziness.",
+            features: isAm ? ["አጠቃላይ የአካል ምርመራ", "የምልክቶች ትንተና", "የመድሃኒት ክለሳ"] : ["Detailed Physical Exam", "Symptom Analysis", "Medication Review"]
         },
         {
             icon: Activity,
-            title: "Hypertension Clinic",
-            desc: "Specialized management of High Blood Pressure. We focus on controlling your numbers to prevent strokes, heart attacks, and kidney damage.",
-            features: ["Personalized Medication Plan", "Home Monitoring Guidance", "Lifestyle Coaching"]
+            title: isAm ? "የደም ግፊት ክትትል" : "Hypertension Clinic",
+            desc: isAm ? "ልዩ የደም ግፊት ህክምና እና ክትትል። ስትሮክን፣ የልብ ህመምን እና የኩላሊት ጉዳትን ለመከላከል የደም ግፊትዎን እንቆጣጠራለን።" : "Specialized management of High Blood Pressure. We focus on controlling your numbers to prevent strokes, heart attacks, and kidney damage.",
+            features: isAm ? ["የግል የመድሃኒት አሰጣጥ", "የቤት ውስጥ ክትትል ምክር", "የአኗኗር ዘይቤ ምክር"] : ["Personalized Medication Plan", "Home Monitoring Guidance", "Lifestyle Coaching"]
         },
         {
             icon: ShieldCheck,
-            title: "Preventive Cardiology",
-            desc: "Don't wait for symptoms. We assess your risk factors (Cholesterol, Diabetes, Family History) to stop heart disease before it starts.",
-            features: ["Risk Scoring", "Dietary Counseling", "Exercise Prescriptions"]
+            title: isAm ? "ቅድመ-መከላከል ህክምና" : "Preventive Cardiology",
+            desc: isAm ? "ምልክቶች እስኪታዩ አይጠብቁ። የልብ ህመም ከመጀመሩ በፊት የኮሌስትሮል፣ የስኳር እና የቤተሰብ ታሪክዎን በማየት እንከላከላለን።" : "Don't wait for symptoms. We assess your risk factors (Cholesterol, Diabetes, Family History) to stop heart disease before it starts.",
+            features: isAm ? ["የአደጋ ግምገማ", "የአመጋገብ ምክር", "የአካል ብቃት እንቅስቃሴ"] : ["Risk Scoring", "Dietary Counseling", "Exercise Prescriptions"]
         },
         {
             icon: Heart,
-            title: "Heart Failure Management",
-            desc: "Long-term compassionate care for patients with weak hearts. Our goal is to improve your quality of life and reduce hospital visits.",
-            features: ["Fluid Management", "Advanced Therapy Options", "Ongoing Monitoring"]
+            title: isAm ? "የልብ ድካም ህክምና" : "Heart Failure Management",
+            desc: isAm ? "የልብ አቅም ማነስ ላጋጠማቸው ታካሚዎች የሚሰጥ የረጅም ጊዜ እንክብካቤ። አላማችን የህይወት ጥራትን ማሻሻል ነው።" : "Long-term compassionate care for patients with weak hearts. Our goal is to improve your quality of life and reduce hospital visits.",
+            features: isAm ? ["የፈሳሽ መጠን ቁጥጥር", "የላቀ የህክምና አማራጮች", "ቀጣይነት ያለው ክትትል"] : ["Fluid Management", "Advanced Therapy Options", "Ongoing Monitoring"]
         },
         {
             icon: ClipboardCheck,
-            title: "Pre-Operative Clearance",
-            desc: "Cardiac assessment before non-cardiac surgeries. We ensure your heart is strong enough to withstand anesthesia and surgery.",
-            features: ["Risk Stratification", "Coordination with Surgeons", "Safety Optimization"]
+            title: isAm ? "ከቀዶ ጥገና በፊት ምርመራ" : "Pre-Operative Clearance",
+            desc: isAm ? "ከማንኛውም ቀዶ ጥገና በፊት የሚደረግ የልብ ምርመራ። ልብዎ ማደንዘዣን እና ቀዶ ጥገናን መቋቋም እንደሚችል እናረጋግጣለን።" : "Cardiac assessment before non-cardiac surgeries. We ensure your heart is strong enough to withstand anesthesia and surgery.",
+            features: isAm ? ["የአደጋ ትንተና", "ከቀዶ ጥገና ሐኪሞች ጋር ምክክር", "የደህንነት ማረጋገጫ"] : ["Risk Stratification", "Coordination with Surgeons", "Safety Optimization"]
         },
         {
             icon: UserCheck,
-            title: "Second Opinion Services",
-            desc: "Have a diagnosis but want peace of mind? We review your existing records and treatment plans to ensure you're on the right path.",
-            features: ["Record Review", "Treatment Validation", "Mental Peace"]
+            title: isAm ? "የተጨማሪ ሀኪም ማረጋገጫ" : "Second Opinion Services",
+            desc: isAm ? "የተሰጠዎትን ህክምና ማረጋገጥ ይፈልጋሉ? ያለዎትን የህክምና መረጃ በመገምገም ትክክለኛውን ውሳኔ እንዲወስኑ እናግዛለን።" : "Have a diagnosis but want peace of mind? We review your existing records and treatment plans to ensure you're on the right path.",
+            features: isAm ? ["የህክምና መረጃ ግምገማ", "የህክምና ትክክለኛነት ማረጋገጫ", "የአእምሮ ሰላም"] : ["Record Review", "Treatment Validation", "Mental Peace"]
         }
     ];
 
@@ -54,9 +57,12 @@ const ServicesPage = () => {
             <section className="bg-red-600 text-white py-20 relative overflow-hidden">
                 <div className="absolute inset-0 bg-black/10"></div>
                 <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
-                    <h1 className="text-4xl md:text-6xl font-bold mb-6">Our Services</h1>
+                    <h1 className="text-4xl md:text-6xl font-bold mb-6">{isAm ? "የሚሰጡ ህክምናዎች" : "Our Services"}</h1>
                     <p className="text-xl md:text-2xl text-red-100 max-w-2xl mx-auto font-light">
-                        Comprehensive cardiovascular care tailored to your unique needs. From prevention to complex management, we are here for your heart.
+                        {isAm
+                            ? "ሁለንተናዊ የልብ ህክምና አገልግሎት ለእርስዎ። ከቅድመ-መከላከል እስከ ውስብስብ ህክምናዎች፣ ለልብዎ ጤና አለንልዎ።"
+                            : "Comprehensive cardiovascular care tailored to your unique needs. From prevention to complex management, we are here for your heart."
+                        }
                     </p>
                 </div>
             </section>
@@ -91,15 +97,20 @@ const ServicesPage = () => {
             {/* CTA Section */}
             <section className="bg-gray-900 text-white py-20">
                 <div className="max-w-4xl mx-auto px-4 text-center">
-                    <h2 className="text-3xl md:text-5xl font-bold mb-8">Ready to prioritize your heart health?</h2>
+                    <h2 className="text-3xl md:text-5xl font-bold mb-8">
+                        {isAm ? "የልብዎን ጤና ለመጠበቅ ዝግጁ ነዎት?" : "Ready to prioritize your heart health?"}
+                    </h2>
                     <p className="text-gray-400 text-lg mb-10 max-w-xl mx-auto">
-                        Book a consultation with our expert cardiologists today and take the first step towards a healthier future.
+                        {isAm
+                            ? "ከምርጥ የልብ ሐኪሞቻችን ጋር ቀጠሮ ይያዙ እና ወደ ጤናማ ህይወት ጉዞዎን ይጀምሩ።"
+                            : "Book a consultation with our expert cardiologists today and take the first step towards a healthier future."
+                        }
                     </p>
                     <button
                         onClick={() => navigate('/login')}
                         className="bg-red-600 text-white px-10 py-4 rounded-xl font-bold text-lg hover:bg-red-700 transition flex items-center justify-center gap-2 mx-auto"
                     >
-                        <span>Book Appointment Now</span>
+                        <span>{isAm ? "ቀጠሮ ያስይዙ" : "Book Appointment Now"}</span>
                         <ArrowRight />
                     </button>
                 </div>

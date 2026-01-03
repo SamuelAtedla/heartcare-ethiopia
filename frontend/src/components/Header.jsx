@@ -2,20 +2,32 @@ import React from 'react';
 import { Heart } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Header = ({ scrollToSection }) => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const changeLanguage = (lang) => {
         i18n.changeLanguage(lang);
     };
 
+    const handleHomeClick = () => {
+        if (location.pathname === '/' && scrollToSection) {
+            scrollToSection('home');
+        } else {
+            navigate('/');
+        }
+    };
+
     return (
         <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
             <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
-                <div className="flex items-center space-x-2">
+                <div
+                    className="flex items-center space-x-2 cursor-pointer"
+                    onClick={handleHomeClick}
+                >
                     <img src="/logo.png" alt="Heart Care Ethiopia Logo" className="h-12 w-auto" />
                     <span className="text-xl font-bold tracking-tight text-gray-800 uppercase">
                         HEART CARE <span className="text-red-600">ETHIOPIA</span>
@@ -25,7 +37,7 @@ const Header = ({ scrollToSection }) => {
                 <div className="flex items-center space-x-4">
                     <nav className="hidden md:flex space-x-6 font-medium mr-4">
                         <button
-                            onClick={() => scrollToSection('home')}
+                            onClick={handleHomeClick}
                             className="hover:text-red-600 transition"
                         >
                             {t('navHome', 'Home')}
