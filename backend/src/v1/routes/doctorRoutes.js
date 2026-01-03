@@ -1,8 +1,7 @@
 // src/routes/doctorRoutes.js
 const express = require("express");
 const router = express.Router();
-const doctorController = require("../controllers/doctorController");
-const { authenticate, authorize } = require("../middleware/auth");
+const articleController = require("../controllers/articleController");
 
 // This route is only accessible to the Specialist
 router.get(
@@ -10,6 +9,35 @@ router.get(
   authenticate,
   authorize("doctor"),
   doctorController.getDailySchedule
+);
+
+// Article Management
+router.post(
+  "/articles",
+  authenticate,
+  authorize("doctor"),
+  articleController.createArticle
+);
+
+router.get(
+  "/articles",
+  authenticate,
+  authorize("doctor"),
+  articleController.getMyArticles
+);
+
+router.put(
+  "/articles/:id",
+  authenticate,
+  authorize("doctor"),
+  articleController.updateArticle
+);
+
+router.delete(
+  "/articles/:id",
+  authenticate,
+  authorize("doctor"),
+  articleController.deleteArticle
 );
 
 // Patient records are strictly for the Specialist

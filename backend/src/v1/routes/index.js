@@ -4,14 +4,20 @@ const router = express.Router();
 
 //const authRoutes = require('./authRoutes');
 const appointmentRoutes = require('./appointmentRoutes');
-const patientRoutes = require('./patientRoutes');
 const doctorRoutes = require('./doctorRoutes');
-//const webhookRoutes = require('./webhookRoutes');
+const patientRoutes = require('./patientRoutes');
+const webhookRoutes = require('./webhookRoutes');
+const publicRoutes = require('./publicRoutes');
 
 // Categorized Middlewares
 const { authenticate, authorize } = require('../middleware/auth');
 
-//router.use('/auth', authRoutes);                      // Public & Auth
+router.use('/auth', authRoutes);
+router.use('/appointments', appointmentRoutes);
+router.use('/doctor', doctorRoutes);
+router.use('/patient', patientRoutes);
+router.use('/webhooks', webhookRoutes);
+router.use('/public', publicRoutes);                      // Public & Auth
 router.use('/appointments', appointmentRoutes);
 router.use('/patient', authenticate, patientRoutes);  // Patient Only
 router.use('/doctor', authenticate, authorize('doctor'), doctorRoutes); // Specialist Only

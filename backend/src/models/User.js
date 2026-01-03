@@ -8,7 +8,12 @@ const User = sequelize.define('User', {
   email: { type: DataTypes.STRING, unique: true },
   password: { type: DataTypes.STRING, allowNull: false },
   fullName: { type: DataTypes.STRING, allowNull: false },
-  role: { type: DataTypes.ENUM('patient', 'doctor'), defaultValue: 'patient' }
+  role: { type: DataTypes.ENUM('patient', 'doctor'), defaultValue: 'patient' },
+  // Specialist Specific Fields
+  specialty: { type: DataTypes.STRING },
+  bio: { type: DataTypes.TEXT },
+  credentials: { type: DataTypes.TEXT },
+  profileImage: { type: DataTypes.STRING }
 });
 
 module.exports = User;
