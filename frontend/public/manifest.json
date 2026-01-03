@@ -1,0 +1,15 @@
+{
+  "short_name": "HeartCare",
+  "name": "Heart Care Ethiopia",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#dc2626",
+  "background_color": "#ffffff"
+}
