@@ -2,8 +2,11 @@ import React from 'react';
 import { Heart } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+import { useNavigate } from 'react-router-dom';
+
 const Header = ({ scrollToSection }) => {
     const { t, i18n } = useTranslation();
+    const navigate = useNavigate();
 
     const changeLanguage = (lang) => {
         i18n.changeLanguage(lang);
@@ -58,7 +61,7 @@ const Header = ({ scrollToSection }) => {
                     </div>
 
                     <button
-                        onClick={() => scrollToSection('register-section')}
+                        onClick={() => navigate('/login')}
                         className="hidden sm:block bg-red-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-red-700 transition shadow-lg shadow-red-200 text-sm cursor-pointer"
                     >
                         {t('btnBook', 'Book Appointment')}

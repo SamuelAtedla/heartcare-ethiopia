@@ -1,9 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Check } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = ({ scrollToSection }) => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
 
     return (
         <section id="home" className="relative bg-white pt-12 pb-20 overflow-hidden">
@@ -21,10 +23,10 @@ const Hero = ({ scrollToSection }) => {
                     </p>
                     <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                         <button
-                            onClick={() => scrollToSection('register-section')}
+                            onClick={() => navigate('/login')}
                             className="bg-gray-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-gray-800 transition cursor-pointer"
                         >
-                            {t('btnRegister', 'Register Now')}
+                            {t('btnRegister', 'Book Appointment')}
                         </button>
                         <div className="flex items-center space-x-2 px-4 py-4">
                             <div className="flex -space-x-2">

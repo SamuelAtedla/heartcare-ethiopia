@@ -1,56 +1,88 @@
-import { useEffect, useState } from 'react';
-//import api from '../api/axiosConfig';
-import { PlayCircle, Clock, FileText } from 'lucide-react';
+import React, { useState } from 'react';
+import { MessageCircle, Check, X, FileText } from 'lucide-react';
 
-export default function DoctorDashboard() {
-  const [appointments, setAppointments] = useState([]);
+const DoctorDashboard = () => {
+  const [activeTab, setActiveTab] = useState('queue');
 
-  /*useEffect(() => {
-    // Fetch appointments for the logged-in specialist
-    api.get('/doctor/appointments').then(res => setAppointments(res.data));
-  }, []);
-*/
+  // Mock Data
+  const queue = [
+    { id: 1, name: 'Abebe Bikila', time: '10:00 AM', type: 'Hypertension', status: 'Confirmed', platform: 'Telegram' },
+    { id: 2, name: 'Sara Tadesse', time: '11:30 AM', type: 'Chest Pain', status: 'Confirmed', platform: 'WhatsApp' },
+  ];
+
+  const finance = [
+    { id: 101, user: 'Kebede Alene', amount: '500 ETB', method: 'CBE Birr', receipt: 'receipt.jpg' },
+  ];
+
   return (
-    <div className="bg-slate-50 min-h-screen p-8">
-      <header className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold text-slate-900">Consultation Queue</h1>
-        <div className="bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-medium">
-          ● Specialist Online
-        </div>
-      </header>
+    <div>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-gray-900">Dr. Dashboard</h1>
+        <p className="text-gray-500">Manage your daily agenda and patient requests</p>
+      </div>
 
-      <div className="grid gap-4">
-        {appointments.map((appt) => (
-          <div key={appt.id} className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
-            <div className="flex gap-4 items-center">
-              <div className="p-3 bg-blue-50 rounded-full">
-                <Clock className="text-blue-600" />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900">{appt.patient_name}</h3>
-                <p className="text-sm text-slate-500">{appt.scheduled_time} • {appt.phone}</p>
-              </div>
-            </div>
-
-            <div className="flex gap-3">
-              <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                appt.status === 'confirmed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
-              }`}>
-                {appt.status.toUpperCase()}
-              </span>
-              
-              {appt.status === 'confirmed' && (
-                <button className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
-                  <PlayCircle size={18} /> Start Session
-                </button>
-              )}
-              <button className="p-2 text-slate-400 hover:text-slate-600">
-                <FileText size={20} />
-              </button>
-            </div>
-          </div>
+      {/* Tabs */}
+      <div className="flex space-x-1 bg-gray-100 p-1 rounded-xl w-fit mb-8">
+        {['queue', 'finance'].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`px-6 py-2 rounded-lg text-sm font-bold capitalize transition ${activeTab === tab ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'
+              }`}
+          >
+            {tab === 'queue' ? "Today's Queue" : 'Payment Verifications'}
+          </button>
         ))}
       </div>
+
+      {activeTab === 'queue' && (
+        <div className="space-y-4">
+          {queue.map((pt) => (
+            <div key={pt.id} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center font-bold text-gray-600">
+                  {pt.name.charAt(0)}
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900">{pt.name}</h3>
+                  <p className="text-sm text-gray-500">{pt.type} • {pt.time}</p>
+                </div>
+              </div>
+              <button className="bg-blue-50 text-blue-600 px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-blue-100 transition">
+                <MessageCircle size={18} />
+                Open {pt.platform}
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {activeTab === 'finance' && (
+        <div className="space-y-4">
+          {finance.map((item) => (
+            <div key={item.id} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+              <div>
+                <h3 className="font-bold text-gray-900">{item.user}</h3>
+                <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
+                  <span className="font-mono bg-gray-100 px-2 rounded">{item.amount}</span>
+                  <span>via {item.method}</span>
+                  <span className="text-blue-500 underline cursor-pointer flex items-center gap-1"><FileText size={12} /> View Receipt</span>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <button className="bg-green-50 text-green-600 p-2 rounded-lg hover:bg-green-100 transition" title="Approve">
+                  <Check size={20} />
+                </button>
+                <button className="bg-red-50 text-red-600 p-2 rounded-lg hover:bg-red-100 transition" title="Reject">
+                  <X size={20} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default DoctorDashboard;

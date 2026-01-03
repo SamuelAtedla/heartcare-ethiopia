@@ -12,7 +12,7 @@ const apiClient = axios.create({
 // 2. Request Interceptor: Attach JWT Token
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('jwt_token');
+    const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -27,7 +27,7 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Auto-logout if token is invalid/expired
-      localStorage.removeItem('jwt_token');
+      localStorage.removeItem('token');
       window.location.href = '/login';
     }
     return Promise.reject(error);

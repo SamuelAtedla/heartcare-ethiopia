@@ -1,7 +1,6 @@
 import React from 'react';
 import Header from '../components/Header';
 import Hero from '../components/Hero';
-import BookingForm from '../components/BookingForm';
 import Footer from '../components/Footer';
 
 const LandingPage = () => {
@@ -16,7 +15,7 @@ const LandingPage = () => {
         <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
             <Header scrollToSection={scrollToSection} />
             <Hero scrollToSection={scrollToSection} />
-            <BookingForm />
+            {/* Booking Form removed - moved to Authenticated Dashboard */}
             <Footer />
         </div>
     );

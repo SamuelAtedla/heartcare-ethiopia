@@ -1,5 +1,5 @@
-import React, { createContext, useState, useEffect } from 'react';
-import axios from '../api/axiosConfig'; // Your pre-configured axios instance
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import axiosInstance from '../api/axiosConfig';
 
 const AuthContext = createContext(null);
 
@@ -7,52 +7,69 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 1. Check if user is logged in on page load/refresh
   useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        // Backend should verify the JWT cookie and return user data
-        const response = await axios.get('/auth/me');
-        setUser(response.data.user);
-      } catch (err) {
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-    checkAuthStatus();
+    // Check for stored token on mount
+    const token = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
+
+    if (token && storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+    setLoading(false);
   }, []);
 
-  // 2. Login function
-  const login = async (email, password) => {
+  const login = async (phone, password) => {
     try {
-      const response = await axios.post('/auth/login', { email, password });
-      setUser(response.data.user); // Contains { id, role, name }
-      return { success: true };
-    } catch (err) {
-      return { success: false, message: err.response?.data?.message || 'Login failed' };
+      // Create simplified payload for prototype without real backend
+      // In real app: const res = await axiosInstance.post('/auth/login', { phone, password });
+
+      // MOCK LOGIC FOR PROTOTYPE
+      let mockRole = 'patient';
+      if (phone === '0911223344') mockRole = 'doctor'; // Mock doctor account
+
+      const mockUser = {
+        name: 'Test User',
+        phone,
+        role: mockRole,
+        token: 'mock-jwt-token-' + Date.now()
+      };
+
+      localStorage.setItem('token', mockUser.token);
+      localStorage.setItem('user', JSON.stringify(mockUser));
+      setUser(mockUser);
+      return mockUser;
+    } catch (error) {
+      console.error("Login failed", error);
+      throw error;
     }
   };
 
-  // 3. Logout function
-  const logout = async () => {
-    try {
-      await axios.post('/auth/logout');
-      setUser(null);
-      window.location.href = '/login';
-    } catch (err) {
-      console.error("Logout failed", err);
-    }
+  const register = async (userData) => {
+    // MOCK LOGIC
+    const mockUser = {
+      name: userData.name,
+      phone: userData.phone,
+      role: 'patient',
+      token: 'mock-jwt-token-' + Date.now()
+    };
+
+    localStorage.setItem('token', mockUser.token);
+    localStorage.setItem('user', JSON.stringify(mockUser));
+    setUser(mockUser);
+    return mockUser;
   };
 
-  // 4. Role-based access helper
-  const isDoctor = () => user?.role === 'doctor';
-  const isPatient = () => user?.role === 'patient';
+  const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null);
+  };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isDoctor, isPatient, loading }}>
+    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
       {!loading && children}
     </AuthContext.Provider>
   );
 };
 
+export const useAuth = () => useContext(AuthContext);
