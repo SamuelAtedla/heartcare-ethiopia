@@ -24,9 +24,9 @@ const Hero = ({ scrollToSection }) => {
                     <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                         <button
                             onClick={() => navigate('/login')}
-                            className="bg-gray-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-gray-800 transition cursor-pointer"
+                            className="bg-gray-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-gray-800 transition cursor-pointer shadow-xl shadow-gray-200"
                         >
-                            {t('btnRegister', 'Book Appointment')}
+                            {t('btnLoginHero', 'Patient & Doctor Login')}
                         </button>
                         <div className="flex items-center space-x-2 px-4 py-4">
                             <div className="flex -space-x-2">

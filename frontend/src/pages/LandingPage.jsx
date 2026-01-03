@@ -1,6 +1,8 @@
 import React from 'react';
 import Header from '../components/Header';
 import Hero from '../components/Hero';
+import ArticleCarousel from '../components/ArticleCarousel';
+import SpecialistGallery from '../components/SpecialistGallery';
 import Footer from '../components/Footer';
 
 const LandingPage = () => {
@@ -15,7 +17,11 @@ const LandingPage = () => {
         <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
             <Header scrollToSection={scrollToSection} />
             <Hero scrollToSection={scrollToSection} />
-            {/* Booking Form removed - moved to Authenticated Dashboard */}
+
+            {/* New Features */}
+            <ArticleCarousel />
+            <SpecialistGallery />
+
             <Footer />
         </div>
     );
