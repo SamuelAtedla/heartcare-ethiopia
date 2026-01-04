@@ -6,11 +6,12 @@ const articleController = require("../controllers/articleController");
 const { authenticate, authorize } = require("../middleware/auth");
 
 // This route is only accessible to the Specialist
+// This route is only accessible to the Specialist
 router.get(
-  "/dashboard",
+  "/queue",
   authenticate,
   authorize("doctor"),
-  doctorController.getDailySchedule
+  doctorController.getConfirmedQueue
 );
 
 // Article Management
