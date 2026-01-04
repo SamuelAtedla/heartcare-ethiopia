@@ -1,7 +1,9 @@
 // src/routes/doctorRoutes.js
 const express = require("express");
 const router = express.Router();
+const doctorController = require("../controllers/doctorController");
 const articleController = require("../controllers/articleController");
+const { authenticate, authorize } = require("../middleware/auth");
 
 // This route is only accessible to the Specialist
 router.get(

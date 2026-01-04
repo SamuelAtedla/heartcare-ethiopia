@@ -1,4 +1,4 @@
-import { Appointment, User } from '../../models/index.js';
+const { Appointment, User } = require('../../models/index');
 
 const getPatientHistory = async (req, res) => {
   try {
@@ -13,6 +13,7 @@ const getPatientHistory = async (req, res) => {
     res.status(500).json({ error: 'Could not fetch history' });
   }
 };
-export {
+
+module.exports = {
   getPatientHistory
 };

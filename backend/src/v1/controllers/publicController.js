@@ -1,4 +1,4 @@
-const { Article, User } = require('../models');
+const { Article, User } = require('../../models');
 
 const getArticles = async (req, res) => {
     try {
