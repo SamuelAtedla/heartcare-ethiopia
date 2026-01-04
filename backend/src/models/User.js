@@ -9,6 +9,7 @@ const User = sequelize.define('User', {
   password: { type: DataTypes.STRING, allowNull: false },
   fullName: { type: DataTypes.STRING, allowNull: false },
   role: { type: DataTypes.ENUM('patient', 'doctor'), defaultValue: 'patient' },
+  age: { type: DataTypes.INTEGER }, // Added for patient profile
   // Specialist Specific Fields
   specialty: { type: DataTypes.STRING },
   bio: { type: DataTypes.TEXT },

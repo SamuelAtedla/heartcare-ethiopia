@@ -44,10 +44,24 @@ router.delete(
 
 // Patient records are strictly for the Specialist
 router.get(
-  "/patient-records/:id",
+  "/patient-records/:patientId",
   authenticate,
   authorize("doctor"),
   doctorController.getDetailedHistory
+);
+
+router.get(
+  "/search-patients",
+  authenticate,
+  authorize("doctor"),
+  doctorController.searchPatients
+);
+
+router.put(
+  "/profile",
+  authenticate,
+  authorize("doctor"),
+  doctorController.updateProfile
 );
 
 module.exports = router;

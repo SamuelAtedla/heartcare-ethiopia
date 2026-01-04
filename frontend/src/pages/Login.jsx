@@ -1,134 +1,250 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import apiClient from '../api/axiosConfig';
 import { useTranslation } from 'react-i18next';
-import { Heart, Loader2, ArrowRight } from 'lucide-react';
+import { Lock, Phone, User, Camera, Calendar, FileText } from 'lucide-react';
 
 const Login = () => {
     const { t } = useTranslation();
-    const { login, register } = useAuth();
     const navigate = useNavigate();
-    const location = useLocation();
-
-    const [isNewUser, setIsNewUser] = useState(false);
-    const [step, setStep] = useState('phone'); // phone, auth
-    const [loading, setLoading] = useState(false);
-
+    const [isRegistering, setIsRegistering] = useState(false);
     const [formData, setFormData] = useState({
         phone: '',
-        name: '',
         password: '',
+        fullName: '',
+        age: '',
+        caseDescription: '',
+        role: 'patient' // Default role
     });
+    const [profilePhoto, setProfilePhoto] = useState(null);
+    const [photoPreview, setPhotoPreview] = useState(null);
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const checkUserExists = async () => {
-        setLoading(true);
-        // Simulate API check
-        setTimeout(() => {
-            setLoading(false);
-            // Mock Logic: If phone ends in 0, treat as new user
-            if (formData.phone.endsWith('0')) {
-                setIsNewUser(true);
-            } else {
-                setIsNewUser(false);
-            }
-            setStep('auth');
-        }, 800);
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setProfilePhoto(file);
+            setPhotoPreview(URL.createObjectURL(file));
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
         setLoading(true);
-        try {
-            let user;
-            if (isNewUser) {
-                user = await register(formData);
-            } else {
-                user = await login(formData.phone, formData.password);
-            }
 
-            // Redirect based on role
-            const origin = location.state?.from?.pathname;
-            if (origin) {
-                navigate(origin);
+        try {
+            if (isRegistering) {
+                // Multipart Request for Registration
+                const data = new FormData();
+                data.append('phone', formData.phone);
+                data.append('password', formData.password);
+                data.append('fullName', formData.fullName);
+                data.append('age', formData.age);
+                data.append('caseDescription', formData.caseDescription);
+                data.append('role', formData.role);
+                if (profilePhoto) {
+                    data.append('profilePhoto', profilePhoto);
+                }
+
+                const response = await apiClient.post('/auth/register', data, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('user', JSON.stringify(response.data.data.user));
+
+                // Redirect based on role
+                if (response.data.data.user.role === 'doctor') {
+                    navigate('/doctor-dashboard');
+                } else {
+                    navigate('/patient-dashboard');
+                }
+
             } else {
-                navigate(user.role === 'doctor' ? '/doctor/dashboard' : '/patient/dashboard');
+                // JSON Request for Login
+                const response = await apiClient.post('/auth/login', {
+                    phone: formData.phone,
+                    password: formData.password
+                });
+
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('user', JSON.stringify(response.data.data.user));
+
+                if (response.data.data.user.role === 'doctor') {
+                    navigate('/doctor-dashboard');
+                } else {
+                    navigate('/patient-dashboard');
+                }
             }
         } catch (err) {
-            alert('Authentication failed');
+            console.error(err);
+            setError(err.response?.data?.error || 'Authentication failed. Please check your credentials.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
-            <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
-                <div className="flex justify-center mb-6">
-                    <div className="bg-red-600 p-3 rounded-full">
-                        <Heart className="text-white w-8 h-8" fill="currentColor" />
-                    </div>
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
+            <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
+                <div className="text-center">
+                    <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+                        {isRegistering ? 'Create Account' : 'Welcome Back'}
+                    </h2>
+                    <p className="mt-2 text-sm text-gray-600">
+                        {isRegistering ? 'Join Heart Care Ethiopia' : 'Sign in to access your dashboard'}
+                    </p>
                 </div>
-                <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">
-                    {step === 'phone' ? 'Welcome Back' : (isNewUser ? 'Create Account' : 'Welcome Back')}
-                </h2>
-                <p className="text-center text-gray-500 mb-8">
-                    {step === 'phone' ? 'Enter your phone number to continue' : (isNewUser ? 'Complete your registration' : 'Enter your credentials')}
-                </p>
 
-                <form onSubmit={step === 'phone' ? (e) => { e.preventDefault(); checkUserExists(); } : handleSubmit} className="space-y-4">
+                {error && (
+                    <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
+                        <p className="text-red-700 text-sm">{error}</p>
+                    </div>
+                )}
 
-                    {/* Step 1: Phone */}
-                    <div className={step === 'phone' ? 'block' : 'hidden'}>
-                        <label className="block text-sm font-bold text-gray-700 mb-2">Phone Number</label>
-                        <input
-                            type="tel"
-                            required
-                            className="w-full border p-3 rounded-xl focus:ring-2 focus:ring-red-500 outline-none"
-                            placeholder="09xxxxxxxx"
-                            value={formData.phone}
-                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        />
-                        <button type="submit" disabled={loading} className="w-full bg-red-600 text-white py-3 rounded-xl font-bold mt-4 flex items-center justify-center gap-2">
-                            {loading ? <Loader2 className="animate-spin" /> : <>Continue <ArrowRight size={18} /></>}
+                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+                    <div className="rounded-md shadow-sm -space-y-px">
+
+                        {/* Common Fields */}
+                        <div className="mb-4 relative">
+                            <label className="text-xs font-semibold text-gray-500 uppercase">Phone Number</label>
+                            <div className="flex items-center border rounded-lg px-3 py-2 mt-1">
+                                <Phone size={20} className="text-gray-400 mr-2" />
+                                <input
+                                    name="phone"
+                                    type="tel"
+                                    required
+                                    className="w-full outline-none text-gray-700"
+                                    placeholder="0911..."
+                                    value={formData.phone}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Registration Extra Fields */}
+                        {isRegistering && (
+                            <>
+                                <div className="mb-4">
+                                    <label className="text-xs font-semibold text-gray-500 uppercase">Full Name</label>
+                                    <div className="flex items-center border rounded-lg px-3 py-2 mt-1">
+                                        <User size={20} className="text-gray-400 mr-2" />
+                                        <input
+                                            name="fullName"
+                                            type="text"
+                                            required
+                                            className="w-full outline-none text-gray-700"
+                                            placeholder="Abebe Kebede"
+                                            value={formData.fullName}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="mb-4">
+                                    <label className="text-xs font-semibold text-gray-500 uppercase">Age</label>
+                                    <div className="flex items-center border rounded-lg px-3 py-2 mt-1">
+                                        <Calendar size={20} className="text-gray-400 mr-2" />
+                                        <input
+                                            name="age"
+                                            type="number"
+                                            required
+                                            className="w-full outline-none text-gray-700"
+                                            placeholder="35"
+                                            value={formData.age}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="mb-4">
+                                    <label className="text-xs font-semibold text-gray-500 uppercase">Case Description</label>
+                                    <div className="flex items-start border rounded-lg px-3 py-2 mt-1">
+                                        <FileText size={20} className="text-gray-400 mr-2 mt-1" />
+                                        <textarea
+                                            name="caseDescription"
+                                            className="w-full outline-none text-gray-700 resize-none h-20"
+                                            placeholder="Describe your heart condition..."
+                                            value={formData.caseDescription}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Profile Photo Upload */}
+                                <div className="mb-4 flex flex-col items-center">
+                                    <label className="text-xs font-semibold text-gray-500 uppercase mb-2">Profile Photo (Optional)</label>
+                                    <div className="relative w-24 h-24 rounded-full overflow-hidden bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center group cursor-pointer">
+                                        {photoPreview ? (
+                                            <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <Camera size={32} className="text-gray-400 group-hover:text-blue-500" />
+                                        )}
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleFileChange}
+                                            className="absolute inset-0 opacity-0 cursor-pointer"
+                                        />
+                                    </div>
+                                </div>
+                            </>
+                        )}
+
+                        <div className="mb-6 relative">
+                            <label className="text-xs font-semibold text-gray-500 uppercase">Password</label>
+                            <div className="flex items-center border rounded-lg px-3 py-2 mt-1">
+                                <Lock size={20} className="text-gray-400 mr-2" />
+                                <input
+                                    name="password"
+                                    type="password"
+                                    required
+                                    className="w-full outline-none text-gray-700"
+                                    placeholder="••••••••"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-full text-white ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-300 shadow-lg hover:shadow-xl`}
+                        >
+                            {loading ? 'Processing...' : (isRegistering ? 'Create Account' : 'Sign in')}
                         </button>
                     </div>
 
-                    {/* Step 2: Auth (Password/Name) */}
-                    {step === 'auth' && (
-                        <div className="space-y-4 animate-in fade-in slide-in-from-right-4">
-                            <div className="bg-gray-50 p-3 rounded-lg flex justify-between items-center mb-4">
-                                <span className="font-medium text-gray-700">{formData.phone}</span>
-                                <button type="button" onClick={() => setStep('phone')} className="text-sm text-red-600 font-bold">Change</button>
-                            </div>
+                    <div className="text-center mt-4">
+                        <p className="text-sm text-gray-600">
+                            {isRegistering ? "Already have an account? " : "Don't have an account? "}
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setIsRegistering(!isRegistering);
+                                    setError('');
+                                }}
+                                className="font-medium text-red-600 hover:text-red-500"
+                            >
+                                {isRegistering ? 'Sign in' : 'Register now'}
+                            </button>
+                        </p>
+                    </div>
 
-                            {isNewUser && (
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        className="w-full border p-3 rounded-xl focus:ring-2 focus:ring-red-500 outline-none"
-                                        placeholder="Enter your name"
-                                        value={formData.name}
-                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    />
-                                </div>
-                            )}
-
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Password</label>
-                                <input
-                                    type="password"
-                                    required
-                                    className="w-full border p-3 rounded-xl focus:ring-2 focus:ring-red-500 outline-none"
-                                    placeholder="••••••••"
-                                    value={formData.password}
-                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                />
-                            </div>
-
-                            <button type="submit" disabled={loading} className="w-full bg-red-600 text-white py-3 rounded-xl font-bold mt-6 flex items-center justify-center gap-2">
-                                {loading ? <Loader2 className="animate-spin" /> : (isNewUser ? 'Register & Login' : 'Login')}
+                    {!isRegistering && (
+                        <div className="text-center mt-2">
+                            <button type="button" className="text-xs text-gray-500 hover:text-gray-700">
+                                Forgot password?
                             </button>
                         </div>
                     )}

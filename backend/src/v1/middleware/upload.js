@@ -1,18 +1,57 @@
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
+
+// Ensure storage directories exist
+const createDir = (dir) => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+};
 
 const storage = multer.diskStorage({
-  destination: 'storage/private/medical_records', // Outside public web root
-  filename: (req, file, cb) => {
-    cb(null, `${req.user.id}-${Date.now()}${path.extname(file.originalname)}`);
+  destination: function (req, file, cb) {
+    let uploadPath = 'storage/';
+
+    if (file.fieldname === 'profilePhoto') {
+      uploadPath += 'profiles/';
+    } else if (file.fieldname === 'receipt') {
+      uploadPath += 'receipts/';
+    } else if (file.fieldname === 'labResults') {
+      uploadPath += 'lab_results/';
+    } else if (file.fieldname === 'articleImage') {
+      uploadPath += 'articles/';
+    } else {
+      uploadPath += 'others/';
+    }
+
+    createDir(path.join(__dirname, '../../../', uploadPath));
+    cb(null, path.join(__dirname, '../../../', uploadPath));
+  },
+  filename: function (req, file, cb) {
+    // Secure filename: timestamp + random + extension
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
   }
 });
 
+// File Filter (Security)
 const fileFilter = (req, file, cb) => {
-  const allowed = /pdf|jpg|jpeg|png/;
-  const isSafe = allowed.test(path.extname(file.originalname).toLowerCase());
-  if (isSafe) return cb(null, true);
-  cb(new Error("Unsafe file type. Only PDF/Images allowed."));
+  const allowedTypes = /jpeg|jpg|png|pdf/;
+  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = allowedTypes.test(file.mimetype);
+
+  if (extname && mimetype) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only images and PDFs are allowed!'));
+  }
 };
 
-module.exports = multer({ storage, fileFilter, limits: { fileSize: 10 * 1024 * 1024 } });
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  fileFilter: fileFilter
+});
+
+module.exports = upload;

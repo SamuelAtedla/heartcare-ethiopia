@@ -1,15 +1,16 @@
 const { Appointment, User, MedicalAttachment } = require('../../models/index');
 const { Op } = require('sequelize');
-const moment = require('moment'); // Ensure moment is available if used
+const moment = require('moment');
 
+// 1. Get Schedule (Confirmed & Pending Payment Approval)
 const getConfirmedQueue = async (req, res) => {
   try {
     const queue = await Appointment.findAll({
       where: {
-        status: 'confirmed',
-        doctorId: req.user.id
+        doctorId: req.user.id,
+        status: { [Op.or]: ['confirmed', 'pending_approval'] }
       },
-      include: [{ model: User, as: 'patient', attributes: ['fullName', 'phone'] }],
+      include: [{ model: User, as: 'patient', attributes: ['fullName', 'phone', 'profileImage', 'age'] }],
       order: [['scheduledAt', 'ASC']]
     });
     res.json(queue);
@@ -18,65 +19,32 @@ const getConfirmedQueue = async (req, res) => {
   }
 };
 
-const saveNote = async (req, res) => {
+// 2. Search Patients (by Name or Phone)
+const searchPatients = async (req, res) => {
   try {
-    const { appointmentId, notes } = req.body;
+    const { query } = req.query; // ?query=Abebe
 
-    const appt = await Appointment.findByPk(appointmentId);
+    if (!query) return res.json([]);
 
-    // Security: Ensure the doctor owns this appointment
-    if (appt.doctorId !== req.user.id) {
-      return res.status(403).json({ error: 'Unauthorized access to record' });
-    }
-
-    await appt.update({
-      clinicalNotes: notes,
-      status: 'completed'
-    });
-
-    res.json({ message: 'Clinical notes saved and session closed.' });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to save notes' });
-  }
-};
-
-const getPatientDetails = async (req, res) => {
-  const details = await Appointment.findByPk(req.params.id, {
-    include: [
-      { model: MedicalAttachment, as: 'labResults' },
-      { model: User, as: 'patient', attributes: ['fullName', 'phone'] }
-    ]
-  });
-  res.json(details);
-};
-
-const getDailySchedule = async (req, res) => {
-  try {
-    const doctorId = req.user.id;
-    const todayStart = moment().startOf('day').toDate();
-    const todayEnd = moment().endOf('day').toDate();
-
-    const schedule = await Appointment.findAll({
+    const patients = await User.findAll({
       where: {
-        doctorId,
-        status: 'confirmed', // Only show paid/confirmed appointments
-        scheduledAt: {
-          [Op.between]: [todayStart, todayEnd]
-        }
+        role: 'patient',
+        [Op.or]: [
+          { fullName: { [Op.iLike]: `%${query}%` } },
+          { phone: { [Op.like]: `%${query}%` } }
+        ]
       },
-      include: [
-        { model: User, as: 'patient', attributes: ['fullName', 'phone'] }
-      ],
-      attributes: ['id', 'scheduledAt', 'caseType', 'preferredChannel'],
-      order: [['scheduledAt', 'ASC']]
+      attributes: ['id', 'fullName', 'phone', 'profileImage', 'age']
     });
 
-    res.status(200).json(schedule);
+    res.json(patients);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to retrieve daily schedule.' });
+    console.error(error);
+    res.status(500).json({ error: 'Search failed.' });
   }
 };
 
+// 3. Get Patient History (Read-only for doctor)
 const getDetailedHistory = async (req, res) => {
   try {
     const { patientId } = req.params;
@@ -85,26 +53,36 @@ const getDetailedHistory = async (req, res) => {
       where: { patientId },
       include: [
         { model: MedicalAttachment, as: 'labResults' },
-        { model: User, as: 'doctor', attributes: ['fullName'] } // See which specialists they saw before
+        { model: User, as: 'doctor', attributes: ['fullName'] }
       ],
-      attributes: ['id', 'scheduledAt', 'caseType', 'clinicalNotes', 'status'],
-      order: [['scheduledAt', 'DESC']] // Newest records first
+      order: [['scheduledAt', 'DESC']]
     });
 
-    if (!history.length) {
-      return res.status(404).json({ message: 'No medical history found for this patient.' });
-    }
-
-    res.status(200).json(history);
+    res.json(history);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch patient medical history.' });
   }
 };
 
+// 4. Update Doctor Profile
+const updateProfile = async (req, res) => {
+  try {
+    const { bio, specialty, credentials } = req.body;
+
+    await User.update(
+      { bio, specialty, credentials },
+      { where: { id: req.user.id } }
+    );
+
+    res.json({ message: 'Profile updated successfully.' });
+  } catch (error) {
+    res.status(500).json({ error: 'Profile update failed.' });
+  }
+};
+
 module.exports = {
   getConfirmedQueue,
-  saveNote,
-  getPatientDetails,
-  getDailySchedule,
-  getDetailedHistory
+  searchPatients,
+  getDetailedHistory,
+  updateProfile
 };

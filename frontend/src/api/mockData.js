@@ -59,31 +59,7 @@ export const doctors = [
         bio: `Adult Cardiologist | Internal Medicine Specialist
 📍 Addis Ababa, Ethiopia | 📞 +251 911 728 203
 
-CAREER OBJECTIVE
-Adult Cardiologist committed to academic excellence, procedural competence, and evidence-based cardiovascular care. Currently aiming to advance interventional cardiology services in Ethiopia.
-
-CURRENT APPOINTMENT
-Physician, Adult Cardiologist at St. Peter Specialized Hospital (Jan 2023 – Present).
-Manages acute coronary syndromes, heart failure, arrhythmias, and valvular heart disease. Performs Coronary Angiography, Echocardiography, and participates in PCI procedures.
-
-EDUCATION & TRAINING
-- Adult Cardiology Fellowship: St. Paul’s Hospital Millennium Medical College (2020–2023) with Interventional Cardiology Observership at St. John's Medical College, India.
-- Internal Medicine Residency: Addis Ababa University (2009–2013).
-- Doctor of Medicine (MD): Jimma University (1998–2004).
-
-PROFESSIONAL EXPERIENCE
-- Internal Medicine Physician: Brook Internal Medicine Specialized Center (2013–2020).
-- Lecturer & MD: Debre Birhan University (2008–2009).
-- Medical Doctor: Médecins Sans Frontières (MSF-Holland) (2006–2007).
-
-SKILLS
-- Coronary Angiography & PCI (Assisting)
-- Echocardiography (TTE, TEE) & Stress Echo
-- Temporary Transvenous Pacemaker Insertion
-
-LANGUAGES
-- English (Fluent)
-- Amharic (Native)`,
+Adult Cardiologist committed to academic excellence, procedural competence, and evidence-based cardiovascular care. Currently aiming to advance interventional cardiology services in Ethiopia.`,
         credentials: "MD, FACC, CCKE (ACC Certified)"
     }
 ];

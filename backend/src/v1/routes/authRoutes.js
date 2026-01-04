@@ -1,8 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-// TODO: Implement Auth Routes (Register, Login)
-router.post('/register', (req, res) => res.status(501).json({ message: 'Not Implemented' }));
-router.post('/login', (req, res) => res.status(501).json({ message: 'Not Implemented' }));
+const authController = require('../controllers/authController');
+const upload = require('../middleware/upload');
+
+// Register: Handle multipart form (photo upload)
+router.post('/register', upload.single('profilePhoto'), authController.register);
+
+// Login: JSON body
+router.post('/login', authController.login);
 
 module.exports = router;
