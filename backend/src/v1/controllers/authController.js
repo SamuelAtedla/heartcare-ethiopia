@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 // Helper: Generate JWT
-const signToken = (id, role) => {
-    return jwt.sign({ id, role }, process.env.JWT_SECRET, {
+const signToken = (id, role, phone) => {
+    return jwt.sign({ id, role, phone }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_IN || '90d'
     });
 };
@@ -46,7 +46,7 @@ const register = async (req, res) => {
         console.log(`User registered successfully: ${newUser.fullName} (${newUser.role})`);
 
         // 5. Generate Token
-        const token = signToken(newUser.id, newUser.role);
+        const token = signToken(newUser.id, newUser.role, newUser.phone);
 
         // 6. Send Response
         res.status(201).json({
@@ -89,7 +89,7 @@ const login = async (req, res) => {
         console.log(`User logged in successfully: ${user.fullName}`);
 
         // 3. Send Token
-        const token = signToken(user.id, user.role);
+        const token = signToken(user.id, user.role, user.phone);
 
         res.status(200).json({
             status: 'success',

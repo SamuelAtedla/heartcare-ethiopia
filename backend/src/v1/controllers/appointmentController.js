@@ -88,6 +88,7 @@ const appointmentController = {
 
       const appointment = await Appointment.create({
         patientId: req.user.id,
+        patientPhone: req.user.phone, // Include phone from user session
         doctorId,
         scheduledAt,
         clinicalNotes, // Initial reason
