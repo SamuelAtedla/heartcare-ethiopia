@@ -12,6 +12,7 @@ const appointmentController = {
   getAvailableSlots: async (req, res) => {
     try {
       const { date, doctorId } = req.query;
+      console.log(`Checking availability for Doctor ${doctorId} on ${date}`);
       const slotDuration = 30; // 30-minute intervals
 
       const confirmedAppts = await Appointment.findAll({
@@ -39,9 +40,33 @@ const appointmentController = {
         }
       }
 
+      console.log(`Available slots calculated: ${availableSlots.length}`);
       res.json({ date, availableSlots });
     } catch (error) {
+      console.error("Availability Error:", error);
       res.status(500).json({ error: 'Failed to load availability.' });
+    }
+  },
+
+  // 8. DOCTOR/ADMIN: Approve Payment
+  approvePayment: async (req, res) => {
+    try {
+      const { appointmentId } = req.body;
+      console.log(`Payment Approval Request for Appt: ${appointmentId} by User ${req.user.id}`);
+      // Security: In real app, check if req.user is admin or the doctor
+
+      await Appointment.update(
+        { status: 'confirmed' },
+        { where: { id: appointmentId } }
+      );
+
+      // Also update Payment status if we had a link, but Appointment status is key
+
+      console.log(`Appointment ${appointmentId} confirmed successfully.`);
+      res.json({ message: 'Appointment approved successfully.' });
+    } catch (error) {
+      console.error("Payment Approval Error:", error);
+      res.status(500).json({ error: 'Approval failed.' });
     }
   },
 
@@ -49,13 +74,17 @@ const appointmentController = {
   createPendingAppointment: async (req, res) => {
     try {
       const { doctorId, scheduledAt, clinicalNotes } = req.body;
+      console.log(`Booking attempt: Patient ${req.user.id} -> Doctor ${doctorId} @ ${scheduledAt}`);
 
       // Check for conflicts
       const conflict = await Appointment.findOne({
         where: { doctorId, scheduledAt, status: 'confirmed' }
       });
 
-      if (conflict) return res.status(400).json({ error: 'Slot is no longer available.' });
+      if (conflict) {
+        console.log(`Booking conflict for ${scheduledAt}`);
+        return res.status(400).json({ error: 'Slot is no longer available.' });
+      }
 
       const appointment = await Appointment.create({
         patientId: req.user.id,
@@ -65,8 +94,10 @@ const appointmentController = {
         status: 'pending_payment'
       });
 
+      console.log(`Appointment Created (Pending Payment): ${appointment.id}`);
       res.status(201).json({ appointmentId: appointment.id });
     } catch (error) {
+      console.error("Booking Error:", error);
       res.status(500).json({ error: 'Booking process failed.' });
     }
   },
@@ -75,6 +106,7 @@ const appointmentController = {
   uploadPaymentReceipt: async (req, res) => {
     try {
       const { appointmentId } = req.params;
+      console.log(`Payment Receipt Upload for Appointment: ${appointmentId}`);
 
       if (!req.file) {
         return res.status(400).json({ error: 'No receipt file provided.' });
@@ -114,6 +146,7 @@ const appointmentController = {
 
       await appointment.update({ status: 'pending_approval' });
 
+      console.log(`Receipt uploaded and status updated to pending_approval for Appt ${appointment.id}`);
       res.status(200).json({ message: 'Receipt uploaded. Waiting for approval.' });
 
     } catch (error) {
@@ -126,6 +159,7 @@ const appointmentController = {
   uploadLabResults: async (req, res) => {
     try {
       const { appointmentId } = req.params;
+      console.log(`Lab Results Upload for Appointment: ${appointmentId}`);
 
       if (!req.files || req.files.length === 0) {
         return res.status(400).json({ error: 'No files provided.' });
@@ -141,8 +175,10 @@ const appointmentController = {
 
       await MedicalAttachment.bulkCreate(fileRecords);
 
+      console.log(`${req.files.length} lab files saved.`);
       res.status(200).json({ message: 'Lab results uploaded successfully.' });
     } catch (error) {
+      console.error("Lab Upload Error:", error);
       res.status(500).json({ error: 'File upload failed.' });
     }
   },
@@ -225,6 +261,7 @@ const appointmentController = {
   approvePayment: async (req, res) => {
     try {
       const { appointmentId } = req.body;
+      console.log(`Payment Approval Request for Appt: ${appointmentId} by User ${req.user.id}`);
       // Security: In real app, check if req.user is admin or the doctor
 
       await Appointment.update(
@@ -234,8 +271,10 @@ const appointmentController = {
 
       // Also update Payment status if we had a link, but Appointment status is key
 
+      console.log(`Appointment ${appointmentId} confirmed successfully.`);
       res.json({ message: 'Appointment approved successfully.' });
     } catch (error) {
+      console.error("Payment Approval Error:", error);
       res.status(500).json({ error: 'Approval failed.' });
     }
   }

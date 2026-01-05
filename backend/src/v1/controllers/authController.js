@@ -16,6 +16,7 @@ const register = async (req, res) => {
         // 1. Check if user already exists
         const existingUser = await User.findOne({ where: { phone } });
         if (existingUser) {
+            console.log(`Registration failed: User already exists (${phone})`);
             return res.status(400).json({ error: 'User already exists with this phone number.' });
         }
 
@@ -25,6 +26,7 @@ const register = async (req, res) => {
         // 3. Handle Profile Photo
         let profileImage = null;
         if (req.file) {
+            console.log(`Profile photo uploaded for ${phone}`);
             profileImage = req.file.path; // Save file path to DB
         }
 
@@ -40,6 +42,8 @@ const register = async (req, res) => {
             // Update User model later if needed for 'age' and 'caseDescription'
             profileImage
         });
+
+        console.log(`User registered successfully: ${newUser.fullName} (${newUser.role})`);
 
         // 5. Generate Token
         const token = signToken(newUser.id, newUser.role);
@@ -67,6 +71,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { phone, password } = req.body;
+        console.log(`Login attempt for: ${phone}`);
 
         // 1. Check if email and password exist
         if (!phone || !password) {
@@ -77,8 +82,11 @@ const login = async (req, res) => {
         const user = await User.findOne({ where: { phone } });
 
         if (!user || !(await bcrypt.compare(password, user.password))) {
+            console.log(`Login failed (invalid credentials) for: ${phone}`);
             return res.status(401).json({ error: 'Incorrect phone number or password' });
         }
+
+        console.log(`User logged in successfully: ${user.fullName}`);
 
         // 3. Send Token
         const token = signToken(user.id, user.role);

@@ -5,6 +5,7 @@ const moment = require('moment');
 // 1. Get Schedule (Confirmed & Pending Payment Approval)
 const getConfirmedQueue = async (req, res) => {
   try {
+    console.log(`Fetching Doctor Queue for Doctor ID: ${req.user.id}`);
     const queue = await Appointment.findAll({
       where: {
         doctorId: req.user.id,
@@ -13,8 +14,10 @@ const getConfirmedQueue = async (req, res) => {
       include: [{ model: User, as: 'patient', attributes: ['fullName', 'phone', 'profileImage', 'age'] }],
       order: [['scheduledAt', 'ASC']]
     });
+    console.log(`Found ${queue.length} items in queue.`);
     res.json(queue);
   } catch (error) {
+    console.error("Doctor Queue Error:", error);
     res.status(500).json({ error: 'Could not fetch queue.' });
   }
 };
@@ -23,6 +26,7 @@ const getConfirmedQueue = async (req, res) => {
 const searchPatients = async (req, res) => {
   try {
     const { query } = req.query; // ?query=Abebe
+    console.log(`Doctor Search Query: ${query}`);
 
     if (!query) return res.json([]);
 
@@ -37,9 +41,10 @@ const searchPatients = async (req, res) => {
       attributes: ['id', 'fullName', 'phone', 'profileImage', 'age']
     });
 
+    console.log(`Search found ${patients.length} patients.`);
     res.json(patients);
   } catch (error) {
-    console.error(error);
+    console.error("Search Error:", error);
     res.status(500).json({ error: 'Search failed.' });
   }
 };
@@ -48,6 +53,7 @@ const searchPatients = async (req, res) => {
 const getDetailedHistory = async (req, res) => {
   try {
     const { patientId } = req.params;
+    console.log(`Fetching history for Patient: ${patientId}`);
 
     const history = await Appointment.findAll({
       where: { patientId },
@@ -60,6 +66,7 @@ const getDetailedHistory = async (req, res) => {
 
     res.json(history);
   } catch (error) {
+    console.error("History Fetch Error:", error);
     res.status(500).json({ error: 'Failed to fetch patient medical history.' });
   }
 };
@@ -68,6 +75,7 @@ const getDetailedHistory = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const { bio, specialty, credentials } = req.body;
+    console.log(`Updating Profile for Doctor: ${req.user.id}`);
 
     await User.update(
       { bio, specialty, credentials },
@@ -76,6 +84,7 @@ const updateProfile = async (req, res) => {
 
     res.json({ message: 'Profile updated successfully.' });
   } catch (error) {
+    console.error("Profile Update Error:", error);
     res.status(500).json({ error: 'Profile update failed.' });
   }
 };

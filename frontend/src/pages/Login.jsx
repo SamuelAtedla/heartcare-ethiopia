@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import apiClient from '../api/axiosConfig';
 import { useTranslation } from 'react-i18next';
 import { Lock, Phone, User, Camera, Calendar, FileText } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { loginAction } = useAuth();
     const [isRegistering, setIsRegistering] = useState(false);
     const [formData, setFormData] = useState({
         phone: '',
@@ -56,14 +58,13 @@ const Login = () => {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
 
-                localStorage.setItem('token', response.data.token);
-                localStorage.setItem('user', JSON.stringify(response.data.data.user));
+                loginAction(response.data.data.user, response.data.token);
 
                 // Redirect based on role
                 if (response.data.data.user.role === 'doctor') {
-                    navigate('/doctor-dashboard');
+                    navigate('/doctor/dashboard');
                 } else {
-                    navigate('/patient-dashboard');
+                    navigate('/patient/dashboard');
                 }
 
             } else {
@@ -73,13 +74,12 @@ const Login = () => {
                     password: formData.password
                 });
 
-                localStorage.setItem('token', response.data.token);
-                localStorage.setItem('user', JSON.stringify(response.data.data.user));
+                loginAction(response.data.data.user, response.data.token);
 
                 if (response.data.data.user.role === 'doctor') {
-                    navigate('/doctor-dashboard');
+                    navigate('/doctor/dashboard');
                 } else {
-                    navigate('/patient-dashboard');
+                    navigate('/patient/dashboard');
                 }
             }
         } catch (err) {

@@ -11,7 +11,7 @@ import ServicesPage from "./pages/ServicesPage";
 import Login from "./pages/Login";
 import PatientDashboard from "./pages/Patient/PatientDashboard";
 import DoctorDashboard from "./pages/Doctor/DoctorDashboard";
-
+import HomeRoute from "./components/HomeRoute";
 import "./App.css";
 
 function App() {
@@ -20,7 +20,9 @@ function App() {
       <AuthProvider>
         <Routes>
           {/* Public Routes */}
-          <Route path="/" element={<LandingPage />} />
+
+          {/* Public Routes */}
+          <Route path="/" element={<HomeRoute />} />
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/login" element={<Login />} />
 

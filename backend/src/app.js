@@ -11,6 +11,12 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
+// Request Logging Middleware
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    next();
+});
+
 // DDoS & Brute Force Protection
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -20,7 +26,7 @@ const limiter = rateLimit({
 app.use('/', limiter);
 
 // --- API VERSIONING ---
-app.use('/v1', v1Router);
+app.use('/v1/routes', v1Router);
 
 // Root health check
 app.get('/', (req, res) => {

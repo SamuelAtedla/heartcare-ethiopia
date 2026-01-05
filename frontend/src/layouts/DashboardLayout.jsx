@@ -13,8 +13,13 @@ const DashboardLayout = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const handleLogout = () => {
+        const role = user?.role;
         logout();
-        navigate('/login');
+        if (role === 'doctor') {
+            navigate('/login');
+        } else {
+            navigate('/');
+        }
     };
 
     const NavItem = ({ to, icon: Icon, label }) => {
@@ -24,8 +29,8 @@ const DashboardLayout = () => {
                 to={to}
                 onClick={() => setIsSidebarOpen(false)}
                 className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition ${isActive
-                        ? 'bg-red-50 text-red-600 font-bold'
-                        : 'text-gray-600 hover:bg-gray-50'
+                    ? 'bg-red-50 text-red-600 font-bold'
+                    : 'text-gray-600 hover:bg-gray-50'
                     }`}
             >
                 <Icon size={20} />
