@@ -14,7 +14,7 @@ const PatientDashboard = () => {
 
     const fetchHistory = async () => {
         try {
-            const response = await apiClient.get('/appointment/my-appointment');
+            const response = await apiClient.get('/appointments/my-appointment');
             setAppointments(response.data);
         } catch (error) {
             console.error('Error fetching history:', error);
@@ -80,7 +80,7 @@ const PatientDashboard = () => {
                         <div key={apt.id} className="relative">
                             {/* Timeline Dot */}
                             <div className={`absolute -left-[41px] top-4 w-5 h-5 rounded-full border-4 border-white ${apt.status === 'confirmed' || apt.status === 'completed' ? 'bg-green-500' :
-                                    apt.status === 'pending_approval' ? 'bg-blue-500' : 'bg-amber-500'
+                                apt.status === 'pending_approval' ? 'bg-blue-500' : 'bg-amber-500'
                                 }`} />
 
                             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
@@ -91,8 +91,8 @@ const PatientDashboard = () => {
                                                 {apt.clinicalNotes || 'Consultation'}
                                             </span>
                                             <span className={`px-2 py-0.5 rounded-full text-xs font-bold uppercase ${apt.status === 'confirmed' ? 'bg-green-100 text-green-700' :
-                                                    apt.status === 'pending_approval' ? 'bg-blue-100 text-blue-700' :
-                                                        'bg-amber-100 text-amber-700'
+                                                apt.status === 'pending_approval' ? 'bg-blue-100 text-blue-700' :
+                                                    'bg-amber-100 text-amber-700'
                                                 }`}>
                                                 {apt.status.replace('_', ' ')}
                                             </span>

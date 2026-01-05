@@ -14,7 +14,7 @@ router.use('/auth', authRoutes);
 router.use('/public', publicRoutes);
 router.use('/appointments', authenticate, appointmentRoutes);
 router.use('/patient', authenticate, patientRoutes);
-router.use('/doctor', authenticate, authorize('doctor'), doctorRoutes);
+router.use('/doctor', authenticate, doctorRoutes);
 router.use('/webhooks', webhookRoutes);
 
 module.exports = router;

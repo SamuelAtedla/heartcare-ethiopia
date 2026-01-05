@@ -10,7 +10,7 @@ const Appointment = sequelize.define('Appointment', {
   patientPhone: { type: DataTypes.STRING, allowNull: false },
   scheduledAt: { type: DataTypes.DATE, allowNull: false },
   status: {
-    type: DataTypes.ENUM('pending_payment', 'confirmed', 'completed'),
+    type: DataTypes.ENUM('pending_payment', 'confirmed', 'completed', 'cancelled', 'pending_approval'),
     defaultValue: 'pending_payment'
   },
   paymentReference: { type: DataTypes.STRING, unique: true },

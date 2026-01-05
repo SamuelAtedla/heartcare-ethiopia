@@ -19,18 +19,18 @@ app.use((req, res, next) => {
 
 // DDoS & Brute Force Protection
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
     message: "Too many requests from this IP, please try again after 15 minutes."
 });
 app.use('/', limiter);
 
 // --- API VERSIONING ---
-app.use('/v1/routes', v1Router);
+app.use('/v1', v1Router);
 
 // Root health check
 app.get('/', (req, res) => {
-    res.send('Heart Care Ethiopia API (v1) is running securely.');
+    res.send('Heart Care Ethiopia API is running safely.');
 });
 
 module.exports = app;
