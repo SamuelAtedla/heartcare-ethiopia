@@ -50,7 +50,7 @@ const BookingModal = ({ onClose, onSuccess }) => {
             await apiClient.post('/appointments/book', {
                 doctorId: selectedDoctor.id,
                 scheduledAt: selectedSlot,
-                clinicalNotes: bookingNote,
+                symptoms: bookingNote,
                 communicationMode,
                 patientPhone: altPhone
             });

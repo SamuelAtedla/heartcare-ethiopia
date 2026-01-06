@@ -74,7 +74,7 @@ const appointmentController = {
   // 2. PATIENT: Create pending booking
   createPendingAppointment: async (req, res) => {
     try {
-      const { doctorId, scheduledAt, clinicalNotes, communicationMode, patientPhone } = req.body;
+      const { doctorId, scheduledAt, symptoms, communicationMode, patientPhone } = req.body;
       console.log(`Booking attempt: Patient ${req.user.id} -> Doctor ${doctorId} @ ${scheduledAt}`);
 
       // Check for conflicts
@@ -93,7 +93,7 @@ const appointmentController = {
         communicationMode: communicationMode || 'whatsapp',
         doctorId,
         scheduledAt,
-        clinicalNotes, // Initial reason
+        symptoms,
         status: 'pending_payment'
       });
 
@@ -206,9 +206,15 @@ const appointmentController = {
   // 6. DOCTOR: Add Notes
   addClinicalNotes: async (req, res) => {
     try {
-      const { appointmentId, notes } = req.body;
-      const appt = await Appointment.findByPk(appointmentId);
+      const { id } = req.params;
+      const { notes } = req.body;
+      const appt = await Appointment.findByPk(id);
 
+      if (!appt) {
+        return res.status(404).json({ error: 'Appointment not found.' });
+      }
+
+      // Check if the doctor is the one assigned
       if (appt.doctorId !== req.user.id) {
         return res.status(403).json({ error: 'Unauthorized.' });
       }
@@ -218,8 +224,9 @@ const appointmentController = {
         status: 'completed'
       });
 
-      res.json({ message: 'Record updated.' });
+      res.json({ message: 'Clinical notes saved successfully.', appointment: appt });
     } catch (error) {
+      console.error("Clinical Notes Error:", error);
       res.status(500).json({ error: 'Failed to save clinical notes.' });
     }
   },

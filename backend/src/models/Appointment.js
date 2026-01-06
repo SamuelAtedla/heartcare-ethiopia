@@ -18,7 +18,9 @@ const Appointment = sequelize.define('Appointment', {
     defaultValue: 'pending_payment'
   },
   paymentReference: { type: DataTypes.STRING, unique: true },
-  attachmentPath: { type: DataTypes.STRING } // Store path, not the file
+  attachmentPath: { type: DataTypes.STRING }, // Store path, not the file
+  symptoms: { type: DataTypes.TEXT },
+  clinicalNotes: { type: DataTypes.TEXT }
 });
 
 module.exports = Appointment;
