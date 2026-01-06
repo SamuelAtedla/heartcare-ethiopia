@@ -86,7 +86,7 @@ const DashboardLayout = () => {
                     <div className="pt-4 border-t border-gray-100">
                         <div className="flex items-center space-x-3 px-4 py-3 mb-2">
                             <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold text-xs">
-                                {user?.name?.charAt(0) || 'U'}
+                                {user?.fullName?.charAt(0) || 'U'}
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="text-sm font-bold text-gray-900 truncate">{user?.name}</p>
