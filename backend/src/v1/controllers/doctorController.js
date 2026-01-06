@@ -130,8 +130,20 @@ const updateProfile = async (req, res) => {
 
     console.log(`Updating Profile for Doctor: ${req.user.id}`);
 
+    const updateData = {};
+    if (fullName) updateData.fullName = fullName;
+    if (bio !== undefined) updateData.bio = bio;
+    if (specialty !== undefined) updateData.specialty = specialty;
+    if (credentials !== undefined) updateData.credentials = credentials;
+    if (profileImage) updateData.profileImage = profileImage;
+
+    // Guard phone update similarly to before
+    if (phone && phone !== '' && phone !== 'undefined') {
+      updateData.phone = phone;
+    }
+
     await User.update(
-      { fullName, bio, specialty, credentials, phone, profileImage },
+      updateData,
       { where: { id: req.user.id } }
     );
 
@@ -145,10 +157,24 @@ const updateProfile = async (req, res) => {
   }
 };
 
+// 6. Get Current Doctor Profile
+const getProfile = async (req, res) => {
+  try {
+    const doctor = await User.findByPk(req.user.id, {
+      attributes: ['id', 'fullName', 'phone', 'specialty', 'bio', 'credentials', 'profileImage']
+    });
+    res.json(doctor);
+  } catch (error) {
+    console.error("Get Profile Error:", error);
+    res.status(500).json({ error: 'Could not fetch profile.' });
+  }
+};
+
 module.exports = {
   getConfirmedQueue,
   searchPatients,
   getDetailedHistory,
   getFinanceRecords,
-  updateProfile
+  updateProfile,
+  getProfile
 };

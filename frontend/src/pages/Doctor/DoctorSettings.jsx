@@ -4,7 +4,7 @@ import apiClient from '../../api/axiosConfig';
 import { useAuth } from '../../context/AuthContext';
 
 const DoctorSettings = () => {
-    const { user, login } = useAuth();
+    const { user, updateUser } = useAuth();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
@@ -12,9 +12,9 @@ const DoctorSettings = () => {
     const [formData, setFormData] = useState({
         fullName: user?.fullName || '',
         phone: user?.phone || '',
-        specialty: '',
-        bio: '',
-        credentials: ''
+        specialty: user?.specialty || '',
+        bio: user?.bio || '',
+        credentials: user?.credentials || ''
     });
 
     useEffect(() => {
@@ -23,12 +23,12 @@ const DoctorSettings = () => {
 
     const fetchProfile = async () => {
         try {
-            const response = await apiClient.get('/public/doctors');
-            const currentDoc = response.data.find(d => d.id === user?.id);
+            const response = await apiClient.get('/doctor/profile');
+            const currentDoc = response.data;
             if (currentDoc) {
                 setFormData({
-                    fullName: currentDoc.fullName,
-                    phone: currentDoc.phone,
+                    fullName: currentDoc.fullName || user?.fullName || '',
+                    phone: currentDoc.phone || user?.phone || '',
                     specialty: currentDoc.specialty || '',
                     bio: currentDoc.bio || '',
                     credentials: currentDoc.credentials || ''
@@ -53,7 +53,13 @@ const DoctorSettings = () => {
         setSuccess(false);
         try {
             const data = new FormData();
-            Object.keys(formData).forEach(key => data.append(key, formData[key]));
+            Object.keys(formData).forEach(key => {
+                // Append everything in formData to allow clearing fields with empty strings
+                if (formData[key] !== undefined && formData[key] !== null) {
+                    data.append(key, formData[key]);
+                }
+            });
+
             if (selectedFile) {
                 data.append('profileImage', selectedFile);
             }
@@ -62,18 +68,11 @@ const DoctorSettings = () => {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 
-            // Update Auth Context if needed (local storage + state)
-            const updatedUser = {
-                ...user,
-                fullName: formData.fullName,
-                phone: formData.phone,
+            // Update Auth Context with EVERYTHING
+            updateUser({
+                ...formData,
                 profileImage: response.data.profileImage || user.profileImage
-            };
-            localStorage.setItem('user', JSON.stringify(updatedUser));
-
-            // If the application uses the 'user' object from local storage on refresh, 
-            // the user will see changes after refresh. 
-            // If we want immediate update In-app, we'd need a way to update the context.
+            });
 
             setSuccess(true);
             setTimeout(() => setSuccess(false), 3000);
@@ -132,6 +131,19 @@ const DoctorSettings = () => {
                                         type="text"
                                         value={formData.fullName}
                                         onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                                        className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 ring-red-100 transition-all font-medium"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Phone Number</label>
+                                <div className="relative group">
+                                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-600 transition-colors" size={18} />
+                                    <input
+                                        type="text"
+                                        value={formData.phone}
+                                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                         className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 ring-red-100 transition-all font-medium"
                                     />
                                 </div>

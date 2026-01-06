@@ -66,6 +66,14 @@ router.get(
   doctorController.getFinanceRecords
 );
 
+// Profile Management
+router.get(
+  "/profile",
+  authenticate,
+  //authorize("doctor"),
+  doctorController.getProfile
+);
+
 router.put(
   "/profile",
   authenticate,
