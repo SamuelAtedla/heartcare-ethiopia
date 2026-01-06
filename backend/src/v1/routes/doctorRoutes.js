@@ -59,6 +59,13 @@ router.get(
   doctorController.searchPatients
 );
 
+router.get(
+  "/finance",
+  authenticate,
+  //authorize("doctor"),
+  doctorController.getFinanceRecords
+);
+
 router.put(
   "/profile",
   authenticate,

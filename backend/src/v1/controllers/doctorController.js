@@ -71,7 +71,53 @@ const getDetailedHistory = async (req, res) => {
   }
 };
 
-// 4. Update Doctor Profile
+// 4. Get Finance Records (All appointments with various filters)
+const getFinanceRecords = async (req, res) => {
+  try {
+    const { status, query, startDate, endDate } = req.query;
+    console.log(`Fetching Finance Records for Doctor: ${req.user.id} with filters:`, { status, query, startDate, endDate });
+
+    let whereClause = {
+      doctorId: req.user.id
+    };
+
+    if (status) {
+      whereClause.status = status;
+    }
+
+    if (startDate && endDate) {
+      whereClause.scheduledAt = {
+        [Op.between]: [moment(startDate).startOf('day').toDate(), moment(endDate).endOf('day').toDate()]
+      };
+    }
+
+    const appointments = await Appointment.findAll({
+      where: whereClause,
+      include: [
+        {
+          model: User,
+          as: 'patient',
+          attributes: ['fullName', 'phone', 'profileImage'],
+          where: query ? {
+            [Op.or]: [
+              { fullName: { [Op.iLike]: `%${query}%` } },
+              { phone: { [Op.like]: `%${query}%` } }
+            ]
+          } : {}
+        },
+        { model: MedicalAttachment, as: 'labResults' } // Assuming receipts are here as well
+      ],
+      order: [['scheduledAt', 'DESC']]
+    });
+
+    res.json(appointments);
+  } catch (error) {
+    console.error("Finance Records Error:", error);
+    res.status(500).json({ error: 'Could not fetch finance records.' });
+  }
+};
+
+// 5. Update Doctor Profile
 const updateProfile = async (req, res) => {
   try {
     const { bio, specialty, credentials } = req.body;
@@ -93,5 +139,6 @@ module.exports = {
   getConfirmedQueue,
   searchPatients,
   getDetailedHistory,
+  getFinanceRecords,
   updateProfile
 };
