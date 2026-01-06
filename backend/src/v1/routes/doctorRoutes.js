@@ -69,6 +69,7 @@ router.get(
 router.put(
   "/profile",
   authenticate,
+  upload.single('profileImage'),
   //authorize("doctor"),
   doctorController.updateProfile
 );

@@ -33,7 +33,7 @@ app.use('/v1', v1Router);
 
 // Root health check
 app.get('/', (req, res) => {
-    res.send('Heart Care Ethiopia API is running safely. off docker also.');
+    res.send('Heart Care Ethiopia API is running safely. On docker also.');
 });
 
 module.exports = app;

@@ -4,11 +4,13 @@ import apiClient from '../../api/axiosConfig';
 import { useAuth } from '../../context/AuthContext';
 
 const DoctorSettings = () => {
-    const { user } = useAuth();
+    const { user, login } = useAuth();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState(null);
     const [formData, setFormData] = useState({
-        fullName: user?.name || '',
+        fullName: user?.fullName || '',
         phone: user?.phone || '',
         specialty: '',
         bio: '',
@@ -21,10 +23,6 @@ const DoctorSettings = () => {
 
     const fetchProfile = async () => {
         try {
-            // Usually we'd have a bio/specialty in the user object from context if updated, 
-            // but for safety we can fetch fresh or use context. 
-            // Mocking the specialty/bio for now as we don't have a direct 'get current doctor profile' yet 
-            // beyond the general auth user.
             const response = await apiClient.get('/public/doctors');
             const currentDoc = response.data.find(d => d.id === user?.id);
             if (currentDoc) {
@@ -41,12 +39,42 @@ const DoctorSettings = () => {
         }
     };
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+            setPreviewUrl(URL.createObjectURL(file));
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setSuccess(false);
         try {
-            await apiClient.put('/doctor/profile', formData);
+            const data = new FormData();
+            Object.keys(formData).forEach(key => data.append(key, formData[key]));
+            if (selectedFile) {
+                data.append('profileImage', selectedFile);
+            }
+
+            const response = await apiClient.put('/doctor/profile', data, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+
+            // Update Auth Context if needed (local storage + state)
+            const updatedUser = {
+                ...user,
+                fullName: formData.fullName,
+                phone: formData.phone,
+                profileImage: response.data.profileImage || user.profileImage
+            };
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+
+            // If the application uses the 'user' object from local storage on refresh, 
+            // the user will see changes after refresh. 
+            // If we want immediate update In-app, we'd need a way to update the context.
+
             setSuccess(true);
             setTimeout(() => setSuccess(false), 3000);
         } catch (error) {
@@ -55,6 +83,8 @@ const DoctorSettings = () => {
             setLoading(false);
         }
     };
+
+    const currentImage = previewUrl || (user?.profileImage ? (user.profileImage.startsWith('http') ? user.profileImage : `http://localhost:5000/${user.profileImage}`) : null);
 
     return (
         <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-500">
@@ -69,13 +99,14 @@ const DoctorSettings = () => {
                     <div className="bg-gray-900 rounded-[40px] p-8 shadow-xl text-center text-white sticky top-8">
                         <div className="relative w-32 h-32 mx-auto mb-6">
                             <div className="w-full h-full rounded-[40px] bg-white/10 flex items-center justify-center text-white/20 overflow-hidden border-4 border-white/10 shadow-xl">
-                                {user?.profileImage ? (
-                                    <img src={`http://localhost:5000/${user.profileImage}`} className="w-full h-full object-cover" alt="" />
+                                {currentImage ? (
+                                    <img src={currentImage} className="w-full h-full object-cover" alt="" />
                                 ) : <User size={48} />}
                             </div>
-                            <button className="absolute -right-2 -bottom-2 w-10 h-10 bg-red-600 text-white rounded-2xl flex items-center justify-center hover:bg-red-700 transition-all border-4 border-gray-900 shadow-lg">
+                            <label className="absolute -right-2 -bottom-2 w-10 h-10 bg-red-600 text-white rounded-2xl flex items-center justify-center hover:bg-red-700 transition-all border-4 border-gray-900 shadow-lg cursor-pointer">
                                 <Camera size={18} />
-                            </button>
+                                <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+                            </label>
                         </div>
                         <h3 className="font-black text-xl">{formData.fullName}</h3>
                         <p className="text-[10px] font-black uppercase tracking-[0.3em] text-red-500 mt-2">{formData.specialty || 'Medical Specialist'}</p>

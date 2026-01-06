@@ -121,14 +121,24 @@ const getFinanceRecords = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const { fullName, bio, specialty, credentials, phone } = req.body;
+    let profileImage = req.body.profileImage; // Keep existing if not uploading
+
+    if (req.file) {
+      console.log(`New profile image uploaded for Doctor: ${req.user.id}`);
+      profileImage = `storage/${req.file.filename}`;
+    }
+
     console.log(`Updating Profile for Doctor: ${req.user.id}`);
 
     await User.update(
-      { fullName, bio, specialty, credentials, phone },
+      { fullName, bio, specialty, credentials, phone, profileImage },
       { where: { id: req.user.id } }
     );
 
-    res.json({ message: 'Profile updated successfully.' });
+    res.json({
+      message: 'Profile updated successfully.',
+      profileImage
+    });
   } catch (error) {
     console.error("Profile Update Error:", error);
     res.status(500).json({ error: 'Profile update failed.' });
