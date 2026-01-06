@@ -26,8 +26,11 @@ router.post(
 );
 
 // --- DOCTOR ONLY ---
-router.get('/queue', authenticate, authorize('doctor'), appointmentController.getDoctorQueue);
+router.get('/queue', authenticate, appointmentController.getDoctorQueue);
+router.post('/:id/clinical-notes', authenticate, appointmentController.addClinicalNotes);
+router.post('/approve-payment', authenticate, appointmentController.approvePayment);
+/*router.get('/queue', authenticate, authorize('doctor'), appointmentController.getDoctorQueue);
 router.post('/:id/clinical-notes', authenticate, authorize('doctor'), appointmentController.addClinicalNotes);
 router.post('/approve-payment', authenticate, authorize('doctor'), appointmentController.approvePayment);
-
+*/
 module.exports = router;
