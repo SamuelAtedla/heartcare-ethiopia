@@ -8,6 +8,10 @@ const Appointment = sequelize.define('Appointment', {
     primaryKey: true
   },
   patientPhone: { type: DataTypes.STRING, allowNull: false },
+  communicationMode: {
+    type: DataTypes.ENUM('whatsapp', 'telegram', 'zoom'),
+    defaultValue: 'whatsapp'
+  },
   scheduledAt: { type: DataTypes.DATE, allowNull: false },
   status: {
     type: DataTypes.ENUM('pending_payment', 'confirmed', 'completed', 'cancelled', 'pending_approval'),
