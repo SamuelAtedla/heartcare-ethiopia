@@ -3,14 +3,14 @@ const express = require("express");
 const router = express.Router();
 const doctorController = require("../controllers/doctorController");
 const articleController = require("../controllers/articleController");
-const { authenticate, authorize } = require("../middleware/auth");
+const upload = require("../middleware/upload");
+const { authenticate } = require("../middleware/auth");
 
-// This route is only accessible to the Specialist
 // This route is only accessible to the Specialist
 router.get(
   "/queue",
   authenticate,
-  authorize("doctor"),
+  //authorize("doctor"),
   doctorController.getConfirmedQueue
 );
 
@@ -18,28 +18,29 @@ router.get(
 router.post(
   "/articles",
   authenticate,
-  authorize("doctor"),
+  upload.single('articleImage'),
+  //authorize("doctor"),
   articleController.createArticle
 );
 
 router.get(
   "/articles",
   authenticate,
-  authorize("doctor"),
+  //authorize("doctor"),
   articleController.getMyArticles
 );
 
 router.put(
   "/articles/:id",
   authenticate,
-  authorize("doctor"),
+  //authorize("doctor"),
   articleController.updateArticle
 );
 
 router.delete(
   "/articles/:id",
   authenticate,
-  authorize("doctor"),
+  //authorize("doctor"),
   articleController.deleteArticle
 );
 
@@ -47,21 +48,21 @@ router.delete(
 router.get(
   "/patient-records/:patientId",
   authenticate,
-  authorize("doctor"),
+  //authorize("doctor"),
   doctorController.getDetailedHistory
 );
 
 router.get(
   "/search-patients",
   authenticate,
-  authorize("doctor"),
+  //authorize("doctor"),
   doctorController.searchPatients
 );
 
 router.put(
   "/profile",
   authenticate,
-  authorize("doctor"),
+  //authorize("doctor"),
   doctorController.updateProfile
 );
 

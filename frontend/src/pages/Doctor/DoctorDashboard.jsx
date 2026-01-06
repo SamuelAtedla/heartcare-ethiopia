@@ -1,25 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { MessageCircle, Check, X, FileText, PenTool, Image as ImageIcon, Search as SearchIcon, Calendar, User } from 'lucide-react';
+import { MessageCircle, Check, X, FileText, PenTool, Image as ImageIcon, User, Plus, Clock } from 'lucide-react';
 import apiClient from '../../api/axiosConfig';
+import PublishArticleModal from './components/PublishArticleModal';
 
 const DoctorDashboard = () => {
   const [activeTab, setActiveTab] = useState('queue');
   const [loading, setLoading] = useState(true);
+  const [showPublishModal, setShowPublishModal] = useState(false);
 
   // Data State
   const [queue, setQueue] = useState([]);
   const [finance, setFinance] = useState([]);
   const [articles, setArticles] = useState([]);
-
-  // New Article State
-  const [newArticle, setNewArticle] = useState({
-    titleEn: '',
-    titleAm: '',
-    contentEn: '',
-    contentAm: '',
-    image: null
-  });
-  const [articleImagePreview, setArticleImagePreview] = useState(null);
 
   // Initial Data Fetch
   useEffect(() => {
@@ -30,12 +22,9 @@ const DoctorDashboard = () => {
   const fetchQueue = async () => {
     try {
       const response = await apiClient.get('/doctor/queue');
-      // Split queue into "Confirmed" (Today's Visits) and "Pending Approval" (Finance)
       const fullQueue = response.data;
-
       setQueue(fullQueue.filter(a => a.status === 'confirmed'));
       setFinance(fullQueue.filter(a => a.status === 'pending_approval'));
-
       setLoading(false);
     } catch (error) {
       console.error('Error fetching queue:', error);
@@ -54,237 +43,198 @@ const DoctorDashboard = () => {
   // Actions
   const handleApprovePayment = async (appointmentId) => {
     try {
-      await apiClient.post('/appointment/approve-payment', { appointmentId });
+      await apiClient.post('/appointments/approve-payment', { appointmentId });
       alert('Payment Approved!');
-      fetchQueue(); // Refresh both lists
+      fetchQueue();
     } catch (error) {
       alert('Approval Failed.');
     }
   };
 
-  const handlePublish = async (e) => {
-    e.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append('titleEn', newArticle.titleEn);
-      formData.append('titleAm', newArticle.titleAm);
-      formData.append('contentEn', newArticle.contentEn);
-      formData.append('contentAm', newArticle.contentAm);
-      if (newArticle.image) {
-        formData.append('articleImage', newArticle.image);
-      }
-
-      await apiClient.post('/doctor/articles', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-
-      alert('Article Published Successfully!');
-      fetchArticles();
-      setNewArticle({ titleEn: '', titleAm: '', contentEn: '', contentAm: '', image: null });
-      setArticleImagePreview(null);
-    } catch (error) {
-      console.error(error);
-      alert('Publication failed.');
-    }
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setNewArticle({ ...newArticle, image: file });
-      setArticleImagePreview(URL.createObjectURL(file));
-    }
-  };
-
-  if (loading) return <div className="p-8 text-center text-gray-500">Loading Dashboard...</div>;
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-10 h-10 border-4 border-red-100 border-t-red-600 rounded-full animate-spin" />
+        <p className="text-gray-500 font-medium">Syncing specialist dashboard...</p>
+      </div>
+    </div>
+  );
 
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Dr. Dashboard</h1>
-        <p className="text-gray-500">Manage your daily agenda and patient requests</p>
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="flex justify-between items-end mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Specialist Workspace</h1>
+          <p className="text-gray-500 font-medium">Coordinate patient care and medical publications</p>
+        </div>
+        <button
+          onClick={() => setShowPublishModal(true)}
+          className="bg-red-600 text-white px-6 py-3.5 rounded-2xl font-bold flex items-center gap-2 shadow-xl shadow-red-100 hover:bg-red-700 transition-all active:scale-95"
+        >
+          <PenTool size={20} />
+          <span>Write Article</span>
+        </button>
       </div>
 
       {/* Tabs */}
-      <div className="flex space-x-1 bg-gray-100 p-1 rounded-xl w-fit mb-8">
-        {['queue', 'finance', 'publications'].map((tab) => (
+      <div className="flex space-x-2 bg-gray-100 p-1.5 rounded-2xl w-fit mb-10">
+        {[
+          { id: 'queue', label: "Patient Queue" },
+          { id: 'finance', label: 'Payment Verifications' },
+          { id: 'publications', label: 'My Articles' }
+        ].map((tab) => (
           <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-6 py-2 rounded-lg text-sm font-bold capitalize transition ${activeTab === tab ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${activeTab === tab.id
+              ? 'bg-white shadow-md text-red-600 scale-105'
+              : 'text-gray-500 hover:text-gray-700'
               }`}
           >
-            {tab === 'queue' ? "Today's Queue" : (tab === 'finance' ? 'Payment Verifications' : 'My Publications')}
+            {tab.label}
           </button>
         ))}
       </div>
 
       {activeTab === 'queue' && (
-        <div className="space-y-4">
-          {queue.length === 0 ? <p className="text-gray-500">No scheduled visits for today.</p> :
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {queue.length === 0 ? (
+            <div className="col-span-full py-20 text-center bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
+              <p className="text-gray-400 font-medium italic">No scheduled visits for today.</p>
+            </div>
+          ) : (
             queue.map((appt) => (
-              <div key={appt.id} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+              <div key={appt.id} className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-6 hover:shadow-xl transition-all group">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
+                  <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
                     {appt.patient.profileImage ? (
                       <img src={`http://localhost:5000/${appt.patient.profileImage}`} alt="Patient" className="w-full h-full object-cover" />
                     ) : (
-                      <User className="text-gray-400" />
+                      <User className="text-red-300" size={32} />
                     )}
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900">{appt.patient.fullName}</h3>
-                    <p className="text-sm text-gray-500">{appt.clinicalNotes} • {new Date(appt.scheduledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                    <h3 className="font-extrabold text-gray-900 text-lg">{appt.patient.fullName}</h3>
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      <span className="text-xs font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full uppercase">
+                        {appt.communicationMode || 'WhatsApp'}
+                      </span>
+                      <p className="text-xs text-gray-500 font-bold flex items-center gap-1">
+                        <Clock size={12} />
+                        {new Date(appt.scheduledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 w-full sm:w-auto">
                   <button
                     onClick={() => {
-                      const phone = appt.patient.phone.replace(/^0/, '251');
+                      const phone = appt.patientPhone.replace(/^0/, '251');
                       window.open(`https://wa.me/${phone}`, '_blank');
                     }}
-                    className="bg-green-50 text-green-600 px-4 py-2 rounded-lg text-sm font-bold hover:bg-green-100 transition">
-                    WhatsApp
+                    className="flex-1 sm:flex-none justify-center bg-green-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-green-100 hover:bg-green-700 transition">
+                    Message
                   </button>
                   <button
-                    onClick={() => {
-                      window.open(`https://t.me/+251${appt.patient.phone.substring(1)}`, '_blank');
-                    }}
-                    className="bg-blue-50 text-blue-600 px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-100 transition">
-                    Telegram
+                    className="flex-1 sm:flex-none justify-center bg-gray-100 text-gray-600 px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-gray-200 transition">
+                    Details
                   </button>
                 </div>
               </div>
-            ))}
+            ))
+          )}
         </div>
       )}
 
       {activeTab === 'finance' && (
-        <div className="space-y-4">
-          {finance.length === 0 ? <p className="text-gray-500">No pending payments.</p> :
+        <div className="max-w-4xl space-y-4">
+          {finance.length === 0 ? (
+            <div className="py-20 text-center bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
+              <p className="text-gray-400 font-medium italic">All payments are up to date.</p>
+            </div>
+          ) : (
             finance.map((item) => (
-              <div key={item.id} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <div>
-                  <h3 className="font-bold text-gray-900">{item.patient.fullName}</h3>
-                  <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
-                    <span className="font-mono bg-gray-100 px-2 rounded">500 ETB</span>
-                    {item.labResults && item.labResults.length > 0 && (
-                      <a
-                        href={`http://localhost:5000/${item.labResults[0].filePath}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-blue-500 underline cursor-pointer flex items-center gap-1"
-                      >
-                        <FileText size={12} /> View Receipt
-                      </a>
-                    )}
+              <div key={item.id} className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-6 hover:border-red-100 transition-all">
+                <div className="flex items-center gap-5">
+                  <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600">
+                    <Check size={24} />
+                  </div>
+                  <div>
+                    <h3 className="font-extrabold text-gray-900">{item.patient.fullName}</h3>
+                    <div className="flex items-center gap-4 mt-1">
+                      <span className="text-sm font-black text-gray-900">500 ETB</span>
+                      {item.labResults && item.labResults.length > 0 && (
+                        <a
+                          href={`http://localhost:5000/${item.labResults[0].filePath}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-red-600 text-xs font-bold hover:underline flex items-center gap-1"
+                        >
+                          <FileText size={14} /> View Receipt
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-3 w-full sm:w-auto">
                   <button
                     onClick={() => handleApprovePayment(item.id)}
-                    className="bg-green-50 text-green-600 p-2 rounded-lg hover:bg-green-100 transition"
-                    title="Approve"
+                    className="flex-1 sm:flex-none bg-green-500 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-green-100 hover:bg-green-600 transition"
                   >
-                    <Check size={20} />
+                    Confirm Payment
                   </button>
-                  <button className="bg-red-50 text-red-600 p-2 rounded-lg hover:bg-red-100 transition" title="Reject">
-                    <X size={20} />
+                  <button className="flex-1 sm:flex-none bg-red-50 text-red-600 px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-red-100 transition">
+                    Reject
                   </button>
                 </div>
               </div>
-            ))}
+            ))
+          )}
         </div>
       )}
 
       {activeTab === 'publications' && (
-        <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-          <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-            <PenTool className="text-red-600" /> Write New Article
-          </h2>
-          <form onSubmit={handlePublish} className="space-y-6 max-w-2xl">
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">Title (English)</label>
-                <input
-                  type="text" required
-                  className="w-full border p-3 rounded-xl focus:ring-2 focus:ring-red-500 outline-none"
-                  value={newArticle.titleEn}
-                  onChange={e => setNewArticle({ ...newArticle, titleEn: e.target.value })}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">Title (Amharic)</label>
-                <input
-                  type="text" required
-                  className="w-full border p-3 rounded-xl focus:ring-2 focus:ring-red-500 outline-none"
-                  value={newArticle.titleAm}
-                  onChange={e => setNewArticle({ ...newArticle, titleAm: e.target.value })}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">Cover Image</label>
-              <div className="flex gap-2 items-center">
-                {articleImagePreview ? (
-                  <img src={articleImagePreview} alt="Preview" className="w-16 h-16 rounded-xl object-cover" />
-                ) : (
-                  <span className="p-3 bg-gray-100 rounded-xl text-gray-500"><ImageIcon size={20} /></span>
-                )}
-
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="text-sm text-gray-500"
-                />
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">Content (English)</label>
-                <textarea
-                  required rows={4}
-                  className="w-full border p-3 rounded-xl focus:ring-2 focus:ring-red-500 outline-none"
-                  value={newArticle.contentEn}
-                  onChange={e => setNewArticle({ ...newArticle, contentEn: e.target.value })}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">Content (Amharic)</label>
-                <textarea
-                  required rows={4}
-                  className="w-full border p-3 rounded-xl focus:ring-2 focus:ring-red-500 outline-none"
-                  value={newArticle.contentAm}
-                  onChange={e => setNewArticle({ ...newArticle, contentAm: e.target.value })}
-                />
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              className="bg-red-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-red-700 transition"
-            >
-              Publish Article
-            </button>
-          </form>
-
-          {/* Article List Preview */}
-          <div className="mt-12 pt-8 border-t">
-            <h3 className="font-bold text-lg mb-4">My Articles</h3>
-            <div className="space-y-4">
-              {articles.map(article => (
-                <div key={article.id} className="flex gap-4 p-4 border rounded-xl">
-                  <div className="font-bold flex-1">{article.titleEn}</div>
-                  <button className="text-red-600 text-sm font-bold">Edit</button>
+        <div className="space-y-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {articles.map(article => (
+              <div key={article.id} className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 group hover:shadow-xl transition-all">
+                <div className="h-48 bg-gray-100 relative">
+                  {article.image && (
+                    <img src={`http://localhost:5000/${article.image}`} alt={article.titleEn} className="w-full h-full object-cover" />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent p-6 flex flex-col justify-end">
+                    <p className="text-white font-bold line-clamp-2">{article.titleEn}</p>
+                  </div>
                 </div>
-              ))}
-            </div>
+                <div className="p-6 flex justify-between items-center">
+                  <span className="text-xs text-gray-400 font-bold">{new Date(article.published_at).toLocaleDateString()}</span>
+                  <div className="flex gap-2">
+                    <button className="text-gray-400 hover:text-red-600 transition p-2"><X size={18} /></button>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <button
+              onClick={() => setShowPublishModal(true)}
+              className="rounded-3xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center p-10 text-gray-400 hover:border-red-300 hover:text-red-600 transition-all bg-gray-50/50"
+            >
+              <Plus size={40} className="mb-4" />
+              <span className="font-bold">Write New Article</span>
+            </button>
           </div>
         </div>
+      )}
+
+      {/* Modals */}
+      {showPublishModal && (
+        <PublishArticleModal
+          onClose={() => setShowPublishModal(false)}
+          onSuccess={() => {
+            fetchArticles();
+            setShowPublishModal(false);
+          }}
+        />
       )}
     </div>
   );

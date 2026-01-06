@@ -4,12 +4,15 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const v1Router = require('./v1/routes/index');
 
+const path = require('path');
+
 const app = express();
 
 // --- GLOBAL MIDDLEWARE & SECURITY ---
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use('/storage', express.static(path.join(__dirname, '../storage')));
 
 // Request Logging Middleware
 app.use((req, res, next) => {

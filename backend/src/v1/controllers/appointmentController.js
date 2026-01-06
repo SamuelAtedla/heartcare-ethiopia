@@ -50,6 +50,7 @@ const appointmentController = {
 
   // 8. DOCTOR/ADMIN: Approve Payment
   approvePayment: async (req, res) => {
+    console.log("Approve payment started");
     try {
       const { appointmentId } = req.body;
       console.log(`Payment Approval Request for Appt: ${appointmentId} by User ${req.user.id}`);

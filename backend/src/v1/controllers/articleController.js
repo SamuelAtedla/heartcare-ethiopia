@@ -1,13 +1,29 @@
 const { Article } = require('../../models');
 
 const createArticle = async (req, res) => {
+    console.log("creating article started", req.body);
+
+    // Multer populates req.body and req.file
+    const { titleEn, titleAm, contentEn, contentAm } = req.body;
+
+    if (!titleEn || !titleAm) {
+        return res.status(400).json({ error: 'Missing required article fields' });
+    }
+
     try {
         const article = await Article.create({
-            ...req.body,
+            titleEn: titleEn,
+            titleAm: titleAm,
+            contentEn: contentEn,
+            contentAm: contentAm,
+            image: req.file ? req.file.path : null,
             doctorId: req.user.id
         });
+
+        console.log(`Article created successfully: ${article.id}`);
         res.status(201).json(article);
     } catch (error) {
+        console.error('Create Article Error:', error);
         res.status(500).json({ error: 'Failed to create article' });
     }
 };
