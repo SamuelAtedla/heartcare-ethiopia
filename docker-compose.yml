@@ -18,16 +18,19 @@ services:
     build: ./backend
     container_name: heartcare_backend
     restart: always
+    command: npm start
     depends_on:
       - db
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - DB_URL=postgres://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@db:5432/${DB_NAME:-heartcare_ethiopia}
       - JWT_SECRET=${JWT_SECRET:-650c7fccc70c57928e9cba2a5aa91230c0b29abf5594ed1da0a4083b662e1c1e}
       - PORT=5000
     ports:
       - "5000:5000"
     volumes:
+      - ./backend:/app
+      - /app/node_modules
       - ./backend/storage:/app/storage
 
   frontend:
