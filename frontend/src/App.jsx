@@ -10,7 +10,9 @@ import LandingPage from "./pages/LandingPage";
 import ServicesPage from "./pages/ServicesPage";
 import Login from "./pages/Login";
 import PatientDashboard from "./pages/Patient/PatientDashboard";
+import PatientSettings from "./pages/Patient/PatientSettings";
 import DoctorDashboard from "./pages/Doctor/DoctorDashboard";
+import DoctorSettings from "./pages/Doctor/DoctorSettings";
 import FinanceManager from "./pages/Doctor/components/FinanceManager";
 import PatientArchive from "./pages/Doctor/components/PatientArchive";
 import HomeRoute from "./components/HomeRoute";
@@ -35,6 +37,7 @@ function App() {
             </ProtectedRoute>
           }>
             <Route path="dashboard" element={<PatientDashboard />} />
+            <Route path="settings" element={<PatientSettings />} />
             {/* Redirect root /patient to /patient/dashboard */}
             <Route index element={<Navigate to="dashboard" replace />} />
           </Route>
@@ -48,6 +51,7 @@ function App() {
             <Route path="dashboard" element={<DoctorDashboard />} />
             <Route path="finance" element={<FinanceManager />} />
             <Route path="archive" element={<PatientArchive />} />
+            <Route path="settings" element={<DoctorSettings />} />
             {/* Redirect root /doctor to /doctor/dashboard */}
             <Route index element={<Navigate to="dashboard" replace />} />
           </Route>

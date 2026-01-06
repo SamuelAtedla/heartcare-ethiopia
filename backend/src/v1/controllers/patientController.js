@@ -14,6 +14,24 @@ const getPatientHistory = async (req, res) => {
   }
 };
 
+const updateProfile = async (req, res) => {
+  try {
+    const { fullName, age, phone } = req.body;
+    console.log(`Updating Profile for Patient: ${req.user.id}`);
+
+    await User.update(
+      { fullName, age, phone },
+      { where: { id: req.user.id } }
+    );
+
+    res.json({ message: 'Profile updated successfully.' });
+  } catch (error) {
+    console.error("Patient Profile Update Error:", error);
+    res.status(500).json({ error: 'Profile update failed.' });
+  }
+};
+
 module.exports = {
-  getPatientHistory
+  getPatientHistory,
+  updateProfile
 };

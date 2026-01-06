@@ -120,11 +120,11 @@ const getFinanceRecords = async (req, res) => {
 // 5. Update Doctor Profile
 const updateProfile = async (req, res) => {
   try {
-    const { bio, specialty, credentials } = req.body;
+    const { fullName, bio, specialty, credentials, phone } = req.body;
     console.log(`Updating Profile for Doctor: ${req.user.id}`);
 
     await User.update(
-      { bio, specialty, credentials },
+      { fullName, bio, specialty, credentials, phone },
       { where: { id: req.user.id } }
     );
 
