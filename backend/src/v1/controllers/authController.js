@@ -99,7 +99,8 @@ const login = async (req, res) => {
                     id: user.id,
                     fullName: user.fullName,
                     role: user.role,
-                    profileImage: user.profileImage
+                    profileImage: user.profileImage,
+                    phone: user.phone
                 }
             }
         });

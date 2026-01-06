@@ -1,26 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Upload, CheckCircle, Clock, FileText, AlertCircle } from 'lucide-react';
+import { Plus, Upload, FileText, Clock } from 'lucide-react';
 import apiClient from '../../api/axiosConfig';
+import BookingModal from '../../components/BookingModal';
 
 const PatientDashboard = () => {
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
-
-    // Booking States
     const [showBooking, setShowBooking] = useState(false);
-    const [doctors, setDoctors] = useState([]);
-    const [selectedDoctor, setSelectedDoctor] = useState(null);
-    const [selectedDate, setSelectedDate] = useState('');
-    const [availableSlots, setAvailableSlots] = useState([]);
-    const [selectedSlot, setSelectedSlot] = useState('');
-    const [bookingNote, setBookingNote] = useState('');
-    const [submitting, setSubmitting] = useState(false);
 
-    // Fetch History & Doctors
     useEffect(() => {
         fetchHistory();
-        fetchDoctors();
     }, []);
 
     const fetchHistory = async () => {
@@ -31,59 +21,6 @@ const PatientDashboard = () => {
             console.error('Error fetching history:', error);
         } finally {
             setLoading(false);
-        }
-    };
-
-    const fetchDoctors = async () => {
-        try {
-            const response = await apiClient.get('/public/doctors');
-            setDoctors(response.data);
-        } catch (error) {
-            console.error('Error fetching doctors:', error);
-        }
-    };
-
-    const fetchSlots = async (doctorId, date) => {
-        if (!doctorId || !date) return;
-        try {
-            const response = await apiClient.get('/appointments/availability', {
-                params: { doctorId, date }
-            });
-            setAvailableSlots(response.data.availableSlots || []);
-        } catch (error) {
-            console.error('Error fetching slots:', error);
-            setAvailableSlots([]);
-        }
-    };
-
-    const handleBookAppointment = async () => {
-        if (!selectedDoctor || !selectedDate || !selectedSlot) {
-            alert('Please select doctor, date and time slot.');
-            return;
-        }
-
-        setSubmitting(true);
-        try {
-            await apiClient.post('/appointments/book', {
-                doctorId: selectedDoctor.id,
-                scheduledAt: selectedSlot,
-                clinicalNotes: bookingNote
-            });
-
-            setShowBooking(false);
-            // Reset form
-            setSelectedDoctor(null);
-            setSelectedDate('');
-            setSelectedSlot('');
-            setBookingNote('');
-
-            fetchHistory(); // Refresh timeline
-            alert('Appointment reserved! Please upload your payment receipt to confirm.');
-        } catch (error) {
-            console.error('Booking failed:', error);
-            alert(error.response?.data?.error || 'Booking failed. Please try again.');
-        } finally {
-            setSubmitting(false);
         }
     };
 
@@ -99,7 +36,6 @@ const PatientDashboard = () => {
             formData.append('receipt', file);
             endpoint = `/appointments/${appointmentId}/upload-receipt`;
         } else {
-            // Lab Results (can be multiple, but simplifying to single for this UI action)
             formData.append('labResults', file);
             endpoint = `/appointments/${appointmentId}/upload-results`;
         }
@@ -109,7 +45,7 @@ const PatientDashboard = () => {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             alert(`${type === 'receipt' ? 'Receipt' : 'Lab Result'} uploaded successfully!`);
-            fetchHistory(); // Refresh to show updated status
+            fetchHistory();
         } catch (error) {
             console.error('Upload failed:', error);
             alert('Upload failed. Please try again.');
@@ -118,170 +54,103 @@ const PatientDashboard = () => {
         }
     };
 
-    if (loading) return <div className="p-8 text-center text-gray-500">Loading your records...</div>;
+    if (loading) return (
+        <div className="flex items-center justify-center min-h-[400px]">
+            <div className="flex flex-col items-center gap-4">
+                <div className="w-10 h-10 border-4 border-red-100 border-t-red-600 rounded-full animate-spin" />
+                <p className="text-gray-500 font-medium animate-pulse">Syncing your health records...</p>
+            </div>
+        </div>
+    );
 
     return (
-        <div className="max-w-4xl mx-auto">
-            <div className="flex justify-between items-center mb-8">
+        <div className="max-w-4xl mx-auto px-4 py-8">
+            <div className="flex justify-between items-center mb-10">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">My Care Timeline</h1>
-                    <p className="text-gray-500">Track your appointments and health records</p>
+                    <h1 className="text-3xl font-bold text-gray-900 tracking-tight">My Care Timeline</h1>
+                    <p className="text-gray-500 font-medium">Your journey to a healthier heart</p>
                 </div>
                 <button
                     onClick={() => setShowBooking(true)}
-                    className="bg-red-600 text-white px-4 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-red-100 hover:bg-red-700 transition"
+                    className="bg-red-600 text-white px-6 py-3.5 rounded-2xl font-bold flex items-center gap-2.5 shadow-xl shadow-red-100 hover:bg-red-700 hover:shadow-red-200 transition-all active:scale-95"
                 >
                     <Plus size={20} />
-                    <span className="hidden sm:inline">Book Appointment</span>
+                    <span>Book Consultation</span>
                 </button>
             </div>
 
-            {/* Booking Modal */}
+            {/* Booking Modal Injection */}
             {showBooking && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-300">
-                        <div className="bg-red-600 p-6 text-white text-center">
-                            <h2 className="text-xl font-bold">New Appointment</h2>
-                            <p className="opacity-80 text-sm">Select a doctor and available slot</p>
-                        </div>
-
-                        <div className="p-8 space-y-6 max-h-[70vh] overflow-y-auto">
-                            {/* Doctor Selection */}
-                            <div>
-                                <label className="block text-xs font-bold text-gray-400 uppercase mb-2">Select Specialist</label>
-                                <div className="grid grid-cols-1 gap-2">
-                                    {doctors.map(doc => (
-                                        <button
-                                            key={doc.id}
-                                            onClick={() => {
-                                                setSelectedDoctor(doc);
-                                                if (selectedDate) fetchSlots(doc.id, selectedDate);
-                                            }}
-                                            className={`p-3 rounded-xl border-2 transition text-left flex items-center gap-3 ${selectedDoctor?.id === doc.id ? 'border-red-600 bg-red-50' : 'border-gray-100 hover:border-red-200'}`}
-                                        >
-                                            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold">
-                                                {doc.fullName.charAt(0)}
-                                            </div>
-                                            <div>
-                                                <div className="font-bold text-gray-900">{doc.fullName}</div>
-                                                <div className="text-xs text-gray-500">{doc.specialty || 'Cardiologist'}</div>
-                                            </div>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Date Selection */}
-                            <div>
-                                <label className="block text-xs font-bold text-gray-400 uppercase mb-2">Preferred Date</label>
-                                <input
-                                    type="date"
-                                    min={new Date().toISOString().split('T')[0]}
-                                    value={selectedDate}
-                                    onChange={(e) => {
-                                        setSelectedDate(e.target.value);
-                                        if (selectedDoctor) fetchSlots(selectedDoctor.id, e.target.value);
-                                    }}
-                                    className="w-full p-3 rounded-xl border-2 border-gray-100 focus:border-red-600 outline-none text-gray-700"
-                                />
-                            </div>
-
-                            {/* Slot Selection */}
-                            {selectedDate && (
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-400 uppercase mb-2">Available Slots</label>
-                                    <div className="grid grid-cols-3 gap-2">
-                                        {availableSlots.length > 0 ? (
-                                            availableSlots.map(slot => (
-                                                <button
-                                                    key={slot}
-                                                    onClick={() => setSelectedSlot(slot)}
-                                                    className={`p-2 rounded-lg border text-sm font-medium transition ${selectedSlot === slot ? 'bg-red-600 border-red-600 text-white' : 'border-gray-200 hover:border-red-300'}`}
-                                                >
-                                                    {new Date(slot).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                </button>
-                                            ))
-                                        ) : (
-                                            <div className="col-span-3 text-center p-4 bg-gray-50 rounded-xl text-xs text-gray-500 italic">
-                                                No slots available for this selective date/doctor.
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Reason */}
-                            <div>
-                                <label className="block text-xs font-bold text-gray-400 uppercase mb-2">Reason for Visit</label>
-                                <textarea
-                                    placeholder="Heart palpitations, routine checkup..."
-                                    value={bookingNote}
-                                    onChange={(e) => setBookingNote(e.target.value)}
-                                    className="w-full p-3 rounded-xl border-2 border-gray-100 h-24 focus:border-red-600 outline-none text-gray-700"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="p-6 bg-gray-50 flex gap-3">
-                            <button
-                                onClick={() => setShowBooking(false)}
-                                className="flex-1 py-3 text-gray-600 font-bold hover:bg-gray-100 rounded-xl transition"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={handleBookAppointment}
-                                disabled={submitting || !selectedSlot}
-                                className={`flex-[2] py-3 rounded-xl font-bold text-white shadow-lg shadow-red-200 transition ${submitting || !selectedSlot ? 'bg-gray-300' : 'bg-red-600 hover:bg-red-700'}`}
-                            >
-                                {submitting ? 'Booking...' : 'Confirm Reservation'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <BookingModal
+                    onClose={() => setShowBooking(false)}
+                    onSuccess={() => {
+                        setShowBooking(false);
+                        fetchHistory();
+                    }}
+                />
             )}
 
             {appointments.length === 0 ? (
-                <div className="text-center py-12 bg-gray-50 rounded-xl border-dashed border-2 border-gray-200">
-                    <p className="text-gray-500 font-medium">No appointments found.</p>
-                    <p className="text-sm text-gray-400 mt-1">Book your first consultation to get started.</p>
+                <div className="text-center py-20 bg-gray-50 rounded-3xl border-dashed border-2 border-gray-200">
+                    <div className="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mx-auto mb-4">
+                        <Plus className="text-gray-300" size={32} />
+                    </div>
+                    <p className="text-gray-500 font-bold text-lg">No appointments yet</p>
+                    <p className="text-sm text-gray-400 mt-2 max-w-xs mx-auto">Start your care journey by booking a consultation with our heart specialists.</p>
                 </div>
             ) : (
-                <div className="space-y-6 relative border-l-2 border-gray-200 ml-4 pl-8 pb-4">
+                <div className="space-y-8 relative border-l-2 border-gray-100 ml-6 pl-10 pb-4">
                     {appointments.map((apt) => (
-                        <div key={apt.id} className="relative">
-                            {/* Timeline Dot */}
-                            <div className={`absolute -left-[41px] top-4 w-5 h-5 rounded-full border-4 border-white ${apt.status === 'confirmed' || apt.status === 'completed' ? 'bg-green-500' :
+                        <div key={apt.id} className="relative group">
+                            {/* Timeline Node */}
+                            <div className={`absolute -left-[51px] top-4 w-6 h-6 rounded-full border-4 border-white shadow-sm z-10 transition-transform group-hover:scale-110 ${apt.status === 'confirmed' || apt.status === 'completed' ? 'bg-green-500' :
                                 apt.status === 'pending_approval' ? 'bg-blue-500' : 'bg-amber-500'
                                 }`} />
 
-                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
-                                <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-                                    <div>
-                                        <div className="flex items-center gap-3 mb-1">
-                                            <span className="font-bold text-gray-900 text-lg">
+                            <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-xl hover:border-red-100 transition-all duration-300">
+                                <div className="flex flex-col md:flex-row justify-between md:items-center gap-6">
+                                    <div className="flex-1">
+                                        <div className="flex flex-wrap items-center gap-3 mb-3">
+                                            <span className="font-extrabold text-gray-900 text-xl tracking-tight">
                                                 {apt.clinicalNotes || 'Consultation'}
                                             </span>
-                                            <span className={`px-2 py-0.5 rounded-full text-xs font-bold uppercase ${apt.status === 'confirmed' ? 'bg-green-100 text-green-700' :
+                                            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${apt.status === 'confirmed' ? 'bg-green-100 text-green-700' :
                                                 apt.status === 'pending_approval' ? 'bg-blue-100 text-blue-700' :
                                                     'bg-amber-100 text-amber-700'
                                                 }`}>
                                                 {apt.status.replace('_', ' ')}
                                             </span>
                                         </div>
-                                        <div className="text-gray-500 text-sm flex items-center gap-4">
-                                            <span className="flex items-center gap-1">
-                                                <Clock size={14} /> {new Date(apt.scheduledAt).toLocaleDateString()}
-                                            </span>
-                                            {apt.doctor && <span>with {apt.doctor.fullName}</span>}
+
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-6 text-sm">
+                                            <div className="flex items-center gap-2 text-gray-500 font-medium">
+                                                <Clock size={16} className="text-red-500" />
+                                                {new Date(apt.scheduledAt).toLocaleDateString('en-US', {
+                                                    weekday: 'short',
+                                                    month: 'short',
+                                                    day: 'numeric',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                })}
+                                            </div>
+                                            {apt.doctor && (
+                                                <div className="flex items-center gap-2 text-gray-900 font-bold">
+                                                    <div className="w-5 h-5 bg-red-100 rounded-full flex items-center justify-center text-[10px] text-red-600">
+                                                        {apt.doctor.fullName.charAt(0)}
+                                                    </div>
+                                                    Dr. {apt.doctor.fullName}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
 
-                                    <div className="flex gap-2">
-                                        {/* Pending Payment -> Upload Receipt */}
+                                    <div className="flex flex-wrap gap-3">
                                         {apt.status === 'pending_payment' && (
-                                            <label className="cursor-pointer text-amber-600 font-bold text-sm bg-amber-50 px-4 py-2 rounded-lg hover:bg-amber-100 transition flex items-center gap-2">
-                                                {uploading ? 'Uploading...' : <><Upload size={16} /> Upload Receipt</>}
+                                            <label className="cursor-pointer group/btn flex items-center gap-2.5 bg-amber-600 text-white px-5 py-3 rounded-2xl font-bold text-sm shadow-lg shadow-amber-100 hover:bg-amber-700 transition-all">
+                                                {uploading ? (
+                                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                                ) : <Upload size={18} />}
+                                                <span>{uploading ? 'Uploading...' : 'Upload Receipt'}</span>
                                                 <input
                                                     type="file"
                                                     className="hidden"
@@ -291,10 +160,10 @@ const PatientDashboard = () => {
                                             </label>
                                         )}
 
-                                        {/* Confirmed -> Upload Lab Results */}
-                                        {apt.status === 'confirmed' && (
-                                            <label className="cursor-pointer text-blue-600 font-bold text-sm bg-blue-50 px-4 py-2 rounded-lg hover:bg-blue-100 transition flex items-center gap-2">
-                                                {uploading ? 'Uploading...' : <><FileText size={16} /> Upload Labs</>}
+                                        {(apt.status === 'confirmed' || apt.status === 'completed') && (
+                                            <label className="cursor-pointer flex items-center gap-2.5 bg-blue-600 text-white px-5 py-3 rounded-2xl font-bold text-sm shadow-lg shadow-blue-100 hover:bg-blue-700 transition-all">
+                                                <FileText size={18} />
+                                                <span>Upload Labs</span>
                                                 <input
                                                     type="file"
                                                     className="hidden"

@@ -73,7 +73,7 @@ const appointmentController = {
   // 2. PATIENT: Create pending booking
   createPendingAppointment: async (req, res) => {
     try {
-      const { doctorId, scheduledAt, clinicalNotes } = req.body;
+      const { doctorId, scheduledAt, clinicalNotes, communicationMode, patientPhone } = req.body;
       console.log(`Booking attempt: Patient ${req.user.id} -> Doctor ${doctorId} @ ${scheduledAt}`);
 
       // Check for conflicts
@@ -88,7 +88,8 @@ const appointmentController = {
 
       const appointment = await Appointment.create({
         patientId: req.user.id,
-        patientPhone: req.user.phone, // Include phone from user session
+        patientPhone: patientPhone || req.user.phone, // Use provided or default from session
+        communicationMode: communicationMode || 'whatsapp',
         doctorId,
         scheduledAt,
         clinicalNotes, // Initial reason
@@ -126,7 +127,7 @@ const appointmentController = {
       await Payment.create({
         appointmentId: appointment.id,
         amount: 500, // Fixed fee for now
-        status: 'pending_approval',
+        status: 'pending_verification',
         tx_ref: 'RECEIPT-' + Date.now(), // Mock TX Ref
       });
 
