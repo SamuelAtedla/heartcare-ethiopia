@@ -6,6 +6,7 @@
 const { Appointment, User, MedicalAttachment, Payment } = require('../../models');
 const { Op } = require('sequelize');
 const moment = require('moment'); // Use moment for easier time manipulation
+const { getRelativeStoragePath } = require('../../utils/fileHelper');
 
 const appointmentController = {
   // 1. PUBLIC: Fetch available time slots
@@ -142,7 +143,7 @@ const appointmentController = {
       await MedicalAttachment.create({
         appointmentId: appointment.id,
         fileName: 'Payment Receipt',
-        filePath: req.file.path,
+        filePath: getRelativeStoragePath(req.file.path), // Save relative path
         fileType: req.file.mimetype,
         fileSize: req.file.size
       });
@@ -171,7 +172,7 @@ const appointmentController = {
       const fileRecords = req.files.map(file => ({
         appointmentId,
         fileName: file.originalname,
-        filePath: file.path,
+        filePath: getRelativeStoragePath(file.path), // Save relative path
         fileType: file.mimetype,
         fileSize: file.size
       }));

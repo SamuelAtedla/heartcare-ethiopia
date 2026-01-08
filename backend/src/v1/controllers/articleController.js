@@ -1,7 +1,9 @@
 const { Article } = require('../../models');
+const { getRelativeStoragePath } = require('../../utils/fileHelper');
+const logger = require('../../utils/logger');
 
 const createArticle = async (req, res) => {
-    console.log("creating article started", req.body);
+    logger.info("Creating article", { userId: req.user.id });
 
     // Multer populates req.body and req.file
     const { titleEn, titleAm, contentEn, contentAm } = req.body;
@@ -16,14 +18,14 @@ const createArticle = async (req, res) => {
             titleAm: titleAm,
             contentEn: contentEn,
             contentAm: contentAm,
-            image: req.file ? req.file.path : null,
+            image: req.file ? getRelativeStoragePath(req.file.path) : null,
             doctorId: req.user.id
         });
 
-        console.log(`Article created successfully: ${article.id}`);
+        logger.info(`Article created successfully: ${article.id}`);
         res.status(201).json(article);
     } catch (error) {
-        console.error('Create Article Error:', error);
+        logger.error('Create Article Error:', error);
         res.status(500).json({ error: 'Failed to create article' });
     }
 };

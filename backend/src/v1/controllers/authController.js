@@ -2,6 +2,7 @@ const { User } = require('../../models');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const logger = require('../../utils/logger');
+const { getRelativeStoragePath } = require('../../utils/fileHelper');
 
 // Helper: Generate JWT
 const signToken = (id, role) => {
@@ -27,8 +28,8 @@ const register = async (req, res) => {
         // 3. Handle Profile Photo
         let profileImage = null;
         if (req.file) {
-            console.log(`Profile photo uploaded for ${phone}`);
-            profileImage = req.file.path; // Save file path to DB
+            logger.info(`Profile photo uploaded for ${phone}`);
+            profileImage = getRelativeStoragePath(req.file.path); // Save relative path
         }
 
         // 4. Create User
