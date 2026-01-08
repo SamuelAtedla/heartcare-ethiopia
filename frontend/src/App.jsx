@@ -9,6 +9,7 @@ import DashboardLayout from './layouts/DashboardLayout';
 import LandingPage from "./pages/LandingPage";
 import ServicesPage from "./pages/ServicesPage";
 import Login from "./pages/Login";
+import RegisterPatient from "./pages/RegisterPatient";
 import PatientDashboard from "./pages/Patient/PatientDashboard";
 import PatientSettings from "./pages/Patient/PatientSettings";
 import DoctorDashboard from "./pages/Doctor/DoctorDashboard";
@@ -29,6 +30,7 @@ function App() {
           <Route path="/" element={<HomeRoute />} />
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<RegisterPatient />} />
 
           {/* Protected Patient Routes */}
           <Route path="/patient" element={
