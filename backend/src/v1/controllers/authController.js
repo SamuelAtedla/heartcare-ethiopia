@@ -1,11 +1,12 @@
 const { User } = require('../../models');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const logger = require('../../utils/logger');
 
 // Helper: Generate JWT
-const signToken = (id, role, phone) => {
-    return jwt.sign({ id, role, phone }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN || '90d'
+const signToken = (id, role) => {
+    return jwt.sign({ id, role }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_IN || '7d'
     });
 };
 
