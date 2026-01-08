@@ -16,11 +16,21 @@ const getPatientHistory = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   try {
-    const { fullName, age, phone } = req.body;
+    const { fullName, age, phone, email } = req.body;
     console.log(`Updating Profile for Patient: ${req.user.id}`);
 
+    const updateData = {};
+    if (fullName) updateData.fullName = fullName;
+    if (age !== undefined) updateData.age = age;
+    if (email !== undefined) updateData.email = email;
+
+    // Guard phone similarly to doctor controller
+    if (phone && phone !== '' && phone !== 'undefined') {
+      updateData.phone = phone;
+    }
+
     await User.update(
-      { fullName, age, phone },
+      updateData,
       { where: { id: req.user.id } }
     );
 

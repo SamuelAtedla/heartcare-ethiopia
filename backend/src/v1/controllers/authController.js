@@ -11,7 +11,7 @@ const signToken = (id, role, phone) => {
 
 const register = async (req, res) => {
     try {
-        const { fullName, phone, password, role, age, caseDescription } = req.body;
+        const { fullName, phone, email, password, role, age, caseDescription } = req.body;
 
         // 1. Check if user already exists
         const existingUser = await User.findOne({ where: { phone } });
@@ -34,12 +34,10 @@ const register = async (req, res) => {
         const newUser = await User.create({
             fullName,
             phone,
+            email,
             password: hashedPassword,
             role: role || 'patient',
-            age, // Store age/case for patients
-            // For now, case description might go into clinical notes or specific field
-            // Assuming basic user model, we might need to add these fields or store in separate table
-            // Update User model later if needed for 'age' and 'caseDescription'
+            age,
             profileImage
         });
 
@@ -56,6 +54,8 @@ const register = async (req, res) => {
                 user: {
                     id: newUser.id,
                     fullName: newUser.fullName,
+                    email: newUser.email,
+                    phone: newUser.phone,
                     role: newUser.role,
                     profileImage: newUser.profileImage
                 }
@@ -98,6 +98,7 @@ const login = async (req, res) => {
                 user: {
                     id: user.id,
                     fullName: user.fullName,
+                    email: user.email,
                     role: user.role,
                     profileImage: user.profileImage,
                     phone: user.phone

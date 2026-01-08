@@ -12,6 +12,7 @@ const Login = () => {
     const [isRegistering, setIsRegistering] = useState(false);
     const [formData, setFormData] = useState({
         phone: '',
+        email: '',
         password: '',
         fullName: '',
         age: '',
@@ -45,6 +46,7 @@ const Login = () => {
                 // Multipart Request for Registration
                 const data = new FormData();
                 data.append('phone', formData.phone);
+                data.append('email', formData.email);
                 data.append('password', formData.password);
                 data.append('fullName', formData.fullName);
                 data.append('age', formData.age);
@@ -142,6 +144,21 @@ const Login = () => {
                                             className="w-full outline-none text-gray-700"
                                             placeholder="Abebe Kebede"
                                             value={formData.fullName}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="mb-4">
+                                    <label className="text-xs font-semibold text-gray-500 uppercase">Email Address</label>
+                                    <div className="flex items-center border rounded-lg px-3 py-2 mt-1">
+                                        <FileText size={20} className="text-gray-400 mr-2" />
+                                        <input
+                                            name="email"
+                                            type="email"
+                                            className="w-full outline-none text-gray-700"
+                                            placeholder="abebe@example.com"
+                                            value={formData.email}
                                             onChange={handleChange}
                                         />
                                     </div>

@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { User, Phone, Calendar, Save, Loader2, Camera, CheckCircle2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { User, Phone, Calendar, Mail, Save, Loader2, Camera, CheckCircle2 } from 'lucide-react';
 import apiClient from '../../api/axiosConfig';
 import { useAuth } from '../../context/AuthContext';
 
 const PatientSettings = () => {
-    const { user } = useAuth();
+    const { user, updateUser } = useAuth();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [formData, setFormData] = useState({
         fullName: user?.fullName || '',
         phone: user?.phone || '',
+        email: user?.email || '',
         age: user?.age || ''
     });
 
@@ -19,6 +20,10 @@ const PatientSettings = () => {
         setSuccess(false);
         try {
             await apiClient.put('/patient/profile', formData);
+
+            // Sync with global auth state
+            updateUser(formData);
+
             setSuccess(true);
             setTimeout(() => setSuccess(false), 3000);
         } catch (error) {
@@ -84,6 +89,20 @@ const PatientSettings = () => {
                                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                         className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 ring-red-100 transition-all font-medium"
                                         placeholder="+251..."
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Email Address</label>
+                                <div className="relative group">
+                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-600 transition-colors" size={18} />
+                                    <input
+                                        type="email"
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                        className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 ring-red-100 transition-all font-medium"
+                                        placeholder="john@example.com"
                                     />
                                 </div>
                             </div>
