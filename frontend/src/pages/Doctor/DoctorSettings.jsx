@@ -83,7 +83,7 @@ const DoctorSettings = () => {
         }
     };
 
-    const currentImage = previewUrl || (user?.profileImage ? (user.profileImage.startsWith('http') ? user.profileImage : `http://localhost:5000/${user.profileImage}`) : null);
+    const currentImage = previewUrl || (user?.profileImage ? (user.profileImage.startsWith('http') ? user.profileImage : `http://localhost:5000/ ${user.profileImage}`) : null);
 
     return (
         <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-500">

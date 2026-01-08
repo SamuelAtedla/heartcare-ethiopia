@@ -125,7 +125,7 @@ const updateProfile = async (req, res) => {
 
     if (req.file) {
       console.log(`New profile image uploaded for Doctor: ${req.user.id}`);
-      profileImage = `storage/${req.file.filename}`;
+      profileImage = `storage/profiles/${req.file.filename}`;
     }
 
     console.log(`Updating Profile for Doctor: ${req.user.id}`);

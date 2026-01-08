@@ -8,7 +8,7 @@ const PatientSettings = () => {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [formData, setFormData] = useState({
-        fullName: user?.name || '',
+        fullName: user?.fullName || '',
         phone: user?.phone || '',
         age: user?.age || ''
     });
