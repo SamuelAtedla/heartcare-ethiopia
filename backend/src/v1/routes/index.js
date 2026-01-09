@@ -6,6 +6,7 @@ const doctorRoutes = require('./doctorRoutes');
 const patientRoutes = require('./patientRoutes');
 const webhookRoutes = require('./webhookRoutes');
 const publicRoutes = require('./publicRoutes');
+const availabilityRoutes = require('./availabilityRoutes');
 
 // Categorized Middlewares
 const { authenticate, authorize } = require('../middleware/auth');
@@ -15,6 +16,7 @@ router.use('/public', publicRoutes);
 router.use('/appointments', authenticate, appointmentRoutes);
 router.use('/patient', authenticate, patientRoutes);
 router.use('/doctor', authenticate, doctorRoutes);
+router.use('/availability', authenticate, availabilityRoutes);
 router.use('/webhooks', webhookRoutes);
 
 module.exports = router;

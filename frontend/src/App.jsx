@@ -15,6 +15,7 @@ import PatientRecords from "./pages/Patient/PatientRecords";
 import PatientSettings from "./pages/Patient/PatientSettings";
 import DoctorDashboard from "./pages/Doctor/DoctorDashboard";
 import DoctorSettings from "./pages/Doctor/DoctorSettings";
+import ScheduleManager from "./pages/Doctor/ScheduleManager";
 import FinanceManager from "./pages/Doctor/components/FinanceManager";
 import PatientArchive from "./pages/Doctor/components/PatientArchive";
 import HomeRoute from "./components/HomeRoute";
@@ -56,6 +57,7 @@ function App() {
             <Route path="finance" element={<FinanceManager />} />
             <Route path="archive" element={<PatientArchive />} />
             <Route path="settings" element={<DoctorSettings />} />
+            <Route path="schedule" element={<ScheduleManager />} />
             {/* Redirect root /doctor to /doctor/dashboard */}
             <Route index element={<Navigate to="dashboard" replace />} />
           </Route>

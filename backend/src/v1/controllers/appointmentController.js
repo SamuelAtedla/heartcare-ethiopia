@@ -3,7 +3,7 @@
 //const axios = require('axios');
 //const { v4: uuidv4 } = require('uuid');
 
-const { Appointment, User, MedicalAttachment, Payment } = require('../../models');
+const { Appointment, User, MedicalAttachment, Payment, Availability } = require('../../models');
 const { Op } = require('sequelize');
 const moment = require('moment'); // Use moment for easier time manipulation
 const { getRelativeStoragePath } = require('../../utils/fileHelper');
@@ -14,12 +14,32 @@ const appointmentController = {
     try {
       const { date, doctorId } = req.query;
       console.log(`Checking availability for Doctor ${doctorId} on ${date}`);
-      const slotDuration = 30; // 30-minute intervals
+      const dayOfWeek = moment(date).day();
+      const availability = await Availability.findOne({
+        where: { doctorId, dayOfWeek, isActive: true }
+      });
+
+      if (!availability) {
+        console.log(`No active availability found for Doctor ${doctorId} on Day ${dayOfWeek}`);
+        return res.json({ date, availableSlots: [] });
+      }
+
+      const { startTime, endTime, slotDuration } = availability;
+      const start = moment(date).set({
+        hour: startTime.split(':')[0],
+        minute: startTime.split(':')[1],
+        second: 0
+      });
+      const end = moment(date).set({
+        hour: endTime.split(':')[0],
+        minute: endTime.split(':')[1],
+        second: 0
+      });
 
       const confirmedAppts = await Appointment.findAll({
         where: {
           doctorId,
-          status: { [Op.or]: ['confirmed'] }, // Can add 'pending_approval' if we want to block those too
+          status: { [Op.or]: ['confirmed', 'pending_approval'] }, // Block pending approvals too
           scheduledAt: {
             [Op.between]: [
               moment(date).startOf('day').toDate(),
@@ -29,16 +49,13 @@ const appointmentController = {
         }
       });
 
-      const startHour = 9; // 9 AM
-      const endHour = 17; // 5 PM
       let availableSlots = [];
+      let current = start.clone();
 
-      for (let hr = startHour; hr < endHour; hr++) {
-        for (let min = 0; min < 60; min += slotDuration) {
-          const slot = moment(date).hour(hr).minute(min).second(0);
-          const isTaken = confirmedAppts.some(a => moment(a.scheduledAt).isSame(slot));
-          if (!isTaken) availableSlots.push(slot.format());
-        }
+      while (current.isBefore(end)) {
+        const isTaken = confirmedAppts.some(a => moment(a.scheduledAt).isSame(current));
+        if (!isTaken) availableSlots.push(current.format());
+        current.add(slotDuration, 'minutes');
       }
 
       console.log(`Available slots calculated: ${availableSlots.length}`);

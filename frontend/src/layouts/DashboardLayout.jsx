@@ -3,7 +3,7 @@ import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
     Heart, LayoutDashboard, Calendar, FileText,
-    Wallet, Settings, LogOut, Menu, X, User
+    Wallet, Settings, LogOut, Menu, X, User, Clock,
 } from 'lucide-react';
 
 const DashboardLayout = () => {
@@ -78,6 +78,7 @@ const DashboardLayout = () => {
                                 <NavItem to="/doctor/dashboard" icon={Calendar} label="My Tasks" />
                                 <NavItem to="/doctor/finance" icon={Wallet} label="Finance" />
                                 <NavItem to="/doctor/archive" icon={User} label="Patient Archive" />
+                                <NavItem to="/doctor/schedule" icon={Clock} label="Schedule" />
                                 <NavItem to="/doctor/settings" icon={Settings} label="Settings" />
                             </>
                         )}
