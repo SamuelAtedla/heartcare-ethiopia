@@ -1,3 +1,5 @@
+import React, { useState } from 'react';
+import { User, Clock, MessageSquare } from 'lucide-react';
 import { getFileUrl } from '../../../api/axiosConfig';
 import PatientDetailsModal from './PatientDetailsModal';
 
@@ -17,8 +19,8 @@ const QueueCard = ({ appointment }) => {
 
     return (
         <>
-            <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-6 hover:shadow-xl transition-all group">
-                <div className="flex items-center gap-4">
+            <div className="bg-white p-6 rounded-[32px] shadow-sm border border-gray-100 flex items-center justify-between gap-6 hover:shadow-xl transition-all group overflow-hidden">
+                <div className="flex items-center gap-5 flex-1 min-w-0">
                     <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
                         {patient.profileImage ? (
                             <img src={getFileUrl(patient.profileImage)} alt="Patient" className="w-full h-full object-cover" />
@@ -46,16 +48,16 @@ const QueueCard = ({ appointment }) => {
                     </div>
                 </div>
 
-                <div className="flex gap-2 w-full sm:w-auto">
+                <div className="flex gap-2 shrink-0">
                     <button
                         onClick={handleMessage}
-                        className="flex-1 sm:flex-none justify-center bg-red-50 text-red-600 px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-red-600 hover:text-white transition-all shadow-sm"
+                        className="bg-red-50 text-red-600 px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-red-600 hover:text-white transition-all shadow-sm whitespace-nowrap"
                     >
                         Message
                     </button>
                     <button
                         onClick={() => setShowDetails(true)}
-                        className="flex-1 sm:flex-none justify-center bg-gray-900 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-black transition-all shadow-lg"
+                        className="bg-gray-900 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-black transition-all shadow-lg whitespace-nowrap"
                     >
                         View Case
                     </button>
