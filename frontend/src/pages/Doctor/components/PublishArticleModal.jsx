@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, PenTool, Image as ImageIcon, Upload, Loader2 } from 'lucide-react';
-import apiClient from '../../../api/axiosConfig';
+import apiClient, { getFileUrl } from '../../../api/axiosConfig';
 
 const PublishArticleModal = ({ onClose, onSuccess, article }) => {
     const [formData, setFormData] = useState({
