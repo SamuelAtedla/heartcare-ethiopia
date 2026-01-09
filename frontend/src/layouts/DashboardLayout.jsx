@@ -75,7 +75,7 @@ const DashboardLayout = () => {
 
                         {user?.role === 'doctor' && (
                             <>
-                                <NavItem to="/doctor/dashboard" icon={Calendar} label="Today's Queue" />
+                                <NavItem to="/doctor/dashboard" icon={Calendar} label="My Tasks" />
                                 <NavItem to="/doctor/finance" icon={Wallet} label="Finance" />
                                 <NavItem to="/doctor/archive" icon={User} label="Patient Archive" />
                                 <NavItem to="/doctor/settings" icon={Settings} label="Settings" />
