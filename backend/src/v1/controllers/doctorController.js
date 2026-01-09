@@ -9,7 +9,11 @@ const getConfirmedQueue = async (req, res) => {
     const queue = await Appointment.findAll({
       where: {
         doctorId: req.user.id,
-        status: { [Op.or]: ['confirmed', 'pending_approval'] }
+        status: { [Op.or]: ['confirmed', 'pending_approval'] },
+        // Only show today and future appointments to keep queue relevant
+        scheduledAt: {
+          [Op.gte]: moment().startOf('day').toDate()
+        }
       },
       include: [{ model: User, as: 'patient', attributes: ['fullName', 'phone', 'profileImage', 'age'] }],
       order: [['scheduledAt', 'ASC']]

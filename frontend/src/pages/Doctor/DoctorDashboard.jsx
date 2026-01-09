@@ -23,7 +23,11 @@ const DoctorDashboard = () => {
   const fetchQueue = async () => {
     try {
       const response = await apiClient.get('/doctor/queue');
-      const fullQueue = response.data;
+      // Sort immediately to guarantee order regardless of backend quirks
+      const fullQueue = response.data.sort((a, b) =>
+        new Date(a.scheduledAt) - new Date(b.scheduledAt)
+      );
+
       setQueue(fullQueue.filter(a => a.status === 'confirmed'));
       setFinance(fullQueue.filter(a => a.status === 'pending_approval'));
       setLoading(false);

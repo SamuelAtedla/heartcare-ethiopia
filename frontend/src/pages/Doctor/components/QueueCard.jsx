@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { User, Clock, MessageSquare } from 'lucide-react';
+import moment from 'moment';
 import { getFileUrl } from '../../../api/axiosConfig';
 import PatientDetailsModal from './PatientDetailsModal';
 
@@ -31,7 +32,14 @@ const QueueCard = ({ appointment }) => {
                     <div>
                         <div className="flex items-center gap-2">
                             <h3 className="font-extrabold text-gray-900 text-lg">{patient.fullName}</h3>
-                            <span className="px-2 py-0.5 bg-gray-100 text-[10px] font-black uppercase text-gray-400 rounded-md">Today</span>
+                            <span className={`px-2 py-0.5 text-[10px] font-black uppercase rounded-md ${moment(scheduledAt).isSame(moment(), 'day')
+                                ? 'bg-red-50 text-red-600'
+                                : 'bg-gray-100 text-gray-400'
+                                }`}>
+                                {moment(scheduledAt).isSame(moment(), 'day') ? 'Today' :
+                                    moment(scheduledAt).isSame(moment().add(1, 'days'), 'day') ? 'Tomorrow' :
+                                        moment(scheduledAt).format('MMM D')}
+                            </span>
                         </div>
                         <div className="flex flex-wrap gap-2 mt-1">
                             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase flex items-center gap-1 ${communicationMode === 'zoom' ? 'bg-blue-50 text-blue-600' :
