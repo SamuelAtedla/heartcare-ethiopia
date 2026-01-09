@@ -34,4 +34,17 @@ apiClient.interceptors.response.use(
   }
 );
 
+// 4. File URL Utility
+export const getFileUrl = (path) => {
+  if (!path) return null;
+  if (path.startsWith('http')) return path;
+
+  // Get base URL without the /v1 suffix
+  const baseUrl = (import.meta.env.VITE_API_URL || 'http://localhost:5000/v1').replace('/v1', '');
+
+  // Clean the path and prepend /storage/
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  return `${baseUrl}/storage/${cleanPath}`;
+};
+
 export default apiClient;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PenTool, Check, FileText, User, Plus } from 'lucide-react';
-import apiClient from '../../api/axiosConfig';
+import apiClient, { getFileUrl } from '../../api/axiosConfig';
 import PublishArticleModal from './components/PublishArticleModal';
 import QueueCard from './components/QueueCard';
 
@@ -132,7 +132,7 @@ const DoctorDashboard = () => {
                       <span className="text-sm font-black text-gray-900">500 ETB</span>
                       {item.labResults && item.labResults.length > 0 && (
                         <a
-                          href={`http://localhost:5000/${item.labResults[0].filePath}`}
+                          href={getFileUrl(item.labResults[0].filePath)}
                           target="_blank"
                           rel="noreferrer"
                           className="text-red-600 text-xs font-bold hover:underline flex items-center gap-1"
@@ -167,7 +167,7 @@ const DoctorDashboard = () => {
               <div key={article.id} className="bg-white rounded-[32px] overflow-hidden shadow-sm border border-gray-100 group hover:shadow-xl transition-all">
                 <div className="h-48 bg-gray-100 relative overflow-hidden">
                   {article.image ? (
-                    <img src={`http://localhost:5000/${article.image}`} alt={article.titleEn} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <img src={getFileUrl(article.image)} alt={article.titleEn} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   ) : <div className="w-full h-full flex items-center justify-center bg-gray-50 text-gray-200"><PenTool size={48} /></div>}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 flex flex-col justify-end">
                     <p className="text-white font-bold leading-tight line-clamp-2">{article.titleEn}</p>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { User, Phone, Briefcase, FileText, Award, Save, Loader2, Camera, CheckCircle2 } from 'lucide-react';
-import apiClient from '../../api/axiosConfig';
+import apiClient, { getFileUrl } from '../../api/axiosConfig';
 import { useAuth } from '../../context/AuthContext';
 
 const DoctorSettings = () => {
@@ -83,7 +83,7 @@ const DoctorSettings = () => {
         }
     };
 
-    const currentImage = previewUrl || (user?.profileImage ? (user.profileImage.startsWith('http') ? user.profileImage : `http://localhost:5000/ ${user.profileImage}`) : null);
+    const currentImage = previewUrl || (user?.profileImage ? getFileUrl(user.profileImage) : null);
 
     return (
         <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-500">

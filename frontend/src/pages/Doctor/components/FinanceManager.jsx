@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Wallet, Search, Filter, Calendar, FileText, ChevronDown, Download, CheckCircle2, AlertCircle, Clock, XCircle, Loader2, User } from 'lucide-react';
-import apiClient from '../../../api/axiosConfig';
+import apiClient, { getFileUrl } from '../../../api/axiosConfig';
 
 const FinanceManager = () => {
     const [records, setRecords] = useState([]);
@@ -170,7 +170,7 @@ const FinanceManager = () => {
                                                 <div className="flex items-center gap-4">
                                                     <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center text-gray-400 overflow-hidden">
                                                         {record.patient?.profileImage ? (
-                                                            <img src={`http://localhost:5000/${record.patient.profileImage}`} className="w-full h-full object-cover" alt="" />
+                                                            <img src={getFileUrl(record.patient.profileImage)} className="w-full h-full object-cover" alt="" />
                                                         ) : <User size={18} />}
                                                     </div>
                                                     <div>
@@ -198,7 +198,7 @@ const FinanceManager = () => {
                                             <td className="px-8 py-6">
                                                 {record.labResults && record.labResults.length > 0 ? (
                                                     <a
-                                                        href={`http://localhost:5000/${record.labResults[0].filePath}`}
+                                                        href={getFileUrl(record.labResults[0].filePath)}
                                                         target="_blank"
                                                         rel="noreferrer"
                                                         className="p-2 bg-white border border-gray-100 rounded-xl text-gray-400 hover:text-red-600 hover:border-red-100 transition-all flex items-center justify-center w-fit shadow-sm"

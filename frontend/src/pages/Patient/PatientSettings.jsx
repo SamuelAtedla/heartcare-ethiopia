@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { User, Phone, Calendar, Mail, Save, Loader2, Camera, CheckCircle2 } from 'lucide-react';
-import apiClient from '../../api/axiosConfig';
+import apiClient, { getFileUrl } from '../../api/axiosConfig';
 import { useAuth } from '../../context/AuthContext';
 
 const PatientSettings = () => {
@@ -49,7 +49,7 @@ const PatientSettings = () => {
                         <div className="relative w-32 h-32 mx-auto mb-6">
                             <div className="w-full h-full rounded-[40px] bg-red-50 flex items-center justify-center text-red-600 overflow-hidden border-4 border-white shadow-xl">
                                 {user?.profileImage ? (
-                                    <img src={`http://localhost:5000/${user.profileImage}`} className="w-full h-full object-cover" alt="" />
+                                    <img src={getFileUrl(user.profileImage)} className="w-full h-full object-cover" alt="" />
                                 ) : <User size={48} />}
                             </div>
                             <button className="absolute -right-2 -bottom-2 w-10 h-10 bg-gray-900 text-white rounded-2xl flex items-center justify-center hover:bg-black transition-all border-4 border-white shadow-lg">

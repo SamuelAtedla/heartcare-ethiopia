@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { User, Clock, MessageSquare } from 'lucide-react';
+import { getFileUrl } from '../../../api/axiosConfig';
 import PatientDetailsModal from './PatientDetailsModal';
 
 const QueueCard = ({ appointment }) => {
@@ -22,7 +21,7 @@ const QueueCard = ({ appointment }) => {
                 <div className="flex items-center gap-4">
                     <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
                         {patient.profileImage ? (
-                            <img src={`http://localhost:5000/${patient.profileImage}`} alt="Patient" className="w-full h-full object-cover" />
+                            <img src={getFileUrl(patient.profileImage)} alt="Patient" className="w-full h-full object-cover" />
                         ) : (
                             <User className="text-red-300" size={32} />
                         )}

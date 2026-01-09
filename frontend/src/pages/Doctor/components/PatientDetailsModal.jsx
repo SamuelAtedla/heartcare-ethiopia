@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, User, Phone, Calendar, Clock, FileText, ClipboardList, Loader2, Save } from 'lucide-react';
-import apiClient from '../../../api/axiosConfig';
+import apiClient, { getFileUrl } from '../../../api/axiosConfig';
 
 const PatientDetailsModal = ({ appointment, onClose }) => {
     const [clinicalNotes, setClinicalNotes] = useState(appointment?.clinicalNotes || '');
@@ -38,7 +38,7 @@ const PatientDetailsModal = ({ appointment, onClose }) => {
                     <div className="flex items-center gap-6">
                         <div className="w-24 h-24 rounded-3xl bg-white/10 border border-white/20 flex items-center justify-center overflow-hidden">
                             {patient.profileImage ? (
-                                <img src={`http://localhost:5000/${patient.profileImage}`} alt="Patient" className="w-full h-full object-cover" />
+                                <img src={getFileUrl(patient.profileImage)} alt="Patient" className="w-full h-full object-cover" />
                             ) : (
                                 <User className="text-white/40" size={48} />
                             )}

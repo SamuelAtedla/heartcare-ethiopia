@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, User, Phone, Calendar, Clock, ChevronRight, FileText, ClipboardList, Loader2, History } from 'lucide-react';
-import apiClient from '../../../api/axiosConfig';
+import apiClient, { getFileUrl } from '../../../api/axiosConfig';
 
 const PatientArchive = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -74,7 +74,7 @@ const PatientArchive = () => {
                             >
                                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${selectedPatient?.id === patient.id ? 'bg-white/20' : 'bg-red-50 text-red-600'}`}>
                                     {patient.profileImage ? (
-                                        <img src={`http://localhost:5000/${patient.profileImage}`} alt="" className="w-full h-full object-cover rounded-xl" />
+                                        <img src={getFileUrl(patient.profileImage)} alt="" className="w-full h-full object-cover rounded-xl" />
                                     ) : (
                                         <User size={24} />
                                     )}
@@ -115,7 +115,7 @@ const PatientArchive = () => {
                             <div className="flex items-center gap-6">
                                 <div className="w-20 h-20 rounded-2xl bg-white/10 p-1">
                                     {selectedPatient.profileImage ? (
-                                        <img src={`http://localhost:5000/${selectedPatient.profileImage}`} alt="" className="w-full h-full object-cover rounded-xl" />
+                                        <img src={getFileUrl(selectedPatient.profileImage)} alt="" className="w-full h-full object-cover rounded-xl" />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-white/20"><User size={40} /></div>
                                     )}

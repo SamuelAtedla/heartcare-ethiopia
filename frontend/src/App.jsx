@@ -11,6 +11,7 @@ import ServicesPage from "./pages/ServicesPage";
 import Login from "./pages/Login";
 import RegisterPatient from "./pages/RegisterPatient";
 import PatientDashboard from "./pages/Patient/PatientDashboard";
+import PatientRecords from "./pages/Patient/PatientRecords";
 import PatientSettings from "./pages/Patient/PatientSettings";
 import DoctorDashboard from "./pages/Doctor/DoctorDashboard";
 import DoctorSettings from "./pages/Doctor/DoctorSettings";
@@ -39,6 +40,7 @@ function App() {
             </ProtectedRoute>
           }>
             <Route path="dashboard" element={<PatientDashboard />} />
+            <Route path="records" element={<PatientRecords />} />
             <Route path="settings" element={<PatientSettings />} />
             {/* Redirect root /patient to /patient/dashboard */}
             <Route index element={<Navigate to="dashboard" replace />} />
