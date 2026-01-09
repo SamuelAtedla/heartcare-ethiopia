@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { User, Phone, Calendar, Mail, Save, Loader2, Camera, CheckCircle2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import apiClient, { getFileUrl } from '../../api/axiosConfig';
 import { useAuth } from '../../context/AuthContext';
 
 const PatientSettings = () => {
+    const { t } = useTranslation();
     const { user, updateUser } = useAuth();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -37,8 +39,8 @@ const PatientSettings = () => {
         <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-black text-gray-900 tracking-tight">Account Settings</h1>
-                    <p className="text-gray-500 font-medium">Manage your personal information and profile preferences.</p>
+                    <h1 className="text-3xl font-black text-gray-900 tracking-tight">{t('accountSettings')}</h1>
+                    <p className="text-gray-500 font-medium">{t('settingsDesc')}</p>
                 </div>
             </div>
 
@@ -57,7 +59,7 @@ const PatientSettings = () => {
                             </button>
                         </div>
                         <h3 className="font-black text-xl text-gray-900">{formData.fullName}</h3>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mt-1">Patient Member</p>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mt-1">{t('patientMember')}</p>
                     </div>
                 </div>
 
@@ -66,7 +68,7 @@ const PatientSettings = () => {
                     <form onSubmit={handleSubmit} className="bg-white rounded-[40px] border border-gray-100 p-8 shadow-sm space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Full Name</label>
+                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">{t('labelName')}</label>
                                 <div className="relative group">
                                     <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-600 transition-colors" size={18} />
                                     <input
@@ -80,7 +82,7 @@ const PatientSettings = () => {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Phone Number</label>
+                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">{t('labelPhone')}</label>
                                 <div className="relative group">
                                     <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-600 transition-colors" size={18} />
                                     <input
@@ -94,7 +96,7 @@ const PatientSettings = () => {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Email Address</label>
+                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">{t('labelEmail')}</label>
                                 <div className="relative group">
                                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-600 transition-colors" size={18} />
                                     <input
@@ -108,7 +110,7 @@ const PatientSettings = () => {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Age</label>
+                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">{t('labelAge')}</label>
                                 <div className="relative group">
                                     <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-600 transition-colors" size={18} />
                                     <input
@@ -129,12 +131,12 @@ const PatientSettings = () => {
                                 className="flex-1 bg-red-600 text-white font-black uppercase text-xs tracking-[0.2em] py-4 rounded-2xl hover:bg-red-700 transition-all shadow-xl shadow-red-100 flex items-center justify-center gap-2"
                             >
                                 {loading ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
-                                Save Changes
+                                {t('btnSaveChanges')}
                             </button>
                             {success && (
                                 <div className="flex items-center gap-2 text-green-600 font-bold text-sm animate-in slide-in-from-left-2">
                                     <CheckCircle2 size={18} />
-                                    Saved!
+                                    {t('saved')}
                                 </div>
                             )}
                         </div>

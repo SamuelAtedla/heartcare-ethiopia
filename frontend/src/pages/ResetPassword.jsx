@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import apiClient from '../api/axiosConfig';
 import { Lock, CheckCircle, ArrowLeft } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const ResetPassword = () => {
+    const { t } = useTranslation();
     const { token } = useParams();
     const navigate = useNavigate();
     const [password, setPassword] = useState('');
@@ -19,7 +21,7 @@ const ResetPassword = () => {
         setError('');
 
         if (password !== confirmPassword) {
-            return setError('Passwords do not match');
+            return setError(t('passMismatch'));
         }
 
         setLoading(true);
@@ -27,14 +29,14 @@ const ResetPassword = () => {
         try {
             const response = await apiClient.post(`/auth/reset-password/${token}`, { password });
             setSuccess(true);
-            setMessage('Your password has been reset successfully. You can now login with your new password.');
+            setMessage(t('resetSuccess'));
 
             // Redirect to login after 3 seconds
             setTimeout(() => {
                 navigate('/login');
             }, 3000);
         } catch (err) {
-            setError(err.response?.data?.error || 'The reset link is invalid or has expired.');
+            setError(err.response?.data?.error || t('invalidResetLink'));
         } finally {
             setLoading(false);
         }
@@ -45,10 +47,10 @@ const ResetPassword = () => {
             <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
                 <div className="text-center">
                     <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-                        Reset Password
+                        {t('resetPassTitle')}
                     </h2>
                     <p className="mt-2 text-sm text-gray-600">
-                        Enter your new password below.
+                        {t('resetPassSubTitle')}
                     </p>
                 </div>
 
@@ -68,7 +70,7 @@ const ResetPassword = () => {
                     <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                         <div className="rounded-md shadow-sm space-y-4">
                             <div className="relative">
-                                <label className="text-xs font-semibold text-gray-500 uppercase">New Password</label>
+                                <label className="text-xs font-semibold text-gray-500 uppercase">{t('labelNewPassword')}</label>
                                 <div className="flex items-center border rounded-lg px-3 py-2 mt-1">
                                     <Lock size={20} className="text-gray-400 mr-2" />
                                     <input
@@ -84,7 +86,7 @@ const ResetPassword = () => {
                             </div>
 
                             <div className="relative">
-                                <label className="text-xs font-semibold text-gray-500 uppercase">Confirm Password</label>
+                                <label className="text-xs font-semibold text-gray-500 uppercase">{t('labelConfirmPassword')}</label>
                                 <div className="flex items-center border rounded-lg px-3 py-2 mt-1">
                                     <Lock size={20} className="text-gray-400 mr-2" />
                                     <input
@@ -106,7 +108,7 @@ const ResetPassword = () => {
                                 disabled={loading}
                                 className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-full text-white ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-300 shadow-lg hover:shadow-xl`}
                             >
-                                {loading ? 'Resetting...' : 'Reset Password'}
+                                {loading ? t('resetting') : t('btnResetPassword')}
                             </button>
                         </div>
                     </form>
@@ -115,9 +117,9 @@ const ResetPassword = () => {
                         <div className="flex justify-center mb-4">
                             <CheckCircle size={48} className="text-green-500" />
                         </div>
-                        <p className="text-gray-600 mb-6">Redirecting you to login page...</p>
+                        <p className="text-gray-600 mb-6">{t('redirectingLogin')}</p>
                         <Link to="/login" className="text-red-600 font-medium hover:text-red-500">
-                            Click here if not redirected
+                            {t('clickIfNotRedirected')}
                         </Link>
                     </div>
                 )}
@@ -126,7 +128,7 @@ const ResetPassword = () => {
                     <div className="text-center mt-4">
                         <Link to="/login" className="flex items-center justify-center text-sm font-medium text-gray-600 hover:text-red-600">
                             <ArrowLeft size={16} className="mr-1" />
-                            Back to Login
+                            {t('backToLogin')}
                         </Link>
                     </div>
                 )}

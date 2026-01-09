@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import apiClient from '../api/axiosConfig';
 import { Mail, ArrowLeft } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const ForgotPassword = () => {
+    const { t } = useTranslation();
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
@@ -17,7 +19,7 @@ const ForgotPassword = () => {
 
         try {
             const response = await apiClient.post('/auth/forgot-password', { email });
-            setMessage(response.data.message || 'If an account exists with this email, you will receive a reset link shortly.');
+            setMessage(response.data.message || t('resetLinkSent'));
 
             // For development: Show the link if it's returned by the backend
             if (response.data.resetURL) {
@@ -35,10 +37,10 @@ const ForgotPassword = () => {
             <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
                 <div className="text-center">
                     <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-                        Forgot Password?
+                        {t('forgotPassTitle')}
                     </h2>
                     <p className="mt-2 text-sm text-gray-600">
-                        Enter your email address and we'll send you a link to reset your password.
+                        {t('forgotPassSubTitle')}
                     </p>
                 </div>
 
@@ -57,7 +59,7 @@ const ForgotPassword = () => {
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     <div className="rounded-md shadow-sm space-y-4">
                         <div className="relative">
-                            <label className="text-xs font-semibold text-gray-500 uppercase">Email Address</label>
+                            <label className="text-xs font-semibold text-gray-500 uppercase">{t('labelEmail')}</label>
                             <div className="flex items-center border rounded-lg px-3 py-2 mt-1">
                                 <Mail size={20} className="text-gray-400 mr-2" />
                                 <input
@@ -79,14 +81,14 @@ const ForgotPassword = () => {
                             disabled={loading}
                             className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-full text-white ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-300 shadow-lg hover:shadow-xl`}
                         >
-                            {loading ? 'Sending...' : 'Send Reset Link'}
+                            {loading ? t('sending') : t('btnSendReset')}
                         </button>
                     </div>
 
                     <div className="text-center mt-4">
                         <Link to="/login" className="flex items-center justify-center text-sm font-medium text-gray-600 hover:text-red-600">
                             <ArrowLeft size={16} className="mr-1" />
-                            Back to Login
+                            {t('backToLogin')}
                         </Link>
                     </div>
                 </form>

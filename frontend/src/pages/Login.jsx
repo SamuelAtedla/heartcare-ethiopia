@@ -41,7 +41,7 @@ const Login = () => {
             }
         } catch (err) {
             console.error(err);
-            setError(err.response?.data?.error || 'Authentication failed. Please check your credentials.');
+            setError(err.response?.data?.error || t('authFailed'));
         } finally {
             setLoading(false);
         }
@@ -52,10 +52,10 @@ const Login = () => {
             <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
                 <div className="text-center">
                     <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-                        Welcome Back
+                        {t('loginWelcome')}
                     </h2>
                     <p className="mt-2 text-sm text-gray-600">
-                        Sign in to access your dashboard
+                        {t('loginSubTitle')}
                     </p>
                 </div>
 
@@ -68,7 +68,7 @@ const Login = () => {
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     <div className="rounded-md shadow-sm space-y-4">
                         <div className="relative">
-                            <label className="text-xs font-semibold text-gray-500 uppercase">Phone Number</label>
+                            <label className="text-xs font-semibold text-gray-500 uppercase">{t('labelPhone')}</label>
                             <div className="flex items-center border rounded-lg px-3 py-2 mt-1">
                                 <Phone size={20} className="text-gray-400 mr-2" />
                                 <input
@@ -84,7 +84,7 @@ const Login = () => {
                         </div>
 
                         <div className="relative">
-                            <label className="text-xs font-semibold text-gray-500 uppercase">Password</label>
+                            <label className="text-xs font-semibold text-gray-500 uppercase">{t('labelPassword')}</label>
                             <div className="flex items-center border rounded-lg px-3 py-2 mt-1">
                                 <Lock size={20} className="text-gray-400 mr-2" />
                                 <input
@@ -106,22 +106,22 @@ const Login = () => {
                             disabled={loading}
                             className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-full text-white ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-300 shadow-lg hover:shadow-xl`}
                         >
-                            {loading ? 'Processing...' : 'Sign in'}
+                            {loading ? t('processing') : t('btnSignIn')}
                         </button>
                     </div>
 
                     <div className="text-center mt-4">
                         <p className="text-sm text-gray-600">
-                            Don't have an account?{' '}
+                            {t('noAccount')}{' '}
                             <Link to="/register" className="font-medium text-red-600 hover:text-red-500">
-                                Register now
+                                {t('linkRegister')}
                             </Link>
                         </p>
                     </div>
 
                     <div className="text-center mt-2">
                         <Link to="/forgot-password" size="sm" className="text-xs text-gray-500 hover:text-gray-700">
-                            Forgot password?
+                            {t('linkForgotPass')}
                         </Link>
                     </div>
                 </form>

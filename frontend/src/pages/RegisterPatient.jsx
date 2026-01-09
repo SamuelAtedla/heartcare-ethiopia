@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import apiClient from '../api/axiosConfig';
 import { Lock, Phone, User, Camera, Calendar, FileText, Mail } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 
 const RegisterPatient = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { loginAction } = useAuth();
     const [formData, setFormData] = useState({
@@ -60,7 +62,7 @@ const RegisterPatient = () => {
 
         } catch (err) {
             console.error(err);
-            setError(err.response?.data?.error || 'Registration failed. Please check your data.');
+            setError(err.response?.data?.error || t('regFailed'));
         } finally {
             setLoading(false);
         }
@@ -70,8 +72,8 @@ const RegisterPatient = () => {
         <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
             <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
                 <div className="text-center">
-                    <h2 className="mt-6 text-3xl font-extrabold text-gray-900">Create Account</h2>
-                    <p className="mt-2 text-sm text-gray-600">Join Heart Care Ethiopia</p>
+                    <h2 className="mt-6 text-3xl font-extrabold text-gray-900">{t('registerTitle')}</h2>
+                    <p className="mt-2 text-sm text-gray-600">{t('registerSubTitle')}</p>
                 </div>
 
                 {error && (
@@ -83,7 +85,7 @@ const RegisterPatient = () => {
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     <div className="space-y-4">
                         <div>
-                            <label className="text-xs font-semibold text-gray-500 uppercase">Phone Number</label>
+                            <label className="text-xs font-semibold text-gray-500 uppercase">{t('labelPhone')}</label>
                             <div className="flex items-center border rounded-lg px-3 py-2 mt-1">
                                 <Phone size={20} className="text-gray-400 mr-2" />
                                 <input
@@ -99,7 +101,7 @@ const RegisterPatient = () => {
                         </div>
 
                         <div>
-                            <label className="text-xs font-semibold text-gray-500 uppercase">Full Name</label>
+                            <label className="text-xs font-semibold text-gray-500 uppercase">{t('labelName')}</label>
                             <div className="flex items-center border rounded-lg px-3 py-2 mt-1">
                                 <User size={20} className="text-gray-400 mr-2" />
                                 <input
@@ -115,7 +117,7 @@ const RegisterPatient = () => {
                         </div>
 
                         <div>
-                            <label className="text-xs font-semibold text-gray-500 uppercase">Email Address</label>
+                            <label className="text-xs font-semibold text-gray-500 uppercase">{t('labelEmail')}</label>
                             <div className="flex items-center border rounded-lg px-3 py-2 mt-1">
                                 <Mail size={20} className="text-gray-400 mr-2" />
                                 <input
@@ -130,7 +132,7 @@ const RegisterPatient = () => {
                         </div>
 
                         <div>
-                            <label className="text-xs font-semibold text-gray-500 uppercase">Age</label>
+                            <label className="text-xs font-semibold text-gray-500 uppercase">{t('labelAge')}</label>
                             <div className="flex items-center border rounded-lg px-3 py-2 mt-1">
                                 <Calendar size={20} className="text-gray-400 mr-2" />
                                 <input
@@ -146,13 +148,13 @@ const RegisterPatient = () => {
                         </div>
 
                         <div>
-                            <label className="text-xs font-semibold text-gray-500 uppercase">Case Description</label>
+                            <label className="text-xs font-semibold text-gray-500 uppercase">{t('labelCaseDesc')}</label>
                             <div className="flex items-start border rounded-lg px-3 py-2 mt-1">
                                 <FileText size={20} className="text-gray-400 mr-2 mt-1" />
                                 <textarea
                                     name="caseDescription"
                                     className="w-full outline-none text-gray-700 resize-none h-20"
-                                    placeholder="Describe your heart condition..."
+                                    placeholder={t('placeholderCaseDesc')}
                                     value={formData.caseDescription}
                                     onChange={handleChange}
                                 />
@@ -160,7 +162,7 @@ const RegisterPatient = () => {
                         </div>
 
                         <div className="flex flex-col items-center">
-                            <label className="text-xs font-semibold text-gray-500 uppercase mb-2">Profile Photo (Optional)</label>
+                            <label className="text-xs font-semibold text-gray-500 uppercase mb-2">{t('labelPhoto')}</label>
                             <div className="relative w-24 h-24 rounded-full overflow-hidden bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center group cursor-pointer">
                                 {photoPreview ? (
                                     <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
@@ -177,7 +179,7 @@ const RegisterPatient = () => {
                         </div>
 
                         <div>
-                            <label className="text-xs font-semibold text-gray-500 uppercase">Password</label>
+                            <label className="text-xs font-semibold text-gray-500 uppercase">{t('labelPassword')}</label>
                             <div className="flex items-center border rounded-lg px-3 py-2 mt-1">
                                 <Lock size={20} className="text-gray-400 mr-2" />
                                 <input
@@ -199,15 +201,15 @@ const RegisterPatient = () => {
                             disabled={loading}
                             className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-full text-white ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-300 shadow-lg hover:shadow-xl`}
                         >
-                            {loading ? 'Processing...' : 'Create Account'}
+                            {loading ? t('processing') : t('btnCreateAccount')}
                         </button>
                     </div>
 
                     <div className="text-center mt-4">
                         <p className="text-sm text-gray-600">
-                            Already have an account?{' '}
+                            {t('haveAccount')}{' '}
                             <Link to="/login" className="font-medium text-red-600 hover:text-red-500">
-                                Sign in
+                                {t('linkSignIn')}
                             </Link>
                         </p>
                     </div>

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
 import { Plus, Upload, FileText, Clock } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import apiClient from '../../api/axiosConfig';
 import BookingModal from '../../components/BookingModal';
 
 const PatientDashboard = () => {
+    const { t } = useTranslation();
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
@@ -58,7 +59,7 @@ const PatientDashboard = () => {
         <div className="flex items-center justify-center min-h-[400px]">
             <div className="flex flex-col items-center gap-4">
                 <div className="w-10 h-10 border-4 border-red-100 border-t-red-600 rounded-full animate-spin" />
-                <p className="text-gray-500 font-medium animate-pulse">Syncing your health records...</p>
+                <p className="text-gray-500 font-medium animate-pulse">{t('syncingRecords')}</p>
             </div>
         </div>
     );
@@ -67,15 +68,15 @@ const PatientDashboard = () => {
         <div className="max-w-4xl mx-auto px-4 py-8">
             <div className="flex justify-between items-center mb-10">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900 tracking-tight">My Care Timeline</h1>
-                    <p className="text-gray-500 font-medium">Your journey to a healthier heart</p>
+                    <h1 className="text-3xl font-bold text-gray-900 tracking-tight">{t('patientDashTitle')}</h1>
+                    <p className="text-gray-500 font-medium">{t('patientDashSubTitle')}</p>
                 </div>
                 <button
                     onClick={() => setShowBooking(true)}
                     className="bg-red-600 text-white px-6 py-3.5 rounded-2xl font-bold flex items-center gap-2.5 shadow-xl shadow-red-100 hover:bg-red-700 hover:shadow-red-200 transition-all active:scale-95"
                 >
                     <Plus size={20} />
-                    <span>Book Consultation</span>
+                    <span>{t('btnBookConsultation')}</span>
                 </button>
             </div>
 
@@ -95,8 +96,8 @@ const PatientDashboard = () => {
                     <div className="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mx-auto mb-4">
                         <Plus className="text-gray-300" size={32} />
                     </div>
-                    <p className="text-gray-500 font-bold text-lg">No appointments yet</p>
-                    <p className="text-sm text-gray-400 mt-2 max-w-xs mx-auto">Start your care journey by booking a consultation with our heart specialists.</p>
+                    <p className="text-gray-500 font-bold text-lg">{t('noAppointments')}</p>
+                    <p className="text-sm text-gray-400 mt-2 max-w-xs mx-auto">{t('noAppointmentsDesc')}</p>
                 </div>
             ) : (
                 <div className="space-y-8 relative border-l-2 border-gray-100 ml-6 pl-10 pb-4">
@@ -112,7 +113,7 @@ const PatientDashboard = () => {
                                     <div className="flex-1">
                                         <div className="flex flex-wrap items-center gap-3 mb-3">
                                             <span className="font-extrabold text-gray-900 text-xl tracking-tight">
-                                                {apt.clinicalNotes || 'Consultation'}
+                                                {apt.clinicalNotes || t('consultation')}
                                             </span>
                                             <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${apt.status === 'confirmed' ? 'bg-green-100 text-green-700' :
                                                 apt.status === 'pending_approval' ? 'bg-blue-100 text-blue-700' :
@@ -150,7 +151,7 @@ const PatientDashboard = () => {
                                                 {uploading ? (
                                                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                                                 ) : <Upload size={18} />}
-                                                <span>{uploading ? 'Uploading...' : 'Upload Receipt'}</span>
+                                                <span>{uploading ? t('uploading') : t('uploadReceipt')}</span>
                                                 <input
                                                     type="file"
                                                     className="hidden"
@@ -163,7 +164,7 @@ const PatientDashboard = () => {
                                         {(apt.status === 'confirmed' || apt.status === 'completed') && (
                                             <label className="cursor-pointer flex items-center gap-2.5 bg-blue-600 text-white px-5 py-3 rounded-2xl font-bold text-sm shadow-lg shadow-blue-100 hover:bg-blue-700 transition-all">
                                                 <FileText size={18} />
-                                                <span>Upload Labs</span>
+                                                <span>{t('uploadLabs')}</span>
                                                 <input
                                                     type="file"
                                                     className="hidden"

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     FileText,
     Calendar,
@@ -16,6 +17,7 @@ import {
 import apiClient, { getFileUrl } from '../../api/axiosConfig';
 
 const PatientRecords = () => {
+    const { t } = useTranslation();
     const [records, setRecords] = useState([]);
     const [loading, setLoading] = useState(true);
     const [expandedRecord, setExpandedRecord] = useState(null);
@@ -56,7 +58,7 @@ const PatientRecords = () => {
             <div className="flex items-center justify-center min-h-[400px]">
                 <div className="flex flex-col items-center gap-4">
                     <div className="w-12 h-12 border-4 border-red-100 border-t-red-600 rounded-full animate-spin" />
-                    <p className="text-gray-500 font-medium animate-pulse">Loading your medical history...</p>
+                    <p className="text-gray-500 font-medium animate-pulse">{t('loadingHistory')}</p>
                 </div>
             </div>
         );
@@ -67,9 +69,9 @@ const PatientRecords = () => {
             <div className="mb-10">
                 <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight flex items-center gap-3">
                     <FileText className="text-red-600" size={32} />
-                    My Medical Records
+                    {t('medicalRecords')}
                 </h1>
-                <p className="text-gray-500 font-medium mt-1">A summarized history of your heart care journey</p>
+                <p className="text-gray-500 font-medium mt-1">{t('medicalRecordsSubTitle')}</p>
             </div>
 
             {records.length === 0 ? (
@@ -77,9 +79,9 @@ const PatientRecords = () => {
                     <div className="w-20 h-20 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
                         <ClipboardList className="text-gray-300" size={40} />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">No records found</h3>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{t('noRecordsFound')}</h3>
                     <p className="text-gray-500 max-w-sm mx-auto">
-                        Your medical history will appear here once you've had your first consultation.
+                        {t('noRecordsDesc')}
                     </p>
                 </div>
             ) : (
@@ -88,8 +90,8 @@ const PatientRecords = () => {
                         <div
                             key={record.id}
                             className={`bg-white rounded-3xl border transition-all duration-300 overflow-hidden ${expandedRecord === record.id
-                                    ? 'shadow-xl border-red-100 ring-1 ring-red-50'
-                                    : 'shadow-sm border-gray-100 hover:shadow-md hover:border-red-100'
+                                ? 'shadow-xl border-red-100 ring-1 ring-red-50'
+                                : 'shadow-sm border-gray-100 hover:shadow-md hover:border-red-100'
                                 }`}
                         >
                             {/* Record Header - Compact View */}
@@ -147,12 +149,12 @@ const PatientRecords = () => {
                                             <div>
                                                 <h4 className="flex items-center gap-2 text-sm font-black text-gray-400 uppercase tracking-widest mb-3">
                                                     <Stethoscope size={16} />
-                                                    Clinical Summary
+                                                    {t('clinicalSummary')}
                                                 </h4>
                                                 <div className="bg-gray-50 p-5 rounded-2xl border border-gray-100">
                                                     <p className="text-gray-800 leading-relaxed font-medium">
                                                         {record.clinicalNotes || (
-                                                            <span className="text-gray-400 italic">No clinical notes available for this visit.</span>
+                                                            <span className="text-gray-400 italic">{t('noClinicalNotes')}</span>
                                                         )}
                                                     </p>
                                                 </div>
@@ -161,7 +163,7 @@ const PatientRecords = () => {
                                             <div>
                                                 <h4 className="flex items-center gap-2 text-sm font-black text-gray-400 uppercase tracking-widest mb-3">
                                                     <AlertCircle size={16} />
-                                                    Symptoms Reported
+                                                    {t('symptomsReported')}
                                                 </h4>
                                                 <div className="flex flex-wrap gap-2">
                                                     {record.symptoms ? (
@@ -171,7 +173,7 @@ const PatientRecords = () => {
                                                             </span>
                                                         ))
                                                     ) : (
-                                                        <span className="text-gray-400 text-sm italic">None reported</span>
+                                                        <span className="text-gray-400 text-sm italic">{t('noneReported')}</span>
                                                     )}
                                                 </div>
                                             </div>
@@ -182,7 +184,7 @@ const PatientRecords = () => {
                                             <div>
                                                 <h4 className="flex items-center gap-2 text-sm font-black text-gray-400 uppercase tracking-widest mb-3">
                                                     <ClipboardList size={16} />
-                                                    Lab Results & Documents
+                                                    {t('labsDocs')}
                                                 </h4>
                                                 <div className="space-y-3">
                                                     {record.labResults && record.labResults.length > 0 ? (
@@ -197,7 +199,7 @@ const PatientRecords = () => {
                                                                             {lab.fileName}
                                                                         </p>
                                                                         <p className="text-[10px] text-gray-500 uppercase font-black">
-                                                                            {lab.fileType || 'Document'}
+                                                                            {lab.fileType || t('document')}
                                                                         </p>
                                                                     </div>
                                                                 </div>
@@ -224,7 +226,7 @@ const PatientRecords = () => {
                                                         ))
                                                     ) : (
                                                         <div className="text-center py-6 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-                                                            <p className="text-gray-400 text-sm italic">No attachments for this visit</p>
+                                                            <p className="text-gray-400 text-sm italic">{t('noAttachments')}</p>
                                                         </div>
                                                     )}
                                                 </div>
@@ -234,10 +236,10 @@ const PatientRecords = () => {
                                                 <div className="bg-green-50/50 p-5 rounded-3xl border border-green-100">
                                                     <div className="flex items-center gap-3 text-green-700 mb-2">
                                                         <CheckCircle2 size={20} />
-                                                        <span className="font-bold">Follow-up Recommended</span>
+                                                        <span className="font-bold">{t('followUp')}</span>
                                                     </div>
                                                     <p className="text-sm text-green-600/80 font-medium font-serif italic">
-                                                        Please ensure you follow the doctor's prescription and schedule your next check-up as advised.
+                                                        {t('followUpDesc')}
                                                     </p>
                                                 </div>
                                             )}
