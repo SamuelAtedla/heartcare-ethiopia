@@ -5,16 +5,27 @@ const moment = require('moment');
 // 1. Get Schedule (Confirmed & Pending Payment Approval)
 const getConfirmedQueue = async (req, res) => {
   try {
-    console.log(`Fetching Doctor Queue for Doctor ID: ${req.user.id}`);
+    const { startDate, endDate } = req.query;
+    console.log(`Fetching Doctor Queue for Doctor ID: ${req.user.id} with range: ${startDate} to ${endDate}`);
+
+    let whereClause = {
+      doctorId: req.user.id,
+      status: { [Op.or]: ['confirmed', 'pending_approval'] }
+    };
+
+    if (startDate && endDate) {
+      whereClause.scheduledAt = {
+        [Op.between]: [moment(startDate).startOf('day').toDate(), moment(endDate).endOf('day').toDate()]
+      };
+    } else {
+      // Default to today and future if no range provided
+      whereClause.scheduledAt = {
+        [Op.gte]: moment().startOf('day').toDate()
+      };
+    }
+
     const queue = await Appointment.findAll({
-      where: {
-        doctorId: req.user.id,
-        status: { [Op.or]: ['confirmed', 'pending_approval'] },
-        // Only show today and future appointments to keep queue relevant
-        scheduledAt: {
-          [Op.gte]: moment().startOf('day').toDate()
-        }
-      },
+      where: whereClause,
       include: [{ model: User, as: 'patient', attributes: ['fullName', 'phone', 'profileImage', 'age'] }],
       order: [['scheduledAt', 'ASC']]
     });

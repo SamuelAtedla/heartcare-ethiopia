@@ -3,14 +3,18 @@ import { PenTool, Check, FileText, User, Plus } from 'lucide-react';
 import apiClient, { getFileUrl } from '../../api/axiosConfig';
 import PublishArticleModal from './components/PublishArticleModal';
 import QueueCard from './components/QueueCard';
+import CalendarView from './components/CalendarView';
+import moment from 'moment';
 
 const DoctorDashboard = () => {
   const [activeTab, setActiveTab] = useState('queue');
   const [loading, setLoading] = useState(true);
   const [showPublishModal, setShowPublishModal] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   // Data State
   const [queue, setQueue] = useState([]);
+  const [allAppointments, setAllAppointments] = useState([]);
   const [finance, setFinance] = useState([]);
   const [articles, setArticles] = useState([]);
 
@@ -22,19 +26,31 @@ const DoctorDashboard = () => {
 
   const fetchQueue = async () => {
     try {
-      const response = await apiClient.get('/doctor/queue');
-      // Sort immediately to guarantee order regardless of backend quirks
+      const startOfMonth = moment().startOf('month').format('YYYY-MM-DD');
+      const endOfNextMonth = moment().add(3, 'months').endOf('month').format('YYYY-MM-DD');
+
+      const response = await apiClient.get(`/doctor/queue?startDate=${startOfMonth}&endDate=${endOfNextMonth}`);
+
       const fullQueue = response.data.sort((a, b) =>
         new Date(a.scheduledAt) - new Date(b.scheduledAt)
       );
 
-      setQueue(fullQueue.filter(a => a.status === 'confirmed'));
+      setAllAppointments(fullQueue);
       setFinance(fullQueue.filter(a => a.status === 'pending_approval'));
       setLoading(false);
     } catch (error) {
       console.error('Error fetching queue:', error);
     }
   };
+
+  // Derive active queue based on selected date
+  useEffect(() => {
+    const filtered = allAppointments.filter(appt =>
+      appt.status === 'confirmed' &&
+      moment(appt.scheduledAt).isSame(moment(selectedDate), 'day')
+    );
+    setQueue(filtered);
+  }, [allAppointments, selectedDate]);
 
   const fetchArticles = async () => {
     try {
@@ -84,6 +100,7 @@ const DoctorDashboard = () => {
       <div className="flex space-x-2 bg-gray-100 p-1.5 rounded-2xl w-fit mb-10">
         {[
           { id: 'queue', label: "Patient Queue" },
+          { id: 'calendar', label: 'Schedule Calendar' },
           { id: 'finance', label: 'Payment Verifications' },
           { id: 'publications', label: 'My Articles' }
         ].map((tab) => (
@@ -101,20 +118,48 @@ const DoctorDashboard = () => {
       </div>
 
       {activeTab === 'queue' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in slide-in-from-bottom-4 duration-500">
-          {queue.length === 0 ? (
-            <div className="col-span-full py-20 text-center bg-gray-50 rounded-[40px] border-2 border-dashed border-gray-200">
-              <p className="text-gray-400 font-bold italic">No scheduled visits for today.</p>
+        <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
+          <div className="flex items-center justify-between bg-red-50 p-6 rounded-[32px] border border-red-100">
+            <div>
+              <p className="text-xs font-black text-red-600 uppercase tracking-widest mb-1">Schedule For</p>
+              <h3 className="text-xl font-black text-gray-900">{moment(selectedDate).format('MMMM D, YYYY')}</h3>
             </div>
-          ) : (
-            queue.map((appt) => (
-              <QueueCard
-                key={appt.id}
-                appointment={appt}
-              />
-            ))
-          )}
+            {!moment(selectedDate).isSame(moment(), 'day') && (
+              <button
+                onClick={() => setSelectedDate(new Date())}
+                className="text-xs font-bold text-red-600 hover:underline"
+              >
+                Return to Today
+              </button>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {queue.length === 0 ? (
+              <div className="col-span-full py-20 text-center bg-gray-50 rounded-[40px] border-2 border-dashed border-gray-200">
+                <p className="text-gray-400 font-bold italic">No visits scheduled for this date.</p>
+              </div>
+            ) : (
+              queue.map((appt) => (
+                <QueueCard
+                  key={appt.id}
+                  appointment={appt}
+                />
+              ))
+            )}
+          </div>
         </div>
+      )}
+
+      {activeTab === 'calendar' && (
+        <CalendarView
+          appointments={allAppointments.filter(a => a.status === 'confirmed')}
+          selectedDate={selectedDate}
+          onDateSelect={(date) => {
+            setSelectedDate(date);
+            setActiveTab('queue');
+          }}
+        />
       )}
 
       {activeTab === 'finance' && (
