@@ -10,6 +10,7 @@ const DoctorDashboard = () => {
   const [activeTab, setActiveTab] = useState('queue');
   const [loading, setLoading] = useState(true);
   const [showPublishModal, setShowPublishModal] = useState(false);
+  const [selectedArticle, setSelectedArticle] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   // Data State
@@ -225,7 +226,15 @@ const DoctorDashboard = () => {
                 <div className="p-6 flex justify-between items-center bg-white">
                   <span className="text-[10px] text-gray-400 font-black uppercase tracking-widest">{new Date(article.createdAt).toLocaleDateString()}</span>
                   <div className="flex gap-2">
-                    <button className="text-gray-400 hover:text-red-600 transition-all p-2 bg-gray-50 rounded-lg"><Plus className="rotate-45" size={16} /></button>
+                    <button
+                      onClick={() => {
+                        setSelectedArticle(article);
+                        setShowPublishModal(true);
+                      }}
+                      className="text-gray-400 hover:text-red-600 transition-all p-2 bg-gray-50 rounded-lg"
+                    >
+                      <PenTool size={16} />
+                    </button>
                   </div>
                 </div>
               </div>
@@ -244,10 +253,15 @@ const DoctorDashboard = () => {
       {/* Modals */}
       {showPublishModal && (
         <PublishArticleModal
-          onClose={() => setShowPublishModal(false)}
+          article={selectedArticle}
+          onClose={() => {
+            setShowPublishModal(false);
+            setSelectedArticle(null);
+          }}
           onSuccess={() => {
             fetchArticles();
             setShowPublishModal(false);
+            setSelectedArticle(null);
           }}
         />
       )}

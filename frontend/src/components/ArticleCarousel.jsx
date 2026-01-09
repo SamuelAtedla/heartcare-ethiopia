@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, PauseCircle, PlayCircle } from 'lucide-react';
-import { getArticles } from '../api/mockData';
+import apiClient, { getFileUrl } from '../api/axiosConfig';
 
 const ArticleCarousel = () => {
     const { t, i18n } = useTranslation();
@@ -11,7 +11,15 @@ const ArticleCarousel = () => {
     const [expandedArticle, setExpandedArticle] = useState(null);
 
     useEffect(() => {
-        setArticles(getArticles());
+        const fetchArticles = async () => {
+            try {
+                const response = await apiClient.get('/public/articles');
+                setArticles(response.data);
+            } catch (error) {
+                console.error("Error fetching articles:", error);
+            }
+        };
+        fetchArticles();
     }, []);
 
     useEffect(() => {
@@ -56,7 +64,7 @@ const ArticleCarousel = () => {
                     >
                         <div className="md:w-1/2 h-64 md:h-auto relative">
                             <img
-                                src={currentArticle.image}
+                                src={getFileUrl(currentArticle.image)}
                                 alt="Article"
                                 className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                             />
@@ -67,10 +75,10 @@ const ArticleCarousel = () => {
                                 {t('latestArticle', 'Latest Article')}
                             </span>
                             <h3 className="text-2xl md:text-4xl font-bold mb-4 leading-tight">
-                                {isAm ? currentArticle.title_am : currentArticle.title_en}
+                                {isAm ? currentArticle.titleAm : currentArticle.titleEn}
                             </h3>
                             <p className="text-gray-400 mb-8 line-clamp-3">
-                                {isAm ? currentArticle.content_am : currentArticle.content_en}
+                                {isAm ? currentArticle.contentAm : currentArticle.contentEn}
                             </p>
                             <button
                                 onClick={() => setExpandedArticle(currentArticle)}
@@ -105,12 +113,12 @@ const ArticleCarousel = () => {
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" x2="6" y1="6" y2="18" /><line x1="6" x2="18" y1="6" y2="18" /></svg>
                         </button>
-                        <img src={expandedArticle.image} alt="Detail" className="w-full h-64 object-cover rounded-2xl mb-8" />
+                        <img src={getFileUrl(expandedArticle.image)} alt="Detail" className="w-full h-64 object-cover rounded-2xl mb-8" />
                         <h2 className="text-3xl font-bold mb-4">
-                            {isAm ? expandedArticle.title_am : expandedArticle.title_en}
+                            {isAm ? expandedArticle.titleAm : expandedArticle.titleEn}
                         </h2>
                         <div className="prose prose-lg text-gray-600">
-                            {isAm ? expandedArticle.content_am : expandedArticle.content_en}
+                            {isAm ? expandedArticle.contentAm : expandedArticle.contentEn}
                         </div>
                     </div>
                 </div>

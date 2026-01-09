@@ -49,9 +49,21 @@ const updateArticle = async (req, res) => {
 
         if (!article) return res.status(404).json({ error: 'Article not found' });
 
-        await article.update(req.body);
+        const { titleEn, titleAm, contentEn, contentAm } = req.body;
+        const updateData = {};
+        if (titleEn) updateData.titleEn = titleEn;
+        if (titleAm) updateData.titleAm = titleAm;
+        if (contentEn) updateData.contentEn = contentEn;
+        if (contentAm) updateData.contentAm = contentAm;
+
+        if (req.file) {
+            updateData.image = getRelativeStoragePath(req.file.path);
+        }
+
+        await article.update(updateData);
         res.json(article);
     } catch (error) {
+        logger.error('Update Article Error:', error);
         res.status(500).json({ error: 'Failed to update article' });
     }
 };

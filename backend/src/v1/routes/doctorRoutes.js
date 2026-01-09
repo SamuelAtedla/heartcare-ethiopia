@@ -33,6 +33,7 @@ router.get(
 router.put(
   "/articles/:id",
   authenticate,
+  upload.single('articleImage'),
   //authorize("doctor"),
   articleController.updateArticle
 );

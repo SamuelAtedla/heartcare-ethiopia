@@ -2,22 +2,63 @@ import React, { useState } from 'react';
 import { X, PenTool, Image as ImageIcon, Upload, Loader2 } from 'lucide-react';
 import apiClient from '../../../api/axiosConfig';
 
-const PublishArticleModal = ({ onClose, onSuccess }) => {
+const PublishArticleModal = ({ onClose, onSuccess, article }) => {
     const [formData, setFormData] = useState({
-        titleEn: '',
-        titleAm: '',
-        contentEn: '',
-        contentAm: '',
+        titleEn: article?.titleEn || '',
+        titleAm: article?.titleAm || '',
+        contentEn: article?.contentEn || '',
+        contentAm: article?.contentAm || '',
         image: null
     });
-    const [imagePreview, setImagePreview] = useState(null);
+    const [imagePreview, setImagePreview] = useState(article?.image ? getFileUrl(article.image) : null);
     const [submitting, setSubmitting] = useState(false);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setFormData({ ...formData, image: file });
-            setImagePreview(URL.createObjectURL(file));
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    // Target aspect ratio 16:9
+                    const targetWidth = 1200;
+                    const targetHeight = 675;
+
+                    canvas.width = targetWidth;
+                    canvas.height = targetHeight;
+
+                    // Calculate crop
+                    const imgAspect = img.width / img.height;
+                    const targetAspect = targetWidth / targetHeight;
+
+                    let drawWidth, drawHeight, offsetX, offsetY;
+
+                    if (imgAspect > targetAspect) {
+                        drawHeight = img.height;
+                        drawWidth = img.height * targetAspect;
+                        offsetX = (img.width - drawWidth) / 2;
+                        offsetY = 0;
+                    } else {
+                        drawWidth = img.width;
+                        drawHeight = img.width / targetAspect;
+                        offsetX = 0;
+                        offsetY = (img.height - drawHeight) / 2;
+                    }
+
+                    ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight, 0, 0, targetWidth, targetHeight);
+
+                    canvas.toBlob((blob) => {
+                        const resizedFile = new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() });
+                        setFormData({ ...formData, image: resizedFile });
+                        setImagePreview(URL.createObjectURL(resizedFile));
+                    }, 'image/jpeg', 0.9);
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
         }
     };
 
@@ -31,20 +72,28 @@ const PublishArticleModal = ({ onClose, onSuccess }) => {
             data.append('titleAm', formData.titleAm);
             data.append('contentEn', formData.contentEn);
             data.append('contentAm', formData.contentAm);
+
             if (formData.image) {
                 data.append('articleImage', formData.image);
             }
 
-            await apiClient.post('/doctor/articles', data, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+            if (article) {
+                await apiClient.put(`/doctor/articles/${article.id}`, data, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                alert('Article updated successfully!');
+            } else {
+                await apiClient.post('/doctor/articles', data, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                alert('Article published successfully!');
+            }
 
-            alert('Article published successfully!');
             onSuccess();
             onClose();
         } catch (error) {
-            console.error('Publication failed:', error);
-            alert(error.response?.data?.error || 'Publication failed. Please try again.');
+            console.error('Operation failed:', error);
+            alert(error.response?.data?.error || 'Operation failed. Please try again.');
         } finally {
             setSubmitting(false);
         }
@@ -56,7 +105,7 @@ const PublishArticleModal = ({ onClose, onSuccess }) => {
                 <div className="bg-red-600 p-6 text-white flex justify-between items-center">
                     <div className="flex items-center gap-2">
                         <PenTool size={20} />
-                        <h2 className="text-xl font-bold">Write New Article</h2>
+                        <h2 className="text-xl font-bold">{article ? 'Edit Article' : 'Write New Article'}</h2>
                     </div>
                     <button
                         onClick={onClose}
@@ -158,9 +207,9 @@ const PublishArticleModal = ({ onClose, onSuccess }) => {
                         {submitting ? (
                             <>
                                 <Loader2 className="animate-spin" size={20} />
-                                Publishing...
+                                {article ? 'Updating...' : 'Publishing...'}
                             </>
-                        ) : 'Publish Article'}
+                        ) : (article ? 'Update Article' : 'Publish Article')}
                     </button>
                 </div>
             </div>
