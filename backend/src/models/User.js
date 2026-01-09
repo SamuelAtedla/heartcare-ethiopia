@@ -14,7 +14,9 @@ const User = sequelize.define('User', {
   specialty: { type: DataTypes.STRING },
   bio: { type: DataTypes.TEXT },
   credentials: { type: DataTypes.TEXT },
-  profileImage: { type: DataTypes.STRING }
+  profileImage: { type: DataTypes.STRING },
+  passwordResetToken: { type: DataTypes.STRING },
+  passwordResetExpires: { type: DataTypes.DATE }
 });
 
 module.exports = User;

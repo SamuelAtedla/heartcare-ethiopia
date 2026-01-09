@@ -10,4 +10,10 @@ router.post('/register', upload.single('profilePhoto'), authController.register)
 // Login: JSON body
 router.post('/login', authController.login);
 
+// Forgot Password
+router.post('/forgot-password', authController.forgotPassword);
+
+// Reset Password
+router.post('/reset-password/:token', authController.resetPassword);
+
 module.exports = router;

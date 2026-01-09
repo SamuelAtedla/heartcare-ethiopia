@@ -3,6 +3,9 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const logger = require('../../utils/logger');
 const { getRelativeStoragePath } = require('../../utils/fileHelper');
+const crypto = require('crypto');
+const { sendEmail } = require('../../services/emailService');
+const { Op } = require('sequelize');
 
 // Helper: Generate JWT
 const signToken = (id, role) => {
@@ -114,7 +117,114 @@ const login = async (req, res) => {
     }
 };
 
+const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            return res.status(400).json({ error: 'Please provide an email address' });
+        }
+
+        // 1. Find user by email
+        const user = await User.findOne({ where: { email } });
+        if (!user) {
+            // We don't want to leak if a user exists or not for security reasons,
+            // but for this implementation we'll keep it simple or send a generic success message.
+            return res.status(404).json({ error: 'No user found with that email address.' });
+        }
+
+        // 2. Generate random reset token
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+        // 3. Save to database with expiry (e.g., 1 hour)
+        user.passwordResetToken = hashedToken;
+        user.passwordResetExpires = Date.now() + 3600000; // 1 hour
+        await user.save();
+
+        // 4. Send token via email
+        const resetURL = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password/${resetToken}`;
+        const message = `Forgot your password? Submit a PATCH request with your new password and confirmPassword to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
+
+        try {
+            await sendEmail({
+                email: user.email,
+                subject: 'Your password reset token (valid for 10 min)',
+                message,
+            });
+
+            res.status(200).json({
+                status: 'success',
+                message: 'Token sent to email!',
+                // For development/debugging purposes when email isn't configured:
+                ...(process.env.NODE_ENV === 'development' && { resetURL })
+            });
+
+        } catch (err) {
+            user.passwordResetToken = null;
+            user.passwordResetExpires = null;
+            await user.save();
+            console.error('Email send failed:', err);
+            return res.status(500).json({ error: 'There was an error sending the email. Try again later!' });
+        }
+
+    } catch (error) {
+        console.error('Forgot Password Error:', error);
+        res.status(500).json({ error: 'Something went wrong. Please try again later.' });
+    }
+};
+
+const resetPassword = async (req, res) => {
+    try {
+        // 1. Get user based on the token
+        const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+
+        const user = await User.findOne({
+            where: {
+                passwordResetToken: hashedToken,
+                passwordResetExpires: { [Op.gt]: Date.now() }
+            }
+        });
+
+        // 2. If token has not expired, and there is user, set the new password
+        if (!user) {
+            return res.status(400).json({ error: 'Token is invalid or has expired' });
+        }
+
+        const { password } = req.body;
+        if (!password) {
+            return res.status(400).json({ error: 'Please provide a new password' });
+        }
+
+        user.password = await bcrypt.hash(password, 12);
+        user.passwordResetToken = null;
+        user.passwordResetExpires = null;
+        await user.save();
+
+        // 3. Log the user in, send JWT
+        const token = signToken(user.id, user.role);
+
+        res.status(200).json({
+            status: 'success',
+            token,
+            data: {
+                user: {
+                    id: user.id,
+                    fullName: user.fullName,
+                    email: user.email,
+                    role: user.role
+                }
+            }
+        });
+
+    } catch (error) {
+        console.error('Reset Password Error:', error);
+        res.status(500).json({ error: 'Reset password failed. Please try again.' });
+    }
+};
+
 module.exports = {
     register,
-    login
+    login,
+    forgotPassword,
+    resetPassword
 };

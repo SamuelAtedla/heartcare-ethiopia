@@ -120,9 +120,9 @@ const Login = () => {
                     </div>
 
                     <div className="text-center mt-2">
-                        <button type="button" className="text-xs text-gray-500 hover:text-gray-700">
+                        <Link to="/forgot-password" size="sm" className="text-xs text-gray-500 hover:text-gray-700">
                             Forgot password?
-                        </button>
+                        </Link>
                     </div>
                 </form>
             </div>
