@@ -1,4 +1,4 @@
-const { Article, User } = require('../../models');
+const { Article, User, Appointment } = require('../../models');
 
 const getArticles = async (req, res) => {
     try {
@@ -24,4 +24,18 @@ const getDoctors = async (req, res) => {
     }
 };
 
-module.exports = { getArticles, getDoctors };
+const getStats = async (req, res) => {
+    try {
+        const patientsHelped = await Appointment.count({
+            where: { status: 'completed' },
+            distinct: true,
+            col: 'patientId'
+        });
+        res.json({ patientsHelped });
+    } catch (error) {
+        console.error('Stats error:', error);
+        res.status(500).json({ error: 'Failed to fetch stats' });
+    }
+};
+
+module.exports = { getArticles, getDoctors, getStats };

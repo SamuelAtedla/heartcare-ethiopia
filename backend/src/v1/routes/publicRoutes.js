@@ -4,5 +4,6 @@ const publicController = require('../controllers/publicController');
 
 router.get('/articles', publicController.getArticles);
 router.get('/doctors', publicController.getDoctors);
+router.get('/stats', publicController.getStats);
 
 module.exports = router;

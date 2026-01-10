@@ -1,11 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import apiClient from '../api/axiosConfig';
 
 const Hero = ({ scrollToSection }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const [patientsHelped, setPatientsHelped] = useState(null);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const response = await apiClient.get('/public/stats');
+                setPatientsHelped(response.data.patientsHelped);
+            } catch (error) {
+                console.error('Failed to fetch public stats:', error);
+            }
+        };
+        fetchStats();
+    }, []);
 
     return (
         <section id="home" className="relative bg-white pt-12 pb-20 overflow-hidden">
@@ -34,7 +48,11 @@ const Hero = ({ scrollToSection }) => {
                                 <img src="https://i.pravatar.cc/100?u=2" className="w-10 h-10 rounded-full border-2 border-white" alt="User" />
                                 <img src="https://i.pravatar.cc/100?u=3" className="w-10 h-10 rounded-full border-2 border-white" alt="User" />
                             </div>
-                            <span className="text-sm font-semibold text-gray-500">{t('heroStats', '500+ Patients Helped')}</span>
+                            <span className="text-sm font-semibold text-gray-500">
+                                {patientsHelped !== null
+                                    ? t('heroStatsDynamic', { count: patientsHelped })
+                                    : t('heroStats', '500+ Patients Helped')}
+                            </span>
                         </div>
                     </div>
                 </div>
