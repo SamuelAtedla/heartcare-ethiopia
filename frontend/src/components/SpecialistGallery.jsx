@@ -1,11 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { doctors } from '../api/mockData';
+import apiClient, { getFileUrl } from '../api/axiosConfig';
 import { User, Award, BookOpen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const SpecialistGallery = () => {
     const { t } = useTranslation();
     const [selectedDoctor, setSelectedDoctor] = useState(null);
+    const [doctors, setDoctors] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchDoctors = async () => {
+            try {
+                const response = await apiClient.get('/public/doctors');
+                setDoctors(response.data);
+            } catch (error) {
+                console.error("Failed to fetch doctors:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDoctors();
+    }, []);
 
     // Handle Escape Key to close modal
     useEffect(() => {
@@ -17,6 +34,16 @@ const SpecialistGallery = () => {
         }
         return () => window.removeEventListener('keydown', handleEsc);
     }, [selectedDoctor]);
+
+    if (loading) {
+        return (
+            <section className="py-20 bg-white">
+                <div className="max-w-7xl mx-auto px-4 text-center">
+                    <p className="text-gray-500">Loading specialists...</p>
+                </div>
+            </section>
+        );
+    }
 
     return (
         <section className="py-20 bg-white">
@@ -31,36 +58,43 @@ const SpecialistGallery = () => {
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {doctors.map((doc) => (
-                        <div
-                            key={doc.id}
-                            onClick={() => setSelectedDoctor(doc)}
-                            className="group bg-white rounded-3xl border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer"
-                        >
-                            <div className="aspect-square relative overflow-hidden bg-gray-100">
-                                <img
-                                    src={doc.image}
-                                    alt={doc.name}
-                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                                    <span className="text-white font-bold flex items-center gap-2">
-                                        <BookOpen size={18} /> {t('viewProfile', 'View Profile')}
-                                    </span>
+                {doctors.length === 0 ? (
+                    <div className="text-center text-gray-500">
+                        <p>{t('noSpecialists', 'No specialists found at the moment.')}</p>
+                    </div>
+                ) : (
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {doctors.map((doc) => (
+                            <div
+                                key={doc.id}
+                                onClick={() => setSelectedDoctor(doc)}
+                                className="group bg-white rounded-3xl border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer"
+                            >
+                                <div className="aspect-square relative overflow-hidden bg-gray-100">
+                                    <img
+                                        src={getFileUrl(doc.profileImage) || 'https://via.placeholder.com/300?text=No+Image'}
+                                        alt={doc.fullName}
+                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                        onError={(e) => { e.target.src = 'https://via.placeholder.com/300?text=No+Image'; }}
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                                        <span className="text-white font-bold flex items-center gap-2">
+                                            <BookOpen size={18} /> {t('viewProfile', 'View Profile')}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="p-6">
+                                    <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-red-600 transition">{doc.fullName}</h3>
+                                    <p className="text-blue-600 font-medium text-sm mb-4">{doc.specialty}</p>
+                                    <div className="flex items-center gap-2 text-xs text-gray-500 font-bold bg-gray-50 w-fit px-3 py-1 rounded-full">
+                                        <Award size={14} />
+                                        <span>{t('verifiedSpecialist', 'Verified Specialist')}</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="p-6">
-                                <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-red-600 transition">{doc.name}</h3>
-                                <p className="text-blue-600 font-medium text-sm mb-4">{doc.specialty}</p>
-                                <div className="flex items-center gap-2 text-xs text-gray-500 font-bold bg-gray-50 w-fit px-3 py-1 rounded-full">
-                                    <Award size={14} />
-                                    <span>{t('verifiedSpecialist', 'Verified Specialist')}</span>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* Doctor Detail Modal */}
@@ -72,7 +106,12 @@ const SpecialistGallery = () => {
                     >
                         {/* Image Side - Hidden on small screens if content is long, or fixed height */}
                         <div className="md:w-2/5 md:h-auto h-48 relative shrink-0">
-                            <img src={selectedDoctor.image} alt="Detail" className="w-full h-full object-cover" />
+                            <img
+                                src={getFileUrl(selectedDoctor.profileImage) || 'https://via.placeholder.com/300?text=No+Image'}
+                                alt="Detail"
+                                className="w-full h-full object-cover"
+                                onError={(e) => { e.target.src = 'https://via.placeholder.com/300?text=No+Image'; }}
+                            />
                         </div>
 
                         {/* Content Side - Scrollable */}
@@ -84,18 +123,18 @@ const SpecialistGallery = () => {
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" x2="6" y1="6" y2="18" /><line x1="6" x2="18" y1="6" y2="18" /></svg>
                             </button>
 
-                            <h3 className="text-3xl font-bold text-gray-900 mb-2">{selectedDoctor.name}</h3>
+                            <h3 className="text-3xl font-bold text-gray-900 mb-2">{selectedDoctor.fullName}</h3>
                             <p className="text-blue-600 font-bold mb-6 text-lg">{selectedDoctor.specialty}</p>
 
                             <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{t('about', 'About')}</h4>
                             <p className="text-gray-600 mb-6 leading-relaxed whitespace-pre-line text-sm md:text-base">
-                                {selectedDoctor.bio}
+                                {selectedDoctor.bio || t('noBio', 'No biography available.')}
                             </p>
 
                             <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">{t('credentials', 'Credentials')}</h4>
                             <div className="bg-gray-50 p-4 rounded-xl flex items-start gap-3">
                                 <Award className="text-red-500 shrink-0 mt-0.5" size={20} />
-                                <p className="text-gray-800 font-medium text-sm">{selectedDoctor.credentials}</p>
+                                <p className="text-gray-800 font-medium text-sm">{selectedDoctor.credentials || t('noCredentials', 'No credentials info available.')}</p>
                             </div>
                         </div>
                     </div>
