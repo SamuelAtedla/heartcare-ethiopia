@@ -11,6 +11,7 @@ import ServicesPage from "./pages/ServicesPage";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import LandingPage2 from "./pages/LandingPage2";
 import RegisterPatient from "./pages/RegisterPatient";
 import PatientDashboard from "./pages/Patient/PatientDashboard";
 import PatientRecords from "./pages/Patient/PatientRecords";
@@ -32,6 +33,8 @@ function App() {
 
           {/* Public Routes */}
           <Route path="/" element={<HomeRoute />} />
+          {/* TODO: Either replace the main landing page or remove this route later */}
+          <Route path="/second" element={<LandingPage2 />} />
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
