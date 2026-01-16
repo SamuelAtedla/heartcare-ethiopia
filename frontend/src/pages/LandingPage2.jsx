@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from '../components/Header';
-import DoctorCarousel from '../components/DoctorCarousel';
+import HeroWithCarousel from '../components/HeroWithCarousel';
 import ArticleCarousel from '../components/ArticleCarousel';
 import SpecialistGallery from '../components/SpecialistGallery';
 import Footer from '../components/Footer';
@@ -17,8 +17,8 @@ const LandingPage2 = () => {
         <div className="min-h-screen bg-white text-gray-900 font-sans">
             <Header scrollToSection={scrollToSection} />
 
-            {/* Main Emphasis: Doctor Carousel at the top */}
-            <DoctorCarousel />
+            {/* Main Emphasis: Hero with Doctor Carousel integrated */}
+            <HeroWithCarousel />
 
             {/* Articles placed below it */}
             <ArticleCarousel />
