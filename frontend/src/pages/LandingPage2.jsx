@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../components/Header';
 import HeroWithCarousel from '../components/HeroWithCarousel';
-import ArticleCarousel from '../components/ArticleCarousel';
+import ArticleGrid from '../components/ArticleGrid';
 import SpecialistGallery from '../components/SpecialistGallery';
 import Footer from '../components/Footer';
 
@@ -20,8 +20,8 @@ const LandingPage2 = () => {
             {/* Main Emphasis: Hero with Doctor Carousel integrated */}
             <HeroWithCarousel />
 
-            {/* Articles placed below it */}
-            <ArticleCarousel />
+            {/* Articles placed below it - Using Grid for visual balance */}
+            <ArticleGrid />
 
             {/* Keep the gallery and footer */}
             <SpecialistGallery />
