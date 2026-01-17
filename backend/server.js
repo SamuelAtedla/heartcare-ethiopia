@@ -1,7 +1,7 @@
 require('dotenv').config();
 const sequelize = require('./src/config/database');
 const app = require('./src/app');
-const { seedDefaultDoctor } = require('./src/utils/seed');
+const { seedInitialData } = require('./src/utils/seed');
 const logger = require('./src/utils/logger');
 
 // Validate required environment variables
@@ -19,8 +19,8 @@ const PORT = process.env.PORT || 5000;
 // Database Sync & Server Start
 sequelize.sync({ alter: true })
     .then(async () => {
-        // Seed default data
-        await seedDefaultDoctor();
+        // Seed initial data
+        await seedInitialData();
 
         const server = app.listen(PORT, () => {
             logger.info(`Server started on port ${PORT}`);
