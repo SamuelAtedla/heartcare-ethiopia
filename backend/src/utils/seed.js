@@ -1,9 +1,9 @@
-const { User, Appointment, Article, Availability } = require('../models');
+const { User, Appointment, Article, Availability, Payment, MedicalAttachment } = require('../models');
 const bcrypt = require('bcryptjs');
 
 const seedInitialData = async () => {
     try {
-        console.log('🌱 Starting database seeding...');
+        console.log('🌱 Starting comprehensive database seeding...');
 
         const hashedPassword = await bcrypt.hash('password123', 12);
 
@@ -50,9 +50,7 @@ const seedInitialData = async () => {
                 where: { phone: dr.phone },
                 defaults: dr
             });
-            if (created) {
-                console.log(`✅ Doctor ${dr.fullName} seeded.`);
-            }
+            if (created) console.log(`✅ Doctor ${dr.fullName} seeded.`);
             createdDoctors.push(user);
         }
 
@@ -73,6 +71,14 @@ const seedInitialData = async () => {
                 password: hashedPassword,
                 role: 'patient',
                 age: 32
+            },
+            {
+                fullName: "Tadesse Hailu",
+                phone: '0900778899',
+                email: 'tadesse@example.com',
+                password: hashedPassword,
+                role: 'patient',
+                age: 58
             }
         ];
 
@@ -82,21 +88,18 @@ const seedInitialData = async () => {
                 where: { phone: pt.phone },
                 defaults: pt
             });
-            if (created) {
-                console.log(`✅ Patient ${pt.fullName} seeded.`);
-            }
+            if (created) console.log(`✅ Patient ${pt.fullName} seeded.`);
             createdPatients.push(user);
         }
 
-        // 3. Seed Availabilities (for Dr. Yebeltal)
-        const yebeltal = createdDoctors.find(d => d.phone === '0911728203');
-        if (yebeltal) {
+        // 3. Seed Availabilities for all Doctors
+        for (const doctor of createdDoctors) {
             const days = [1, 2, 3, 4, 5]; // Mon to Fri
             for (const day of days) {
                 await Availability.findOrCreate({
-                    where: { doctorId: yebeltal.id, dayOfWeek: day },
+                    where: { doctorId: doctor.id, dayOfWeek: day },
                     defaults: {
-                        doctorId: yebeltal.id,
+                        doctorId: doctor.id,
                         dayOfWeek: day,
                         startTime: '09:00',
                         endTime: '17:00',
@@ -104,92 +107,130 @@ const seedInitialData = async () => {
                     }
                 });
             }
-            console.log(`✅ Availabilities for Dr. Yebeltal seeded.`);
+            console.log(`✅ Availabilities for ${doctor.fullName} seeded.`);
         }
 
         // 4. Seed Articles
         const articlesData = [
             {
-                titleEn: "Understanding Hypertension",
+                titleEn: "Understanding Hypertension (High Blood Pressure)",
                 titleAm: "የደም ግፊትን መረዳት",
-                contentEn: "Hypertension, also known as high blood pressure, is a condition in which the force of the blood against the artery walls is too high.",
-                contentAm: "የደም ግፊት (Hypertension) ማለት ደም በደም ቅዳ ግድግዳዎች ላይ የሚያሳርፈው ግፊት ከተለመደው በላይ የሚሆንበት ሁኔታ ነው።",
+                contentEn: "Hypertension, also known as high blood pressure, is a condition in which the force of the blood against the artery walls is too high. It can lead to severe health complications and increase the risk of heart disease, stroke, and sometimes death.",
+                contentAm: "የደም ግፊት (Hypertension) ማለት ደም በደም ቅዳ ግድግዳዎች ላይ የሚያሳርፈው ግፊት ከተለመደው በላይ የሚሆንበት ሁኔታ ነው። ይህ ሁኔታ ለከፋ የጤና ችግሮች ይዳርጋል፤ ለልብ ህመም፣ ለስትሮክ እና አንዳንዴም ለሞት የመጋለጥ እድልን ይጨምራል።",
                 image: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&q=80&w=1000",
-                doctorId: yebeltal ? yebeltal.id : null
+                doctorId: createdDoctors[0].id
             },
             {
-                titleEn: "Heart Healthy Lifestyle",
-                titleAm: "ለልብ ጤና የሚጠቅም የአኗኗር ዘይቤ",
-                contentEn: "A healthy diet and regular exercise are key to maintaining a healthy heart.",
-                contentAm: "ጤናማ አመጋገብ እና መደበኛ የአካል ብቃት እንቅስቃሴ ለልብ ጤና ቁልፍ ናቸው።",
+                titleEn: "Healthy Eating for a Strong Heart",
+                titleAm: "ለጠንካራ ልብ ጤናማ አመጋገብ",
+                contentEn: "A heart-healthy diet is one of your best weapons for fighting cardiovascular disease. Focus on fruits, vegetables, whole grains, and lean proteins while limiting salt and saturated fats.",
+                contentAm: "ለልብ ተስማሚ የሆነ አመጋገብ የልብና የደም ዝውውር ችግሮችን ለመከላከል ትልቁ መሳሪያ ነው። ጨውና ቅባትን በመቀነስ በአትክልትና ፍራፍሬ፣ በጥራጥሬዎች እና በፕሮቲን የበለጸጉ ምግቦች ላይ ትኩረት ያድርጉ።",
                 image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&q=80&w=1000",
-                doctorId: creationDoctors[1] ? createdDoctors[1].id : (yebeltal ? yebeltal.id : null)
+                doctorId: createdDoctors[0].id
+            },
+            {
+                titleEn: "Common Cardiac Symptoms You Shouldn't Ignore",
+                titleAm: "የማይናቁ የልብ ህመም ምልክቶች",
+                contentEn: "Chest pain, shortness of breath, and palpitations are some of the signs that your heart needs attention. Early diagnosis can save lives.",
+                contentAm: "የደረት ህመም፣ የትንፋሽ ማጠር እና የልብ ትርታ መዛባት ልብዎ ትኩረት እንደሚፈልግ ከሚያሳዩ ምልክቶች ጥቂቶቹ ናቸው። ቀደም ብሎ ምርመራ ማድረግ ህይወትን ያድናል::",
+                image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=1000",
+                doctorId: createdDoctors[1].id
+            },
+            {
+                titleEn: "The Importance of Regular Exercise",
+                titleAm: "የመደበኛ የአካል ብቃት እንቅስቃሴ አስፈላጊነት",
+                contentEn: "Physical activity is a key part of heart health. Even 30 minutes of brisk walking five days a week can significantly improve your cardiovascular health.",
+                contentAm: "የአካል ብቃት እንቅስቃሴ ለልብ ጤና ቁልፍ ነው። በሳምንት አምስት ቀን በቀን ለ30 ደቂቃ ፈጠን ያለ እርምጃ መራመድ የልብና የደም ዝውውር ጤንነትን በእጅጉ ያሻሽላል።",
+                image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=1000",
+                doctorId: createdDoctors[2].id
             }
         ];
 
-        // Minor fix in above logic: createdDoctors[1] instead of creationDoctors[1]
-        articlesData[1].doctorId = createdDoctors[1] ? createdDoctors[1].id : (yebeltal ? yebeltal.id : null);
-
         for (const art of articlesData) {
-            const [article, created] = await Article.findOrCreate({
+            await Article.findOrCreate({
                 where: { titleEn: art.titleEn },
                 defaults: art
             });
-            if (created) {
-                console.log(`✅ Article "${art.titleEn}" seeded.`);
-            }
         }
+        console.log(`✅ ${articlesData.length} Articles seeded.`);
 
-        // 5. Seed Appointments
-        if (yebeltal && createdPatients.length > 0) {
-            const appointmentsData = [
-                {
-                    patientId: createdPatients[0].id,
-                    doctorId: yebeltal.id,
-                    patientPhone: createdPatients[0].phone,
-                    communicationMode: 'zoom',
-                    scheduledAt: new Date(Date.now() + 86400000), // Tomorrow
-                    status: 'confirmed',
-                    symptoms: "Mild chest pain and dizziness.",
-                    paymentReference: "PAY-EXAMPLE-001",
-                    clinicalNotes: "Patient reports history of hypertension."
+        // 5. Seed Appointments & Payments
+        const appointmentsData = [
+            {
+                patientId: createdPatients[0].id,
+                doctorId: createdDoctors[0].id,
+                patientPhone: createdPatients[0].phone,
+                communicationMode: 'zoom',
+                scheduledAt: new Date(Date.now() + 86400000), // Tomorrow
+                status: 'confirmed',
+                symptoms: "Mild chest pain and dizziness.",
+                paymentReference: "PAY-EXAMPLE-001",
+                clinicalNotes: "Patient reports history of hypertension."
+            },
+            {
+                patientId: createdPatients[1].id,
+                doctorId: createdDoctors[0].id,
+                patientPhone: createdPatients[1].phone,
+                communicationMode: 'whatsapp',
+                scheduledAt: new Date(Date.now() + 172800000), // Day after tomorrow
+                status: 'confirmed',
+                symptoms: "Follow up after medication change.",
+                paymentReference: "PAY-EXAMPLE-002"
+            },
+            {
+                patientId: createdPatients[2].id,
+                doctorId: createdDoctors[1].id,
+                patientPhone: createdPatients[2].phone,
+                communicationMode: 'telegram',
+                scheduledAt: new Date(Date.now() + 259200000), // 3 days later
+                status: 'confirmed',
+                symptoms: "Occasional palpitations during exercise.",
+                paymentReference: "PAY-EXAMPLE-003"
+            }
+        ];
+
+        for (const appt of appointmentsData) {
+            const [appointment, created] = await Appointment.findOrCreate({
+                where: {
+                    patientId: appt.patientId,
+                    doctorId: appt.doctorId,
+                    scheduledAt: appt.scheduledAt
                 },
-                {
-                    patientId: createdPatients[1].id,
-                    doctorId: yebeltal.id,
-                    patientPhone: createdPatients[1].phone,
-                    communicationMode: 'whatsapp',
-                    scheduledAt: new Date(Date.now() + 172800000), // Day after tomorrow
-                    status: 'confirmed',
-                    symptoms: "Follow up after medication change.",
-                    paymentReference: "PAY-EXAMPLE-002"
-                }
-            ];
+                defaults: appt
+            });
 
-            // Fix status typo if necessary (model says 'confirmed' is one of the ENUM values)
-            appointmentsData[1].status = 'confirmed';
-
-            for (const appt of appointmentsData) {
-                // We use findOrCreate carefully here. Maybe check by patientId and scheduledAt
-                const [appointment, created] = await Appointment.findOrCreate({
-                    where: {
-                        patientId: appt.patientId,
-                        doctorId: appt.doctorId,
-                        scheduledAt: appt.scheduledAt
-                    },
-                    defaults: appt
+            if (created) {
+                // Seed a Payment for the appointment
+                await Payment.findOrCreate({
+                    where: { tx_ref: appt.paymentReference },
+                    defaults: {
+                        tx_ref: appt.paymentReference,
+                        appointmentId: appointment.id,
+                        method: 'manual_transfer',
+                        status: 'success',
+                        receiptPath: 'storage/samples/receipt.jpg'
+                    }
                 });
-                if (created) {
-                    console.log(`✅ Appointment for ${createdPatients.find(p => p.id === appt.patientId).fullName} seeded.`);
+
+                // Seed a Medical Attachment for the first appointment
+                if (appt.paymentReference === "PAY-EXAMPLE-001") {
+                    await MedicalAttachment.create({
+                        appointmentId: appointment.id,
+                        fileName: 'Lab_Results_Abebe.pdf',
+                        filePath: 'storage/samples/lab_results.pdf',
+                        fileType: 'application/pdf'
+                    });
                 }
             }
         }
+        console.log(`✅ Sample Appointments, Payments, and Attachments seeded.`);
 
         console.log('🚀 Database seeding completed successfully.');
         console.log('-----------------------------------------------');
         console.log('Sample Logins:');
-        console.log('Doctor: 0911728203 / password123');
-        console.log('Patient: 0900112233 / password123');
+        console.log('Doctor (Yebeltal): 0911728203 / password123');
+        console.log('Doctor (Selamawit): 0911223344 / password123');
+        console.log('Patient (Abebe): 0900112233 / password123');
         console.log('-----------------------------------------------');
 
     } catch (error) {

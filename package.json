@@ -1,0 +1,13 @@
+{
+    "name": "heart-care-ethiopia",
+    "version": "1.0.0",
+    "description": "Heart Care Ethiopia - Full Stack Application",
+    "scripts": {
+        "start-frontend": "cd frontend && npm run dev",
+        "start-backend": "cd backend && npm start",
+        "start-all": "concurrently \"npm run start-backend\" \"npm run start-frontend\""
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    }
+}
