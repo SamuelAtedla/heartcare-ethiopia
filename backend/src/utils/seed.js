@@ -50,7 +50,16 @@ const seedInitialData = async () => {
                 where: { phone: dr.phone },
                 defaults: dr
             });
-            if (created) console.log(`✅ Doctor ${dr.fullName} seeded.`);
+
+            if (created) {
+                console.log(`✅ Doctor ${dr.fullName} seeded.`);
+            } else {
+                // Force update credentials for existing users to ensure they match the demo
+                user.password = hashedPassword;
+                if (dr.email) user.email = dr.email; // Also ensure email is set if missing
+                await user.save();
+                console.log(`🔄 Doctor ${dr.fullName} updated with correct credentials.`);
+            }
             createdDoctors.push(user);
         }
 
@@ -88,7 +97,16 @@ const seedInitialData = async () => {
                 where: { phone: pt.phone },
                 defaults: pt
             });
-            if (created) console.log(`✅ Patient ${pt.fullName} seeded.`);
+
+            if (created) {
+                console.log(`✅ Patient ${pt.fullName} seeded.`);
+            } else {
+                // Force update credentials for existing users
+                user.password = hashedPassword;
+                if (pt.email) user.email = pt.email;
+                await user.save();
+                console.log(`🔄 Patient ${pt.fullName} updated with correct credentials.`);
+            }
             createdPatients.push(user);
         }
 
