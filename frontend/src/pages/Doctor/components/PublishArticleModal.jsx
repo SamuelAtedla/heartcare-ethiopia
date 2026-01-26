@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { X, PenTool, Image as ImageIcon, Upload, Loader2 } from 'lucide-react';
 import apiClient, { getFileUrl } from '../../../api/axiosConfig';
 
+import { useNotification } from '../../../context/NotificationContext';
+
 const PublishArticleModal = ({ onClose, onSuccess, article }) => {
+    const { notify } = useNotification();
     const [formData, setFormData] = useState({
         titleEn: article?.titleEn || '',
         titleAm: article?.titleAm || '',
@@ -81,19 +84,19 @@ const PublishArticleModal = ({ onClose, onSuccess, article }) => {
                 await apiClient.put(`/doctor/articles/${article.id}`, data, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
-                alert('Article updated successfully!');
+                notify.success('Article updated successfully!');
             } else {
                 await apiClient.post('/doctor/articles', data, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
-                alert('Article published successfully!');
+                notify.success('Article published successfully!');
             }
 
             onSuccess();
             onClose();
         } catch (error) {
             console.error('Operation failed:', error);
-            alert(error.response?.data?.error || 'Operation failed. Please try again.');
+            notify.error(error.response?.data?.error || 'Operation failed. Please try again.');
         } finally {
             setSubmitting(false);
         }

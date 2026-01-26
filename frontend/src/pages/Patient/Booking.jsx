@@ -1,14 +1,14 @@
-//import { useState } from 'react';
-import api from '../api/axiosConfig';
+import { useNotification } from '../context/NotificationContext';
 
 export default function BookingPage() {
+  const { notify } = useNotification();
   const handleBooking = async (slot) => {
     try {
       const response = await api.post('/appointments/book', { slot });
       // Redirect to Ethiopian Payment Gateway (Chapa/Telebirr)
       window.location.href = response.data.payment_url;
     } catch (err) {
-      alert("Slot might be taken. Please refresh." + { err });
+      notify.error("Slot might be taken. Please refresh.");
     }
   };
 

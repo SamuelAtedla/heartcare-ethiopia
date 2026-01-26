@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { X, User, Phone, Calendar, Clock, FileText, ClipboardList, Loader2, Save } from 'lucide-react';
 import apiClient, { getFileUrl } from '../../../api/axiosConfig';
 
+import { useNotification } from '../../../context/NotificationContext';
+
 const PatientDetailsModal = ({ appointment, onClose }) => {
+    const { notify } = useNotification();
     const [clinicalNotes, setClinicalNotes] = useState(appointment?.clinicalNotes || '');
     const [saving, setSaving] = useState(false);
 
@@ -13,11 +16,11 @@ const PatientDetailsModal = ({ appointment, onClose }) => {
         setSaving(true);
         try {
             await apiClient.post(`/appointments/${id}/clinical-notes`, { notes: clinicalNotes });
-            alert('Clinical notes saved and appointment marked as completed.');
+            notify.success('Clinical notes saved and appointment marked as completed.');
             onClose();
         } catch (error) {
             console.error('Save failed:', error);
-            alert('Failed to save notes.');
+            notify.error('Failed to save notes.');
         } finally {
             setSaving(false);
         }

@@ -3,9 +3,11 @@ import { Plus, Upload, FileText, Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import apiClient from '../../api/axiosConfig';
 import BookingModal from '../../components/BookingModal';
+import { useNotification } from '../../context/NotificationContext';
 
 const PatientDashboard = () => {
     const { t } = useTranslation();
+    const { notify } = useNotification();
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
@@ -46,11 +48,11 @@ const PatientDashboard = () => {
             await apiClient.post(endpoint, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
-            alert(`${type === 'receipt' ? 'Receipt' : 'Lab Result'} uploaded successfully!`);
+            notify.success(`${type === 'receipt' ? 'Receipt' : 'Lab Result'} uploaded successfully!`);
             fetchHistory();
         } catch (error) {
             console.error('Upload failed:', error);
-            alert('Upload failed. Please try again.');
+            notify.error('Upload failed. Please try again.');
         } finally {
             setUploading(false);
         }

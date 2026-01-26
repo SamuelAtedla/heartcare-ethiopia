@@ -3,8 +3,11 @@ import { X, Calendar, Clock, Video, MessageCircle, Send, Phone } from 'lucide-re
 import { useTranslation } from 'react-i18next';
 import apiClient from '../api/axiosConfig';
 
+import { useNotification } from '../context/NotificationContext';
+
 const BookingModal = ({ onClose, onSuccess }) => {
     const { t } = useTranslation();
+    const { notify } = useNotification();
     const [doctors, setDoctors] = useState([]);
     const [selectedDoctor, setSelectedDoctor] = useState(null);
     const [selectedDate, setSelectedDate] = useState('');
@@ -43,7 +46,7 @@ const BookingModal = ({ onClose, onSuccess }) => {
 
     const handleBook = async () => {
         if (!selectedDoctor || !selectedDate || !selectedSlot) {
-            alert(t('bookingAlert'));
+            notify.warning(t('bookingAlert'));
             return;
         }
 
@@ -58,11 +61,11 @@ const BookingModal = ({ onClose, onSuccess }) => {
             });
 
             onSuccess();
-            alert(t('bookingReserved'));
+            notify.success(t('bookingReserved'));
             onClose();
         } catch (error) {
             console.error('Booking failed:', error);
-            alert(error.response?.data?.error || t('bookingFailed'));
+            notify.error(error.response?.data?.error || t('bookingFailed'));
         } finally {
             setSubmitting(false);
         }

@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { NotificationProvider } from './context/NotificationContext';
+import NotificationContainer from './components/common/NotificationContainer';
 import ProtectedRoute from './components/ProtectedRoute';
 
 // Layouts
@@ -28,50 +30,53 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <Routes>
-          {/* Public Routes */}
+        <NotificationProvider>
+          <NotificationContainer />
+          <Routes>
+            {/* Public Routes */}
 
-          {/* Public Routes */}
-          <Route path="/" element={<HomeRoute />} />
-          {/* TODO: Either replace the main landing page or remove this route later */}
-          <Route path="/second" element={<LandingPage2 />} />
-          <Route path="/services" element={<ServicesPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
-          <Route path="/register" element={<RegisterPatient />} />
+            {/* Public Routes */}
+            <Route path="/" element={<HomeRoute />} />
+            {/* TODO: Either replace the main landing page or remove this route later */}
+            <Route path="/second" element={<LandingPage2 />} />
+            <Route path="/services" element={<ServicesPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/register" element={<RegisterPatient />} />
 
-          {/* Protected Patient Routes */}
-          <Route path="/patient" element={
-            <ProtectedRoute roles={['patient']}>
-              <DashboardLayout />
-            </ProtectedRoute>
-          }>
-            <Route path="dashboard" element={<PatientDashboard />} />
-            <Route path="records" element={<PatientRecords />} />
-            <Route path="settings" element={<PatientSettings />} />
-            {/* Redirect root /patient to /patient/dashboard */}
-            <Route index element={<Navigate to="dashboard" replace />} />
-          </Route>
+            {/* Protected Patient Routes */}
+            <Route path="/patient" element={
+              <ProtectedRoute roles={['patient']}>
+                <DashboardLayout />
+              </ProtectedRoute>
+            }>
+              <Route path="dashboard" element={<PatientDashboard />} />
+              <Route path="records" element={<PatientRecords />} />
+              <Route path="settings" element={<PatientSettings />} />
+              {/* Redirect root /patient to /patient/dashboard */}
+              <Route index element={<Navigate to="dashboard" replace />} />
+            </Route>
 
-          {/* Protected Doctor Routes */}
-          <Route path="/doctor" element={
-            <ProtectedRoute roles={['doctor']}>
-              <DashboardLayout />
-            </ProtectedRoute>
-          }>
-            <Route path="dashboard" element={<DoctorDashboard />} />
-            <Route path="finance" element={<FinanceManager />} />
-            <Route path="archive" element={<PatientArchive />} />
-            <Route path="settings" element={<DoctorSettings />} />
-            <Route path="schedule" element={<ScheduleManager />} />
-            {/* Redirect root /doctor to /doctor/dashboard */}
-            <Route index element={<Navigate to="dashboard" replace />} />
-          </Route>
+            {/* Protected Doctor Routes */}
+            <Route path="/doctor" element={
+              <ProtectedRoute roles={['doctor']}>
+                <DashboardLayout />
+              </ProtectedRoute>
+            }>
+              <Route path="dashboard" element={<DoctorDashboard />} />
+              <Route path="finance" element={<FinanceManager />} />
+              <Route path="archive" element={<PatientArchive />} />
+              <Route path="settings" element={<DoctorSettings />} />
+              <Route path="schedule" element={<ScheduleManager />} />
+              {/* Redirect root /doctor to /doctor/dashboard */}
+              <Route index element={<Navigate to="dashboard" replace />} />
+            </Route>
 
-          {/* Fallback */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            {/* Fallback */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </NotificationProvider>
       </AuthProvider>
     </Router>
   );

@@ -3,8 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { Check, Loader2 } from 'lucide-react';
 // import { FaWhatsapp, FaTelegram } from 'react-icons/fa'; // We'll use simple SVGs or lucide icons if possible, or just text for now to match style
 
+import { useNotification } from '../context/NotificationContext';
+
 const BookingForm = () => {
     const { t, i18n } = useTranslation();
+    const { notify } = useNotification();
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
@@ -26,7 +29,7 @@ const BookingForm = () => {
     const nextStep = () => {
         if (step === 1) {
             if (!formData.name || !formData.phone || !formData.date) {
-                alert(t('alertFill', 'Please fill in all required fields.'));
+                notify.warning(t('alertFill', 'Please fill in all required fields.'));
                 return;
             }
             setStep(2);

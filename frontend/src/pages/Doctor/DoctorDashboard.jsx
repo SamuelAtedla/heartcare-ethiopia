@@ -6,7 +6,10 @@ import QueueCard from './components/QueueCard';
 import CalendarView from './components/CalendarView';
 import moment from 'moment';
 
+import { useNotification } from '../../context/NotificationContext';
+
 const DoctorDashboard = () => {
+  const { notify } = useNotification();
   const [activeTab, setActiveTab] = useState('queue');
   const [loading, setLoading] = useState(true);
   const [showPublishModal, setShowPublishModal] = useState(false);
@@ -65,10 +68,10 @@ const DoctorDashboard = () => {
   const handleApprovePayment = async (appointmentId) => {
     try {
       await apiClient.post('/appointments/approve-payment', { appointmentId });
-      alert('Payment Approved!');
+      notify.success('Payment Approved!');
       fetchQueue();
     } catch (error) {
-      alert('Approval Failed.');
+      notify.error('Approval Failed.');
     }
   };
 
