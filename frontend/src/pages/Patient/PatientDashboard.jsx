@@ -146,6 +146,33 @@ const PatientDashboard = () => {
                                                 </div>
                                             )}
                                         </div>
+
+                                        {apt.status === 'pending_payment' && (
+                                            <div className="mt-6 bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                                                <p className="text-xs font-black text-gray-500 uppercase tracking-widest mb-3">{t('paymentInstructions', 'Payment Instructions (500 ETB)')}</p>
+                                                <div className="space-y-3">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="w-10 h-10 bg-[#8A2BE2] rounded-xl flex items-center justify-center text-white font-black text-[10px] shadow-sm tracking-tighter">
+                                                            CBE
+                                                        </div>
+                                                        <div>
+                                                            <div className="text-sm font-bold text-gray-900 tracking-tight">1000123456789</div>
+                                                            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Yebeltal Assefa</div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="w-10 h-10 bg-[#00adef] rounded-xl flex items-center justify-center text-white font-black text-[10px] shadow-sm tracking-tighter">
+                                                            telebirr
+                                                        </div>
+                                                        <div>
+                                                            <div className="text-sm font-bold text-gray-900 tracking-tight">0911223344</div>
+                                                            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Yebeltal Assefa</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
                                     </div>
 
                                     <div className="flex flex-wrap gap-3">
