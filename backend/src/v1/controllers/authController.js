@@ -8,8 +8,8 @@ const { sendEmail } = require('../../services/emailService');
 const { Op } = require('sequelize');
 
 // Helper: Generate JWT
-const signToken = (id, role) => {
-    return jwt.sign({ id, role }, process.env.JWT_SECRET, {
+const signToken = (id, role, isAdmin) => {
+    return jwt.sign({ id, role, isAdmin }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_IN || '7d'
     });
 };
@@ -48,8 +48,12 @@ const register = async (req, res) => {
 
         console.log(`User registered successfully: ${newUser.fullName} (${newUser.role})`);
 
+
         // 5. Generate Token
-        const token = signToken(newUser.id, newUser.role, newUser.phone);
+        // New users (except seeded ones) are not admins by default, so isAdmin is false/undefined.
+        // But for consistency let's pass it. Since we created it, we know it's false unless we change logic.
+        // Actually, newUser.isAdmin is default false.
+        const token = signToken(newUser.id, newUser.role, newUser.isAdmin);
 
         // 6. Send Response
         res.status(201).json({
@@ -91,10 +95,15 @@ const login = async (req, res) => {
             return res.status(401).json({ error: 'Incorrect phone number or password' });
         }
 
+        // 3. Check if account is approved (for doctors)
+        if (user.role === 'doctor' && !user.isApproved) {
+            return res.status(403).json({ error: 'Your account is pending approval. Please contact the administrator.' });
+        }
+
         console.log(`User logged in successfully: ${user.fullName}`);
 
         // 3. Send Token
-        const token = signToken(user.id, user.role, user.phone);
+        const token = signToken(user.id, user.role, user.isAdmin);
 
         res.status(200).json({
             status: 'success',
@@ -105,6 +114,8 @@ const login = async (req, res) => {
                     fullName: user.fullName,
                     email: user.email,
                     role: user.role,
+                    isAdmin: user.isAdmin,
+                    isApproved: user.isApproved,
                     profileImage: user.profileImage,
                     phone: user.phone
                 }
@@ -201,7 +212,7 @@ const resetPassword = async (req, res) => {
         await user.save();
 
         // 3. Log the user in, send JWT
-        const token = signToken(user.id, user.role);
+        const token = signToken(user.id, user.role, user.isAdmin);
 
         res.status(200).json({
             status: 'success',

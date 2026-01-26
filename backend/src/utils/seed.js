@@ -15,6 +15,8 @@ const seedInitialData = async () => {
                 email: 'yebeltal@heartcareethiopia.com',
                 password: hashedPassword,
                 role: 'doctor',
+                isAdmin: true, // Admin Privileges
+                isApproved: true, // Pre-approved
                 specialty: "Adult Cardiologist | Internal Medicine Specialist",
                 profileImage: "https://i.pravatar.cc/300?u=dr_yibeltal",
                 bio: "Adult Cardiologist committed to academic excellence, procedural competence, and evidence-based cardiovascular care. Currently aiming to advance interventional cardiology services in Ethiopia.",
@@ -26,6 +28,7 @@ const seedInitialData = async () => {
                 email: 'selamawit@heartcareethiopia.com',
                 password: hashedPassword,
                 role: 'doctor',
+                isApproved: true,
                 specialty: "Pediatric Cardiologist",
                 profileImage: "https://i.pravatar.cc/300?u=dr_selam",
                 bio: "Specializing in congenital heart diseases and pediatric cardiac care with over 10 years of experience.",
@@ -37,6 +40,7 @@ const seedInitialData = async () => {
                 email: 'kebede@heartcareethiopia.com',
                 password: hashedPassword,
                 role: 'doctor',
+                isApproved: true,
                 specialty: "Cardiac Surgeon",
                 profileImage: "https://i.pravatar.cc/300?u=dr_kebede",
                 bio: "Expert in open-heart surgery and minimally invasive cardiac procedures.",

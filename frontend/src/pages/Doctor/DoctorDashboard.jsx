@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PenTool, Check, FileText, User, Plus } from 'lucide-react';
+import { PenTool, Check, FileText, User, Plus, UserPlus } from 'lucide-react';
 import apiClient, { getFileUrl } from '../../api/axiosConfig';
 import PublishArticleModal from './components/PublishArticleModal';
 import QueueCard from './components/QueueCard';
@@ -7,12 +7,16 @@ import CalendarView from './components/CalendarView';
 import moment from 'moment';
 
 import { useNotification } from '../../context/NotificationContext';
+import { useAuth } from '../../context/AuthContext';
+import AddDoctor from './components/AddDoctor';
 
 const DoctorDashboard = () => {
   const { notify } = useNotification();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('queue');
   const [loading, setLoading] = useState(true);
   const [showPublishModal, setShowPublishModal] = useState(false);
+  const [showAddDoctorModal, setShowAddDoctorModal] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -91,13 +95,24 @@ const DoctorDashboard = () => {
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Specialist Workspace</h1>
           <p className="text-gray-500 font-medium">Coordinate patient care and medical publications</p>
         </div>
-        <button
-          onClick={() => setShowPublishModal(true)}
-          className="bg-red-600 text-white px-6 py-3.5 rounded-2xl font-bold flex items-center gap-2 shadow-xl shadow-red-100 hover:bg-red-700 transition-all active:scale-95"
-        >
-          <PenTool size={20} />
-          <span>Write Article</span>
-        </button>
+        <div className="flex gap-3">
+          {user?.isAdmin && (
+            <button
+              onClick={() => setShowAddDoctorModal(true)}
+              className="bg-blue-600 text-white px-6 py-3.5 rounded-2xl font-bold flex items-center gap-2 shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all active:scale-95"
+            >
+              <UserPlus size={20} />
+              <span>Register Doctor</span>
+            </button>
+          )}
+          <button
+            onClick={() => setShowPublishModal(true)}
+            className="bg-red-600 text-white px-6 py-3.5 rounded-2xl font-bold flex items-center gap-2 shadow-xl shadow-red-100 hover:bg-red-700 transition-all active:scale-95"
+          >
+            <PenTool size={20} />
+            <span>Write Article</span>
+          </button>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -265,6 +280,14 @@ const DoctorDashboard = () => {
             fetchArticles();
             setShowPublishModal(false);
             setSelectedArticle(null);
+          }}
+        />
+      )}
+      {showAddDoctorModal && (
+        <AddDoctor
+          onClose={() => setShowAddDoctorModal(false)}
+          onSuccess={() => {
+            setShowAddDoctorModal(false);
           }}
         />
       )}

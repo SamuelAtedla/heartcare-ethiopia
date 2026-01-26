@@ -9,6 +9,8 @@ const User = sequelize.define('User', {
   password: { type: DataTypes.STRING, allowNull: false },
   fullName: { type: DataTypes.STRING, allowNull: false },
   role: { type: DataTypes.ENUM('patient', 'doctor'), defaultValue: 'patient' },
+  isApproved: { type: DataTypes.BOOLEAN, defaultValue: true }, // Default true for patients, overridden for doctors
+  isAdmin: { type: DataTypes.BOOLEAN, defaultValue: false },
   age: { type: DataTypes.INTEGER }, // Added for patient profile
   // Specialist Specific Fields
   specialty: { type: DataTypes.STRING },
@@ -17,6 +19,13 @@ const User = sequelize.define('User', {
   profileImage: { type: DataTypes.STRING },
   passwordResetToken: { type: DataTypes.STRING },
   passwordResetExpires: { type: DataTypes.DATE }
+});
+
+// Hook to set isApproved=false for doctors by default
+User.beforeCreate(async (user) => {
+  if (user.role === 'doctor' && user.isApproved === undefined) {
+    user.isApproved = false;
+  }
 });
 
 module.exports = User;

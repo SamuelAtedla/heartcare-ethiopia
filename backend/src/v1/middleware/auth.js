@@ -23,6 +23,11 @@ const authenticate = (req, res, next) => {
 // 2. Verify User Permissions (Role-Based)
 const authorize = (...allowedRoles) => {
   return (req, res, next) => {
+    // Check if user has admin privileges if 'admin' role is required
+    if (allowedRoles.includes('admin') && req.user.isAdmin) {
+      return next();
+    }
+
     if (!req.user || !allowedRoles.includes(req.user.role)) {
       return res
         .status(403)
