@@ -3,8 +3,11 @@ import { X, PenTool, Image as ImageIcon, Upload, Loader2, Paperclip } from 'luci
 import apiClient, { getFileUrl } from '../../../api/axiosConfig';
 
 import { useNotification } from '../../../context/NotificationContext';
+import { useTranslation } from 'react-i18next';
+import { validateFile } from '../../../utils/fileValidation';
 
 const PublishArticleModal = ({ onClose, onSuccess, article }) => {
+    const { t } = useTranslation();
     const { notify } = useNotification();
     const [formData, setFormData] = useState({
         titleEn: article?.titleEn || '',
@@ -21,6 +24,11 @@ const PublishArticleModal = ({ onClose, onSuccess, article }) => {
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            const validationError = validateFile(file, { allowedTypes: ['image/jpeg', 'image/png', 'image/webp'] });
+            if (validationError) {
+                notify.error(t(validationError));
+                return;
+            }
             const reader = new FileReader();
             reader.onload = (event) => {
                 const img = new Image();
@@ -70,6 +78,11 @@ const PublishArticleModal = ({ onClose, onSuccess, article }) => {
     const handleAttachmentChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            const validationError = validateFile(file); // Default allows PDF and images
+            if (validationError) {
+                notify.error(t(validationError));
+                return;
+            }
             setFormData({ ...formData, attachment: file });
             setAttachmentName(file.name);
         }

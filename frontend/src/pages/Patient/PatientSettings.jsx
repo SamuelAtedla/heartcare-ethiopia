@@ -3,12 +3,17 @@ import { User, Phone, Calendar, Mail, Save, Loader2, Camera, CheckCircle2 } from
 import { useTranslation } from 'react-i18next';
 import apiClient, { getFileUrl } from '../../api/axiosConfig';
 import { useAuth } from '../../context/AuthContext';
+import { validateFile } from '../../utils/fileValidation';
+import { useNotification } from '../../context/NotificationContext';
 
 const PatientSettings = () => {
     const { t } = useTranslation();
     const { user, updateUser } = useAuth();
+    const { notify } = useNotification();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState(null);
     const [formData, setFormData] = useState({
         fullName: user?.fullName || '',
         phone: user?.phone || '',
@@ -16,20 +21,48 @@ const PatientSettings = () => {
         age: user?.age || ''
     });
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const validationError = validateFile(file, { allowedTypes: ['image/jpeg', 'image/png', 'image/webp'] });
+            if (validationError) {
+                notify.error(t(validationError));
+                return;
+            }
+            setSelectedFile(file);
+            setPreviewUrl(URL.createObjectURL(file));
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setSuccess(false);
         try {
-            await apiClient.put('/patient/profile', formData);
+            const data = new FormData();
+            Object.keys(formData).forEach(key => {
+                data.append(key, formData[key]);
+            });
+
+            if (selectedFile) {
+                data.append('profileImage', selectedFile);
+            }
+
+            const response = await apiClient.put('/patient/profile', data, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
 
             // Sync with global auth state
-            updateUser(formData);
+            updateUser({
+                ...formData,
+                profileImage: response.data.profileImage || user.profileImage
+            });
 
             setSuccess(true);
             setTimeout(() => setSuccess(false), 3000);
         } catch (error) {
             console.error('Update failed:', error);
+            notify.error('Update failed. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -50,13 +83,14 @@ const PatientSettings = () => {
                     <div className="bg-white rounded-[40px] border border-gray-100 p-8 shadow-sm text-center">
                         <div className="relative w-32 h-32 mx-auto mb-6">
                             <div className="w-full h-full rounded-[40px] bg-red-50 flex items-center justify-center text-red-600 overflow-hidden border-4 border-white shadow-xl">
-                                {user?.profileImage ? (
-                                    <img src={getFileUrl(user.profileImage)} className="w-full h-full object-cover" alt="" />
+                                {previewUrl || user?.profileImage ? (
+                                    <img src={previewUrl || getFileUrl(user.profileImage)} className="w-full h-full object-cover" alt="" />
                                 ) : <User size={48} />}
                             </div>
-                            <button className="absolute -right-2 -bottom-2 w-10 h-10 bg-gray-900 text-white rounded-2xl flex items-center justify-center hover:bg-black transition-all border-4 border-white shadow-lg">
+                            <label className="absolute -right-2 -bottom-2 w-10 h-10 bg-gray-900 text-white rounded-2xl flex items-center justify-center hover:bg-black transition-all border-4 border-white shadow-lg cursor-pointer">
                                 <Camera size={18} />
-                            </button>
+                                <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+                            </label>
                         </div>
                         <h3 className="font-black text-xl text-gray-900">{formData.fullName}</h3>
                         <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mt-1">{t('patientMember')}</p>

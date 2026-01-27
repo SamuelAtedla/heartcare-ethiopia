@@ -150,6 +150,8 @@ i18n
                     footRights: "© 2024 Heart Care Ethiopia. All Rights Reserved.",
                     attachments: "Supplementary Materials",
                     downloadAttachment: "Download Reference Material",
+                    invalidFileType: "Invalid file type. Please upload an image or PDF.",
+                    fileTooLarge: "File is too large. Maximum size is 5MB.",
                 }
             },
             am: {
@@ -295,6 +297,8 @@ i18n
                     footRights: "© 2024 ሃርት ኬር ኢትዮጵያ። መብቱ በህግ የተጠበቀ ነው።",
                     attachments: "ተጨማሪ መረጃዎች",
                     downloadAttachment: "ተያያዥ መረጃዎችን አውርድ",
+                    invalidFileType: "ልክ ያልሆነ የፋይል አይነት። እባክዎን ምስል ወይም PDF ያስገቡ።",
+                    fileTooLarge: "ፋይሉ በጣም ትልቅ ነው። ከፍተኛው መጠን 5MB ነው።",
                 }
             }
         },

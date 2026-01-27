@@ -2,9 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { User, Phone, Briefcase, FileText, Award, Save, Loader2, Camera, CheckCircle2 } from 'lucide-react';
 import apiClient, { getFileUrl } from '../../api/axiosConfig';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
+import { validateFile } from '../../utils/fileValidation';
+import { useNotification } from '../../context/NotificationContext';
 
 const DoctorSettings = () => {
+    const { t } = useTranslation();
     const { user, updateUser } = useAuth();
+    const { notify } = useNotification();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
@@ -44,6 +49,11 @@ const DoctorSettings = () => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            const validationError = validateFile(file, { allowedTypes: ['image/jpeg', 'image/png', 'image/webp'] });
+            if (validationError) {
+                notify.error(t(validationError));
+                return;
+            }
             setSelectedFile(file);
             setPreviewUrl(URL.createObjectURL(file));
         }

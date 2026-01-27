@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { validateFile } from '../utils/fileValidation';
 
 const RegisterPatient = () => {
     const { t } = useTranslation();
@@ -32,6 +33,11 @@ const RegisterPatient = () => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            const validationError = validateFile(file, { allowedTypes: ['image/jpeg', 'image/png', 'image/webp'] });
+            if (validationError) {
+                setError(t(validationError));
+                return;
+            }
             setProfilePhoto(file);
             setPhotoPreview(URL.createObjectURL(file));
         }

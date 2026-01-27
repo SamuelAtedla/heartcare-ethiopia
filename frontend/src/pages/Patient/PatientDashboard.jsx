@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import apiClient from '../../api/axiosConfig';
 import BookingModal from '../../components/BookingModal';
 import { useNotification } from '../../context/NotificationContext';
+import { validateFile } from '../../utils/fileValidation';
 
 const PatientDashboard = () => {
     const { t } = useTranslation();
@@ -31,6 +32,12 @@ const PatientDashboard = () => {
     const handleFileUpload = async (e, appointmentId, type) => {
         const file = e.target.files[0];
         if (!file) return;
+
+        const validationError = validateFile(file);
+        if (validationError) {
+            notify.error(t(validationError));
+            return;
+        }
 
         setUploading(true);
         const formData = new FormData();

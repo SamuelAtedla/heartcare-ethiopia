@@ -24,6 +24,10 @@ const updateProfile = async (req, res) => {
     if (age !== undefined) updateData.age = age;
     if (email !== undefined) updateData.email = email;
 
+    if (req.file) {
+      updateData.profileImage = req.file.path.replace(/\\/g, '/');
+    }
+
     // Guard phone similarly to doctor controller
     if (phone && phone !== '' && phone !== 'undefined') {
       updateData.phone = phone;
@@ -34,7 +38,10 @@ const updateProfile = async (req, res) => {
       { where: { id: req.user.id } }
     );
 
-    res.json({ message: 'Profile updated successfully.' });
+    res.json({
+      message: 'Profile updated successfully.',
+      profileImage: updateData.profileImage
+    });
   } catch (error) {
     console.error("Patient Profile Update Error:", error);
     res.status(500).json({ error: 'Profile update failed.' });

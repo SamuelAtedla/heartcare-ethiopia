@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { X, UserPlus, Loader2, Save, Camera } from 'lucide-react';
 import apiClient from '../../../api/axiosConfig';
 import { useNotification } from '../../../context/NotificationContext';
+import { useTranslation } from 'react-i18next';
+import { validateFile } from '../../../utils/fileValidation';
 
 const AddDoctor = ({ onClose, onSuccess }) => {
+    const { t } = useTranslation();
     const { notify } = useNotification();
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
@@ -25,6 +28,11 @@ const AddDoctor = ({ onClose, onSuccess }) => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            const validationError = validateFile(file, { allowedTypes: ['image/jpeg', 'image/png', 'image/webp'] });
+            if (validationError) {
+                notify.error(t(validationError));
+                return;
+            }
             setProfilePhoto(file);
             setPhotoPreview(URL.createObjectURL(file));
         }
