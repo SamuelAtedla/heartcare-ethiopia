@@ -1,0 +1,92 @@
+[
+  {
+    "column_name": "id",
+    "data_type": "uuid",
+    "column_default": null
+  },
+  {
+    "column_name": "phone",
+    "data_type": "character varying",
+    "column_default": null
+  },
+  {
+    "column_name": "email",
+    "data_type": "character varying",
+    "column_default": null
+  },
+  {
+    "column_name": "password",
+    "data_type": "character varying",
+    "column_default": null
+  },
+  {
+    "column_name": "full_name",
+    "data_type": "character varying",
+    "column_default": null
+  },
+  {
+    "column_name": "role",
+    "data_type": "USER-DEFINED",
+    "column_default": "'patient'::enum_users_role"
+  },
+  {
+    "column_name": "specialty",
+    "data_type": "character varying",
+    "column_default": null
+  },
+  {
+    "column_name": "bio",
+    "data_type": "text",
+    "column_default": null
+  },
+  {
+    "column_name": "credentials",
+    "data_type": "text",
+    "column_default": null
+  },
+  {
+    "column_name": "profile_image",
+    "data_type": "character varying",
+    "column_default": null
+  },
+  {
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone",
+    "column_default": null
+  },
+  {
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone",
+    "column_default": null
+  },
+  {
+    "column_name": "age",
+    "data_type": "integer",
+    "column_default": null
+  },
+  {
+    "column_name": "password_reset_token",
+    "data_type": "character varying",
+    "column_default": null
+  },
+  {
+    "column_name": "password_reset_expires",
+    "data_type": "timestamp with time zone",
+    "column_default": null
+  },
+  {
+    "column_name": "is_approved",
+    "data_type": "boolean",
+    "column_default": "true"
+  },
+  {
+    "column_name": "is_admin",
+    "data_type": "boolean",
+    "column_default": "false"
+  },
+  {
+    "column_name": "is_first_login",
+    "data_type": "boolean",
+    "column_default": "false"
+  }
+]
