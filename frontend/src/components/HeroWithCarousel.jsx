@@ -121,10 +121,10 @@ const HeroWithCarousel = () => {
                             {/* Doctor Image */}
                             <div className="aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-2xl bg-gray-100">
                                 <img
-                                    src={getFileUrl(currentDoc.profileImage) || 'https://via.placeholder.com/600x800?text=No+Image'}
+                                    src={currentDoc.profileImage ? getFileUrl(currentDoc.profileImage) : '/doctor-default.png'}
                                     alt={currentDoc.fullName}
                                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                    onError={(e) => { e.target.src = 'https://via.placeholder.com/600x800?text=No+Image'; }}
+                                    onError={(e) => { e.target.src = '/doctor-default.png'; }}
                                 />
 
                                 {/* Overlay Content */}
@@ -187,10 +187,10 @@ const HeroWithCarousel = () => {
                     >
                         <div className="md:w-2/5 md:h-auto h-48 relative shrink-0">
                             <img
-                                src={getFileUrl(selectedDoctor.profileImage) || 'https://via.placeholder.com/300?text=No+Image'}
+                                src={selectedDoctor.profileImage ? getFileUrl(selectedDoctor.profileImage) : '/doctor-default.png'}
                                 alt="Detail"
                                 className="w-full h-full object-cover"
-                                onError={(e) => { e.target.src = 'https://via.placeholder.com/300?text=No+Image'; }}
+                                onError={(e) => { e.target.src = '/doctor-default.png'; }}
                             />
                         </div>
 

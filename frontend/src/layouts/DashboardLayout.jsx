@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
+import apiClient from '../api/axiosConfig';
 import { useAuth } from '../context/AuthContext';
 import {
     Heart, LayoutDashboard, Calendar, FileText,
@@ -86,12 +87,23 @@ const DashboardLayout = () => {
 
                     <div className="pt-4 border-t border-gray-100">
                         <div className="flex items-center space-x-3 px-4 py-3 mb-2">
-                            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold text-xs">
-                                {user?.fullName?.charAt(0) || 'U'}
-                            </div>
+                            {user?.profileImage ? (
+                                <img
+                                    src={`${apiClient.defaults.baseURL.replace('/api/v1', '')}/${user.profileImage}`}
+                                    className="w-8 h-8 rounded-full object-cover border-2 border-red-50"
+                                    alt="Profile"
+                                    onError={(e) => {
+                                        e.target.src = '/doctor-default.png';
+                                    }}
+                                />
+                            ) : (
+                                <div className="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center text-red-600 font-bold text-xs border-2 border-red-100 overflow-hidden">
+                                    <img src="/doctor-default.png" alt="Default" className="w-full h-full object-cover opacity-50" />
+                                </div>
+                            )}
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-bold text-gray-900 truncate">{user?.name}</p>
-                                <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+                                <p className="text-sm font-black text-gray-900 truncate">{user?.fullName}</p>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{user?.role}</p>
                             </div>
                         </div>
                         <button

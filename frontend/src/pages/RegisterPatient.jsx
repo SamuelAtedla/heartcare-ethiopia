@@ -52,7 +52,7 @@ const RegisterPatient = () => {
             data.append('caseDescription', formData.caseDescription);
             data.append('role', formData.role);
             if (profilePhoto) {
-                data.append('profilePhoto', profilePhoto);
+                data.append('profileImage', profilePhoto);
             }
 
             const response = await apiClient.post('/auth/register', data, {

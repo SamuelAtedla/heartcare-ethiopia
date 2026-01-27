@@ -102,7 +102,7 @@ const DoctorSettings = () => {
                             <div className="w-full h-full rounded-[40px] bg-white/10 flex items-center justify-center text-white/20 overflow-hidden border-4 border-white/10 shadow-xl">
                                 {currentImage ? (
                                     <img src={currentImage} className="w-full h-full object-cover" alt="" />
-                                ) : <User size={48} />}
+                                ) : <img src="/doctor-default.png" className="w-full h-full object-cover opacity-50" alt="" />}
                             </div>
                             <label className="absolute -right-2 -bottom-2 w-10 h-10 bg-red-600 text-white rounded-2xl flex items-center justify-center hover:bg-red-700 transition-all border-4 border-gray-900 shadow-lg cursor-pointer">
                                 <Camera size={18} />

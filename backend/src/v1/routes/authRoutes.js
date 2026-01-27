@@ -5,7 +5,7 @@ const authController = require('../controllers/authController');
 const upload = require('../middleware/upload');
 
 // Register: Handle multipart form (photo upload)
-router.post('/register', upload.single('profilePhoto'), authController.register);
+router.post('/register', upload.single('profileImage'), authController.register);
 
 // Login: JSON body
 router.post('/login', authController.login);

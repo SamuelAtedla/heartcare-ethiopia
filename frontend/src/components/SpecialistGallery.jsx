@@ -72,10 +72,10 @@ const SpecialistGallery = () => {
                             >
                                 <div className="aspect-square relative overflow-hidden bg-gray-100">
                                     <img
-                                        src={getFileUrl(doc.profileImage) || 'https://via.placeholder.com/300?text=No+Image'}
+                                        src={doc.profileImage ? getFileUrl(doc.profileImage) : '/doctor-default.png'}
                                         alt={doc.fullName}
                                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                        onError={(e) => { e.target.src = 'https://via.placeholder.com/300?text=No+Image'; }}
+                                        onError={(e) => { e.target.src = '/doctor-default.png'; }}
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                                         <span className="text-white font-bold flex items-center gap-2">
@@ -107,10 +107,10 @@ const SpecialistGallery = () => {
                         {/* Image Side - Hidden on small screens if content is long, or fixed height */}
                         <div className="md:w-2/5 md:h-auto h-48 relative shrink-0">
                             <img
-                                src={getFileUrl(selectedDoctor.profileImage) || 'https://via.placeholder.com/300?text=No+Image'}
+                                src={selectedDoctor.profileImage ? getFileUrl(selectedDoctor.profileImage) : '/doctor-default.png'}
                                 alt="Detail"
                                 className="w-full h-full object-cover"
-                                onError={(e) => { e.target.src = 'https://via.placeholder.com/300?text=No+Image'; }}
+                                onError={(e) => { e.target.src = '/doctor-default.png'; }}
                             />
                         </div>
 

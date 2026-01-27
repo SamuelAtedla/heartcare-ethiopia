@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, UserPlus, Loader2, Save } from 'lucide-react';
+import { X, UserPlus, Loader2, Save, Camera } from 'lucide-react';
 import apiClient from '../../../api/axiosConfig';
 import { useNotification } from '../../../context/NotificationContext';
 
@@ -15,8 +15,19 @@ const AddDoctor = ({ onClose, onSuccess }) => {
         bio: ''
     });
 
+    const [profilePhoto, setProfilePhoto] = useState(null);
+    const [photoPreview, setPhotoPreview] = useState(null);
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setProfilePhoto(file);
+            setPhotoPreview(URL.createObjectURL(file));
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -31,7 +42,20 @@ const AddDoctor = ({ onClose, onSuccess }) => {
                 return;
             }
 
-            await apiClient.post('/admin/doctors', formData);
+            const data = new FormData();
+            data.append('fullName', formData.fullName);
+            data.append('phone', formData.phone);
+            data.append('email', formData.email);
+            data.append('password', formData.password);
+            data.append('specialty', formData.specialty);
+            data.append('bio', formData.bio);
+            if (profilePhoto) {
+                data.append('profileImage', profilePhoto);
+            }
+
+            await apiClient.post('/admin/doctors', data, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
 
             notify.success('Doctor registered successfully!');
             onSuccess();
@@ -110,6 +134,26 @@ const AddDoctor = ({ onClose, onSuccess }) => {
                                 className="w-full bg-gray-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-xl px-4 py-3 font-medium transition-all outline-none"
                                 placeholder="••••••••"
                             />
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-100 rounded-3xl bg-gray-50/30 gap-4">
+                        <div className="relative group">
+                            <div className="w-28 h-28 rounded-3xl bg-white border-2 border-gray-100 overflow-hidden flex items-center justify-center text-gray-300 shadow-sm transition-all group-hover:border-blue-400 group-hover:shadow-md">
+                                {photoPreview ? (
+                                    <img src={photoPreview} alt="Profile Preview" className="w-full h-full object-cover" />
+                                ) : (
+                                    <UserPlus size={40} />
+                                )}
+                            </div>
+                            <label className="absolute -bottom-2 -right-2 w-10 h-10 bg-blue-600 text-white rounded-2xl flex items-center justify-center shadow-lg cursor-pointer hover:bg-blue-700 transition-all scale-90 group-hover:scale-100 border-4 border-white">
+                                <Camera size={18} />
+                                <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+                            </label>
+                        </div>
+                        <div className="text-center">
+                            <p className="text-sm font-black text-gray-900 uppercase tracking-tight">Specialist Profile Photo</p>
+                            <p className="text-xs text-gray-500 font-medium">Clear professional portrait recommended</p>
                         </div>
                     </div>
 
