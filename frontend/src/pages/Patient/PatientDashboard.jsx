@@ -156,8 +156,8 @@ const PatientDashboard = () => {
                                                             CBE
                                                         </div>
                                                         <div>
-                                                            <div className="text-sm font-bold text-gray-900 tracking-tight">1000123456789</div>
-                                                            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Yebeltal Assefa</div>
+                                                            <div className="text-sm font-bold text-gray-900 tracking-tight">1000137798038</div>
+                                                            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Yebeltal Assefa and/or Misrak Kifle</div>
                                                         </div>
                                                     </div>
                                                     <div className="flex items-center gap-4">
@@ -165,7 +165,7 @@ const PatientDashboard = () => {
                                                             telebirr
                                                         </div>
                                                         <div>
-                                                            <div className="text-sm font-bold text-gray-900 tracking-tight">0911223344</div>
+                                                            <div className="text-sm font-bold text-gray-900 tracking-tight">Coming Soon</div>
                                                             <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Yebeltal Assefa</div>
                                                         </div>
                                                     </div>
