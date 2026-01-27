@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import LandingPage from '../pages/LandingPage';
+import LandingPage2 from '../pages/LandingPage2';
 
 const HomeRoute = () => {
     const { user, loading } = useAuth();
@@ -18,7 +18,7 @@ const HomeRoute = () => {
         }
     }
 
-    return <LandingPage />;
+    return <LandingPage2 />;
 };
 
 export default HomeRoute;
