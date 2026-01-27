@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
       uploadPath += 'receipts/';
     } else if (file.fieldname === 'labResults') {
       uploadPath += 'lab_results/';
-    } else if (file.fieldname === 'articleImage') {
+    } else if (file.fieldname === 'articleImage' || file.fieldname === 'attachment') {
       uploadPath += 'articles/';
     } else {
       uploadPath += 'others/';
@@ -37,14 +37,14 @@ const storage = multer.diskStorage({
 
 // File Filter (Security)
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png|pdf/;
+  const allowedTypes = /jpeg|jpg|png|pdf|doc|docx|txt/;
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-  const mimetype = allowedTypes.test(file.mimetype);
+  const mimetype = allowedTypes.test(file.mimetype) || (file.fieldname === 'attachment'); // Relax mimetype check for docs if needed, or stick to extname
 
-  if (extname && mimetype) {
+  if (extname) {
     cb(null, true);
   } else {
-    cb(new Error('Only images and PDFs are allowed!'));
+    cb(new Error('Only images, PDFs, and document files are allowed!'));
   }
 };
 

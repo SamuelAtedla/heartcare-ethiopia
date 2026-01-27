@@ -13,12 +13,16 @@ const createArticle = async (req, res) => {
     }
 
     try {
+        const image = req.files['articleImage'] ? getRelativeStoragePath(req.files['articleImage'][0].path) : null;
+        const attachment = req.files['attachment'] ? getRelativeStoragePath(req.files['attachment'][0].path) : null;
+
         const article = await Article.create({
             titleEn: titleEn,
             titleAm: titleAm,
             contentEn: contentEn,
             contentAm: contentAm,
-            image: req.file ? getRelativeStoragePath(req.file.path) : null,
+            image: image,
+            attachment: attachment,
             doctorId: req.user.id
         });
 
@@ -56,8 +60,13 @@ const updateArticle = async (req, res) => {
         if (contentEn) updateData.contentEn = contentEn;
         if (contentAm) updateData.contentAm = contentAm;
 
-        if (req.file) {
-            updateData.image = getRelativeStoragePath(req.file.path);
+        if (req.files) {
+            if (req.files['articleImage']) {
+                updateData.image = getRelativeStoragePath(req.files['articleImage'][0].path);
+            }
+            if (req.files['attachment']) {
+                updateData.attachment = getRelativeStoragePath(req.files['attachment'][0].path);
+            }
         }
 
         await article.update(updateData);

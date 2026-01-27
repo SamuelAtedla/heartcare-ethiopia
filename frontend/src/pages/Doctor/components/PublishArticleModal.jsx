@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, PenTool, Image as ImageIcon, Upload, Loader2 } from 'lucide-react';
+import { X, PenTool, Image as ImageIcon, Upload, Loader2, Paperclip } from 'lucide-react';
 import apiClient, { getFileUrl } from '../../../api/axiosConfig';
 
 import { useNotification } from '../../../context/NotificationContext';
@@ -11,9 +11,11 @@ const PublishArticleModal = ({ onClose, onSuccess, article }) => {
         titleAm: article?.titleAm || '',
         contentEn: article?.contentEn || '',
         contentAm: article?.contentAm || '',
-        image: null
+        image: null,
+        attachment: null
     });
     const [imagePreview, setImagePreview] = useState(article?.image ? getFileUrl(article.image) : null);
+    const [attachmentName, setAttachmentName] = useState(article?.attachment ? article.attachment.split('/').pop() : '');
     const [submitting, setSubmitting] = useState(false);
 
     const handleImageChange = (e) => {
@@ -65,6 +67,14 @@ const PublishArticleModal = ({ onClose, onSuccess, article }) => {
         }
     };
 
+    const handleAttachmentChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setFormData({ ...formData, attachment: file });
+            setAttachmentName(file.name);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSubmitting(true);
@@ -78,6 +88,10 @@ const PublishArticleModal = ({ onClose, onSuccess, article }) => {
 
             if (formData.image) {
                 data.append('articleImage', formData.image);
+            }
+
+            if (formData.attachment) {
+                data.append('attachment', formData.attachment);
             }
 
             if (article) {
@@ -163,6 +177,28 @@ const PublishArticleModal = ({ onClose, onSuccess, article }) => {
                                     type="file"
                                     accept="image/*"
                                     onChange={handleImageChange}
+                                    className="hidden"
+                                />
+                            </label>
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Optional Attachment (PDF, Doc, etc.)</label>
+                        <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-xl bg-gray-50 border-2 border-gray-100 flex items-center justify-center text-gray-400">
+                                <Paperclip size={20} />
+                            </div>
+                            <label className="cursor-pointer flex-1">
+                                <div className="flex items-center justify-between bg-gray-100 px-4 py-2.5 rounded-xl hover:bg-gray-200 transition">
+                                    <span className="text-sm font-bold text-gray-600 truncate max-w-[200px]">
+                                        {attachmentName || 'Select attachment'}
+                                    </span>
+                                    <Upload size={18} className="text-gray-400" />
+                                </div>
+                                <input
+                                    type="file"
+                                    onChange={handleAttachmentChange}
                                     className="hidden"
                                 />
                             </label>

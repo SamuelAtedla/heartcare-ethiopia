@@ -117,9 +117,24 @@ const ArticleCarousel = () => {
                         <h2 className="text-3xl font-bold mb-4">
                             {isAm ? expandedArticle.titleAm : expandedArticle.titleEn}
                         </h2>
-                        <div className="prose prose-lg text-gray-600">
+                        <div className="prose prose-lg text-gray-600 whitespace-pre-line mb-8">
                             {isAm ? expandedArticle.contentAm : expandedArticle.contentEn}
                         </div>
+
+                        {expandedArticle.attachment && (
+                            <div className="border-t border-gray-100 pt-6">
+                                <a
+                                    href={getFileUrl(expandedArticle.attachment)}
+                                    download
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 text-red-600 font-bold hover:gap-3 transition-all"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" /></svg>
+                                    {t('downloadAttachment', 'Download Reference Material')}
+                                </a>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}

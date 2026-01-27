@@ -148,6 +148,8 @@ i18n
                     document: "Document",
                     bookingFailed: "Booking failed. Please try again.",
                     footRights: "© 2024 Heart Care Ethiopia. All Rights Reserved.",
+                    attachments: "Supplementary Materials",
+                    downloadAttachment: "Download Reference Material",
                 }
             },
             am: {
@@ -291,6 +293,8 @@ i18n
                     document: "ሰነድ",
                     bookingFailed: "ምዝገባው አልተሳካም። እባክዎን እንደገና ይሞክሩ።",
                     footRights: "© 2024 ሃርት ኬር ኢትዮጵያ። መብቱ በህግ የተጠበቀ ነው።",
+                    attachments: "ተጨማሪ መረጃዎች",
+                    downloadAttachment: "ተያያዥ መረጃዎችን አውርድ",
                 }
             }
         },

@@ -8,6 +8,7 @@ const Article = sequelize.define('Article', {
     contentEn: { type: DataTypes.TEXT, allowNull: false },
     contentAm: { type: DataTypes.TEXT, allowNull: false },
     image: { type: DataTypes.STRING },
+    attachment: { type: DataTypes.STRING },
     published: { type: DataTypes.BOOLEAN, defaultValue: true }
 });
 

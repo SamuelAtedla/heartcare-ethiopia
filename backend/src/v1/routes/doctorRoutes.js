@@ -18,7 +18,7 @@ router.get(
 router.post(
   "/articles",
   authenticate,
-  upload.single('articleImage'),
+  upload.fields([{ name: 'articleImage', maxCount: 1 }, { name: 'attachment', maxCount: 1 }]),
   //authorize("doctor"),
   articleController.createArticle
 );
@@ -33,7 +33,7 @@ router.get(
 router.put(
   "/articles/:id",
   authenticate,
-  upload.single('articleImage'),
+  upload.fields([{ name: 'articleImage', maxCount: 1 }, { name: 'attachment', maxCount: 1 }]),
   //authorize("doctor"),
   articleController.updateArticle
 );
