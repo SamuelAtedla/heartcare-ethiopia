@@ -135,7 +135,7 @@ const getFinanceRecords = async (req, res) => {
 // 5. Update Doctor Profile
 const updateProfile = async (req, res) => {
   try {
-    const { fullName, bio, specialty, credentials, phone } = req.body;
+    const { fullName, bio, specialty, credentials, phone, professionalFee } = req.body;
     let profileImage = req.body.profileImage; // Keep existing if not uploading
 
     if (req.file) {
@@ -150,6 +150,7 @@ const updateProfile = async (req, res) => {
     if (bio !== undefined) updateData.bio = bio;
     if (specialty !== undefined) updateData.specialty = specialty;
     if (credentials !== undefined) updateData.credentials = credentials;
+    if (professionalFee !== undefined) updateData.professionalFee = professionalFee;
     if (profileImage) updateData.profileImage = profileImage;
 
     // Guard phone update similarly to before
@@ -176,7 +177,7 @@ const updateProfile = async (req, res) => {
 const getProfile = async (req, res) => {
   try {
     const doctor = await User.findByPk(req.user.id, {
-      attributes: ['id', 'fullName', 'phone', 'specialty', 'bio', 'credentials', 'profileImage']
+      attributes: ['id', 'fullName', 'phone', 'specialty', 'bio', 'credentials', 'profileImage', 'professionalFee']
     });
     res.json(doctor);
   } catch (error) {

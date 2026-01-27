@@ -14,7 +14,8 @@ const DoctorSettings = () => {
         phone: user?.phone || '',
         specialty: user?.specialty || '',
         bio: user?.bio || '',
-        credentials: user?.credentials || ''
+        credentials: user?.credentials || '',
+        professionalFee: user?.professionalFee || 3000
     });
 
     useEffect(() => {
@@ -31,7 +32,8 @@ const DoctorSettings = () => {
                     phone: currentDoc.phone || user?.phone || '',
                     specialty: currentDoc.specialty || '',
                     bio: currentDoc.bio || '',
-                    credentials: currentDoc.credentials || ''
+                    credentials: currentDoc.credentials || '',
+                    professionalFee: currentDoc.professionalFee || 3000
                 });
             }
         } catch (error) {
@@ -159,6 +161,20 @@ const DoctorSettings = () => {
                                         onChange={(e) => setFormData({ ...formData, specialty: e.target.value })}
                                         className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 ring-red-100 transition-all font-medium"
                                         placeholder="e.g. Cardiologist"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Professional Fee (per session)</label>
+                                <div className="relative group">
+                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold group-focus-within:text-red-600 transition-colors">ETB</span>
+                                    <input
+                                        type="number"
+                                        value={formData.professionalFee}
+                                        onChange={(e) => setFormData({ ...formData, professionalFee: e.target.value })}
+                                        className="w-full pl-14 pr-4 py-4 bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 ring-red-100 transition-all font-medium"
+                                        placeholder="3000"
                                     />
                                 </div>
                             </div>

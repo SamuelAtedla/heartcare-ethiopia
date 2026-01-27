@@ -17,6 +17,7 @@ const User = sequelize.define('User', {
   bio: { type: DataTypes.TEXT },
   credentials: { type: DataTypes.TEXT },
   profileImage: { type: DataTypes.STRING },
+  professionalFee: { type: DataTypes.INTEGER, defaultValue: 3000 },
   passwordResetToken: { type: DataTypes.STRING },
   passwordResetExpires: { type: DataTypes.DATE }
 });

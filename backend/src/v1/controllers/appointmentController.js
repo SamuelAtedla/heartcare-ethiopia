@@ -133,19 +133,22 @@ const appointmentController = {
         return res.status(400).json({ error: 'No receipt file provided.' });
       }
 
-      // 1. Find the appointment
+      // 1. Find the appointment and doctor
       const appointment = await Appointment.findOne({
-        where: { id: appointmentId, patientId: req.user.id }
+        where: { id: appointmentId, patientId: req.user.id },
+        include: [{ model: User, as: 'doctor', attributes: ['professionalFee'] }]
       });
 
       if (!appointment) {
         return res.status(404).json({ error: 'Appointment not found.' });
       }
 
+      const professionalFee = appointment.doctor?.professionalFee || 3000;
+
       // 2. Create Payment Record (Receipt Based)
       await Payment.create({
         appointmentId: appointment.id,
-        amount: 500, // Fixed fee for now
+        amount: professionalFee,
         status: 'pending_verification',
         tx_ref: 'RECEIPT-' + Date.now(), // Mock TX Ref
       });
