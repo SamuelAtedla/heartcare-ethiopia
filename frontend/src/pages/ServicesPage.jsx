@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import apiClient from '../api/axiosConfig';
 
+import { defaultServices } from '../data/defaultServices';
+
 const iconMap = {
     Heart, Activity, Stethoscope, ClipboardCheck, UserCheck, ShieldCheck, Layout
 };
@@ -17,63 +19,6 @@ const ServicesPage = () => {
     const [services, setServices] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const staticServices = [
-        {
-            iconName: 'Stethoscope',
-            titleEn: "Expert Cardiac Consultation",
-            titleAm: "የልብ ህክምና የምክር አገልግሎት",
-            descriptionEn: "Comprehensive evaluation by specialized cardiologists. We treat conditions such as Chest Pain, Palpitations, Shortness of Breath, and Dizziness.",
-            descriptionAm: "በልዩ የልብ ሐኪሞች የሚሰጥ ዝርዝር ምርመራ። የደረት ህመም፣ የልብ ምት መዛባት፣ የትንፋሽ ማጠር እና የማዞር ስሜት ህክምና እንሰጣለን።",
-            featuresEn: ["Detailed Physical Exam", "Symptom Analysis", "Medication Review"],
-            featuresAm: ["አጠቃላይ የአካል ምርመራ", "የምልክቶች ትንተና", "የመድሃኒት ክለሳ"]
-        },
-        {
-            iconName: 'Activity',
-            titleEn: "Hypertension Clinic",
-            titleAm: "የደም ግፊት ክትትል",
-            descriptionEn: "Specialized management of High Blood Pressure. We focus on controlling your numbers to prevent strokes, heart attacks, and kidney damage.",
-            descriptionAm: "ልዩ የደም ግፊት ህክምና እና ክትትል። ስትሮክን፣ የልብ ህመምን እና የኩላሊት ጉዳትን ለመከላከል የደም ግፊትዎን እንቆጣጠራለን።",
-            featuresEn: ["Personalized Medication Plan", "Home Monitoring Guidance", "Lifestyle Coaching"],
-            featuresAm: ["የግል የመድሃኒት አሰጣጥ", "የቤት ውስጥ ክትትል ምክር", "የአኗኗር ዘይቤ ምክር"]
-        },
-        {
-            iconName: 'ShieldCheck',
-            titleEn: "Preventive Cardiology",
-            titleAm: "ቅድመ-መከላከል ህክምና",
-            descriptionEn: "Don't wait for symptoms. We assess your risk factors (Cholesterol, Diabetes, Family History) to stop heart disease before it starts.",
-            descriptionAm: "ምልክቶች እስኪታዩ አይጠብቁ። የልብ ህመም ከመጀመሩ በፊት የኮሌስትሮል፣ የስኳር እና የቤተሰብ ታሪክዎን በማየት እንከላከላለን።",
-            featuresEn: ["Risk Scoring", "Dietary Counseling", "Exercise Prescriptions"],
-            featuresAm: ["የአደጋ ግምገማ", "የአመጋገብ ምክር", "የአካል ብቃት እንቅስቃሴ"]
-        },
-        {
-            iconName: 'Heart',
-            titleEn: "Heart Failure Management",
-            titleAm: "የልብ ድካም ህክምና",
-            descriptionEn: "Long-term compassionate care for patients with weak hearts. Our goal is to improve your quality of life and reduce hospital visits.",
-            descriptionAm: "የልብ አቅም ማነስ ላጋጠማቸው ታካሚዎች የሚሰጥ የረጅም ጊዜ እንክብካቤ። አላማችን የህይወት ጥራትን ማሻሻል ነው።",
-            featuresEn: ["Fluid Management", "Advanced Therapy Options", "Ongoing Monitoring"],
-            featuresAm: ["የፈሳሽ መጠን ቁጥጥር", "የላቀ የህክምና አማራጮች", "ቀጣይነት ያለው ክትትል"]
-        },
-        {
-            iconName: 'ClipboardCheck',
-            titleEn: "Pre-Operative Clearance",
-            titleAm: "ከቀዶ ጥገና በፊት ምርመራ",
-            descriptionEn: "Cardiac assessment before non-cardiac surgeries. We ensure your heart is strong enough to withstand anesthesia and surgery.",
-            descriptionAm: "ከማንኛውም ቀዶ ጥገና በፊት የሚደረግ የልብ ምርመራ። ልብዎ ማደንዘዣን እና ቀዶ ጥገናን መቋቋም እንደሚችል እናረጋግጣለን።",
-            featuresEn: ["Risk Stratification", "Coordination with Surgeons", "Safety Optimization"],
-            featuresAm: ["የአደጋ ትንተና", "ከቀዶ ጥገና ሐኪሞች ጋር ምክክር", "የደህንነት ማረጋገጫ"]
-        },
-        {
-            iconName: 'UserCheck',
-            titleEn: "Second Opinion Services",
-            titleAm: "የተጨማሪ ሀኪም ማረጋገጫ",
-            descriptionEn: "Have a diagnosis but want peace of mind? We review your existing records and treatment plans to ensure you're on the right path.",
-            descriptionAm: "የተሰጠዎትን ህክምና ማረጋገጥ ይፈልጋሉ? ያለዎትን የህክምና መረጃ በመገምገም ትክክለኛውን ውሳኔ እንዲወስኑ እናግዛለን።",
-            featuresEn: ["Record Review", "Treatment Validation", "Mental Peace"],
-            featuresAm: ["የህክምና መረጃ ግምገማ", "የህክምና ትክክለኛነት ማረጋገጫ", "የአእምሮ ሰላም"]
-        }
-    ];
-
     useEffect(() => {
         const fetchServices = async () => {
             try {
@@ -81,11 +26,11 @@ const ServicesPage = () => {
                 if (response.data && response.data.length > 0) {
                     setServices(response.data);
                 } else {
-                    setServices(staticServices);
+                    setServices(defaultServices);
                 }
             } catch (error) {
                 console.error('Error fetching services:', error);
-                setServices(staticServices);
+                setServices(defaultServices);
             } finally {
                 setLoading(false);
             }
@@ -122,8 +67,9 @@ const ServicesPage = () => {
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {services.map((service, index) => {
                                 const Icon = iconMap[service.iconName] || Stethoscope;
+                                const features = (isAm ? service.featuresAm : service.featuresEn) || [];
                                 return (
-                                    <div key={index} className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 group">
+                                    <div key={service.id || index} className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 group">
                                         <div className="bg-red-50 w-16 h-16 rounded-2xl flex items-center justify-center text-red-600 mb-6 group-hover:bg-red-600 group-hover:text-white transition-colors">
                                             <Icon size={32} />
                                         </div>
@@ -134,7 +80,7 @@ const ServicesPage = () => {
                                             {isAm ? service.descriptionAm : service.descriptionEn}
                                         </p>
                                         <ul className="space-y-3 mb-8">
-                                            {(isAm ? service.featuresAm : service.featuresEn).map((feature, idx) => (
+                                            {features.map((feature, idx) => (
                                                 <li key={idx} className="flex items-center text-sm font-semibold text-gray-500">
                                                     <div className="w-1.5 h-1.5 bg-red-400 rounded-full mr-3"></div>
                                                     {feature}
