@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, User, Phone, Calendar, Clock, FileText, ClipboardList, Loader2, Save } from 'lucide-react';
 import apiClient, { getFileUrl } from '../../../api/axiosConfig';
 
@@ -8,6 +8,14 @@ const PatientDetailsModal = ({ appointment, onClose }) => {
     const { notify } = useNotification();
     const [clinicalNotes, setClinicalNotes] = useState(appointment?.clinicalNotes || '');
     const [saving, setSaving] = useState(false);
+
+    useEffect(() => {
+        const handleEsc = (e) => {
+            if (e.key === 'Escape') onClose();
+        };
+        window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, [onClose]);
 
     if (!appointment) return null;
     const { id, patient, scheduledAt, communicationMode, patientPhone, symptoms, status } = appointment;

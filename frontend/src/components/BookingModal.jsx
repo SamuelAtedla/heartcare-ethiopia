@@ -22,6 +22,14 @@ const BookingModal = ({ onClose, onSuccess }) => {
         fetchDoctors();
     }, []);
 
+    useEffect(() => {
+        const handleEsc = (e) => {
+            if (e.key === 'Escape') onClose();
+        };
+        window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, [onClose]);
+
     const fetchDoctors = async () => {
         try {
             const response = await apiClient.get('/public/doctors');

@@ -13,6 +13,14 @@ const DashboardLayout = () => {
     const location = useLocation();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+    useEffect(() => {
+        const handleEsc = (e) => {
+            if (e.key === 'Escape') setIsSidebarOpen(false);
+        };
+        window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, []);
+
     const handleLogout = () => {
         const role = user?.role;
         logout();

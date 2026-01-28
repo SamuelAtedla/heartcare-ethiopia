@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, PenTool, Image as ImageIcon, Upload, Loader2, Paperclip } from 'lucide-react';
 import apiClient, { getFileUrl } from '../../../api/axiosConfig';
 
@@ -20,6 +20,14 @@ const PublishArticleModal = ({ onClose, onSuccess, article }) => {
     const [imagePreview, setImagePreview] = useState(article?.image ? getFileUrl(article.image) : null);
     const [attachmentName, setAttachmentName] = useState(article?.attachment ? article.attachment.split('/').pop() : '');
     const [submitting, setSubmitting] = useState(false);
+
+    useEffect(() => {
+        const handleEsc = (e) => {
+            if (e.key === 'Escape') onClose();
+        };
+        window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, [onClose]);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];

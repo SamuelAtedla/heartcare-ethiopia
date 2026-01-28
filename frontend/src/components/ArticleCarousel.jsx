@@ -31,6 +31,14 @@ const ArticleCarousel = () => {
         }
     }, [isPaused, expandedArticle, articles.length]);
 
+    useEffect(() => {
+        const handleEsc = (e) => {
+            if (e.key === 'Escape') setExpandedArticle(null);
+        };
+        window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, []);
+
     if (articles.length === 0) return null;
 
     const currentArticle = articles[currentIndex];

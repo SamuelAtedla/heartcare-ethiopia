@@ -23,6 +23,14 @@ const ArticleGrid = () => {
         fetchArticles();
     }, []);
 
+    useEffect(() => {
+        const handleEsc = (e) => {
+            if (e.key === 'Escape') setExpandedArticle(null);
+        };
+        window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, []);
+
     if (loading) {
         return (
             <section className="py-20 bg-gray-50 flex items-center justify-center">

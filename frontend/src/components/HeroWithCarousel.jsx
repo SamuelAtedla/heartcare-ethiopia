@@ -40,6 +40,14 @@ const HeroWithCarousel = () => {
     }, []);
 
     useEffect(() => {
+        const handleEsc = (e) => {
+            if (e.key === 'Escape') setSelectedDoctor(null);
+        };
+        window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, []);
+
+    useEffect(() => {
         if (!isPaused && doctors.length > 1 && !selectedDoctor) {
             const interval = setInterval(() => {
                 nextSlide();
