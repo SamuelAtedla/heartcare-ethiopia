@@ -114,6 +114,9 @@ i18n
                     patientMember: "Patient Member",
                     btnSaveChanges: "Save Changes",
                     saved: "Saved!",
+                    paymentInstructions: "Payment Instructions ({{fee}} ETB)",
+                    paymentInstructionsTitle: "Payment Instructions",
+                    feeAmount: "{{fee}} ETB",
                     // Booking Modal
                     newAppointment: "New Appointment",
                     bookingSubTitle: "Select a doctor and available slot",
@@ -261,6 +264,9 @@ i18n
                     patientMember: "የታካሚ አባል",
                     btnSaveChanges: "ለውጦችን አስቀምጥ",
                     saved: "ተቀምጧል!",
+                    paymentInstructions: "የክፍያ መመሪያ ({{fee}} ብር)",
+                    paymentInstructionsTitle: "የክፍያ መመሪያ",
+                    feeAmount: "{{fee}} ብር",
                     // Booking Modal
                     newAppointment: "አዲስ ቀጠሮ",
                     bookingSubTitle: "ዶክተር እና የሚመችዎትን ሰዓት ይምረጡ",

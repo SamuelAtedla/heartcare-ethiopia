@@ -156,7 +156,13 @@ const PatientDashboard = () => {
 
                                         {apt.status === 'pending_payment' && (
                                             <div className="mt-6 bg-gray-50 p-5 rounded-2xl border border-gray-100">
-                                                <p className="text-xs font-black text-gray-500 uppercase tracking-widest mb-3">{t('paymentInstructions', 'Payment Instructions (500 ETB)')}</p>
+                                                <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
+                                                    <p className="text-xs font-black text-gray-500 uppercase tracking-widest">{t('paymentInstructionsTitle')}</p>
+                                                    <div className="flex items-center gap-1.5 bg-red-50 text-red-600 px-4 py-1.5 rounded-xl border border-red-100 shadow-sm">
+                                                        <span className="text-[10px] font-bold uppercase tracking-tight opacity-70">{t('consultation')}</span>
+                                                        <span className="text-sm font-black tracking-tight">{apt.doctor?.professionalFee || 500} ETB</span>
+                                                    </div>
+                                                </div>
                                                 <div className="space-y-3">
                                                     <div className="flex items-center gap-4">
                                                         <div className="w-10 h-10 bg-[#8A2BE2] rounded-xl flex items-center justify-center text-white font-black text-[10px] shadow-sm tracking-tighter">

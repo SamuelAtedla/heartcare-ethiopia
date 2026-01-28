@@ -213,7 +213,7 @@ const appointmentController = {
       const history = await Appointment.findAll({
         where: { patientId: req.user.id },
         include: [
-          { model: User, as: 'doctor', attributes: ['fullName', 'specialty'] },
+          { model: User, as: 'doctor', attributes: ['fullName', 'specialty', 'professionalFee'] },
           { model: MedicalAttachment, as: 'labResults' }
         ],
         order: [['scheduledAt', 'DESC']]

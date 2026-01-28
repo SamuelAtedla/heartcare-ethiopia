@@ -110,8 +110,13 @@ const BookingModal = ({ onClose, onSuccess }) => {
                                     <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold">
                                         {doc.fullName.charAt(0)}
                                     </div>
-                                    <div>
-                                        <div className="font-bold text-gray-900">{doc.fullName}</div>
+                                    <div className="flex-1">
+                                        <div className="flex justify-between items-start">
+                                            <div className="font-bold text-gray-900">{doc.fullName}</div>
+                                            <div className="text-[10px] font-black bg-red-100 text-red-600 px-2 py-0.5 rounded-lg border border-red-200 uppercase tracking-tighter shadow-sm">
+                                                {doc.professionalFee || 3000} ETB
+                                            </div>
+                                        </div>
                                         <div className="text-xs font-medium text-gray-500 uppercase tracking-tight">{doc.specialty || t('cardiologist')}</div>
                                     </div>
                                 </button>
