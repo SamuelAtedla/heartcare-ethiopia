@@ -4,6 +4,8 @@ const MedicalAttachment = require('./MedicalAttachment');
 const Payment = require('./Payment');
 const Article = require('./Article');
 const Availability = require('./Availability');
+const Service = require('./Service');
+
 
 // Relationships
 User.hasMany(Appointment, { foreignKey: 'patientId', as: 'patientAppointment' });
@@ -24,4 +26,4 @@ Article.belongsTo(User, { foreignKey: 'doctorId' });
 User.hasMany(Availability, { foreignKey: 'doctorId' });
 Availability.belongsTo(User, { foreignKey: 'doctorId' });
 
-module.exports = { User, Appointment, Payment, MedicalAttachment, Article, Availability };
+module.exports = { User, Appointment, Payment, MedicalAttachment, Article, Availability, Service };

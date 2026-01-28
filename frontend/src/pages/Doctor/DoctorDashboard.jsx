@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PenTool, Check, FileText, User, Plus, UserPlus } from 'lucide-react';
+import { PenTool, Check, FileText, User, Plus, UserPlus, Layout } from 'lucide-react';
 import apiClient, { getFileUrl } from '../../api/axiosConfig';
 import PublishArticleModal from './components/PublishArticleModal';
 import QueueCard from './components/QueueCard';
@@ -9,6 +9,8 @@ import moment from 'moment';
 import { useNotification } from '../../context/NotificationContext';
 import { useAuth } from '../../context/AuthContext';
 import AddDoctor from './components/AddDoctor';
+import ServiceManagerModal from './components/ServiceManagerModal';
+
 
 const DoctorDashboard = () => {
   const { notify } = useNotification();
@@ -17,6 +19,8 @@ const DoctorDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [showPublishModal, setShowPublishModal] = useState(false);
   const [showAddDoctorModal, setShowAddDoctorModal] = useState(false);
+  const [showServiceModal, setShowServiceModal] = useState(false);
+
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -105,6 +109,16 @@ const DoctorDashboard = () => {
               <span>Register Doctor</span>
             </button>
           )}
+          {user?.isAdmin && (
+            <button
+              onClick={() => setShowServiceModal(true)}
+              className="bg-emerald-600 text-white px-6 py-3.5 rounded-2xl font-bold flex items-center gap-2 shadow-xl shadow-emerald-100 hover:bg-emerald-700 transition-all active:scale-95"
+            >
+              <Layout size={20} />
+              <span>Services</span>
+            </button>
+          )}
+
           <button
             onClick={() => setShowPublishModal(true)}
             className="bg-red-600 text-white px-6 py-3.5 rounded-2xl font-bold flex items-center gap-2 shadow-xl shadow-red-100 hover:bg-red-700 transition-all active:scale-95"
@@ -291,7 +305,13 @@ const DoctorDashboard = () => {
           }}
         />
       )}
+      {showServiceModal && (
+        <ServiceManagerModal
+          onClose={() => setShowServiceModal(false)}
+        />
+      )}
     </div>
+
   );
 };
 
