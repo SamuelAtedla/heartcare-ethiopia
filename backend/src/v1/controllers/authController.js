@@ -233,9 +233,42 @@ const resetPassword = async (req, res) => {
     }
 };
 
+const changePassword = async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+        const userId = req.user.id;
+
+        // 1. Find user
+        const user = await User.findByPk(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // 2. Check current password
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ error: 'Incorrect current password' });
+        }
+
+        // 3. Hash new password and save
+        user.password = await bcrypt.hash(newPassword, 12);
+        await user.save();
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Password updated successfully'
+        });
+
+    } catch (error) {
+        console.error('Change Password Error:', error);
+        res.status(500).json({ error: 'Failed to change password' });
+    }
+};
+
 module.exports = {
     register,
     login,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    changePassword
 };

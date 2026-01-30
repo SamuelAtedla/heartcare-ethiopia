@@ -16,4 +16,8 @@ router.post('/forgot-password', authController.forgotPassword);
 // Reset Password
 router.post('/reset-password/:token', authController.resetPassword);
 
+// Change Password (for logged in users)
+const { authenticate } = require('../middleware/auth');
+router.put('/change-password', authenticate, authController.changePassword);
+
 module.exports = router;

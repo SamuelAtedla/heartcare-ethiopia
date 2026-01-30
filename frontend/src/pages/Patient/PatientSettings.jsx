@@ -5,6 +5,7 @@ import apiClient, { getFileUrl } from '../../api/axiosConfig';
 import { useAuth } from '../../context/AuthContext';
 import { validateFile } from '../../utils/fileValidation';
 import { useNotification } from '../../context/NotificationContext';
+import PasswordManager from '../../components/PasswordManager';
 
 const PatientSettings = () => {
     const { t } = useTranslation();
@@ -176,6 +177,11 @@ const PatientSettings = () => {
                         </div>
                     </form>
                 </div>
+            </div>
+
+            {/* Password Management */}
+            <div className="max-w-4xl mx-auto">
+                <PasswordManager />
             </div>
         </div>
     );

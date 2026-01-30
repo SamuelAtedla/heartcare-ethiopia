@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { validateFile } from '../../utils/fileValidation';
 import { useNotification } from '../../context/NotificationContext';
+import PasswordManager from '../../components/PasswordManager';
 
 const DoctorSettings = () => {
     const { t } = useTranslation();
@@ -236,6 +237,11 @@ const DoctorSettings = () => {
                         </div>
                     </form>
                 </div>
+            </div>
+
+            {/* Password Management */}
+            <div className="max-w-5xl mx-auto">
+                <PasswordManager isDoctor />
             </div>
         </div>
     );

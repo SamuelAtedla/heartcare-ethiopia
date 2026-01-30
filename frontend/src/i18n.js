@@ -155,6 +155,15 @@ i18n
                     downloadAttachment: "Download Reference Material",
                     invalidFileType: "Invalid file type. Please upload an image or PDF.",
                     fileTooLarge: "File is too large. Maximum size is 5MB.",
+                    changePassword: "Change Password",
+                    securityUpdateDesc: "Keep your account secure with a strong password.",
+                    currentPassword: "Current Password",
+                    newPassword: "New Password",
+                    confirmNewPassword: "Confirm New Password",
+                    updatePassword: "Update Password",
+                    allFieldsRequired: "All fields are required",
+                    passwordTooShort: "Password must be at least 6 characters",
+                    passwordChangedSuccess: "Password updated successfully!",
                 }
             },
             am: {
@@ -305,6 +314,15 @@ i18n
                     downloadAttachment: "ተያያዥ መረጃዎችን አውርድ",
                     invalidFileType: "ልክ ያልሆነ የፋይል አይነት። እባክዎን ምስል ወይም PDF ያስገቡ።",
                     fileTooLarge: "ፋይሉ በጣም ትልቅ ነው። ከፍተኛው መጠን 5MB ነው።",
+                    changePassword: "የይለፍ ቃል መቀየር",
+                    securityUpdateDesc: "ጠንካራ የይለፍ ቃል በመጠቀም የመለያዎን ደህንነት ይጠብቁ",
+                    currentPassword: "የአሁኑ የይለፍ ቃል",
+                    newPassword: "አዲስ የይለፍ ቃል",
+                    confirmNewPassword: "አዲሱን የይለፍ ቃል ያረጋግጡ",
+                    updatePassword: "የይለፍ ቃል ቀይር",
+                    allFieldsRequired: "እባክዎን ሁሉንም ቦታዎች ይሙሉ",
+                    passwordTooShort: "የይለፍ ቃሉ ቢያንስ 6 ፊደላት መሆን አለበት",
+                    passwordChangedSuccess: "የይለፍ ቃልዎ በተሳካ ሁኔታ ተቀይሯል!",
                 }
             }
         },
