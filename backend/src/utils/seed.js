@@ -214,9 +214,7 @@ const seedInitialData = async () => {
         for (const appt of appointmentsData) {
             const [appointment, created] = await Appointment.findOrCreate({
                 where: {
-                    patientId: appt.patientId,
-                    doctorId: appt.doctorId,
-                    scheduledAt: appt.scheduledAt
+                    paymentReference: appt.paymentReference
                 },
                 defaults: appt
             });
