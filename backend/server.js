@@ -5,7 +5,7 @@ const { seedInitialData } = require('./src/utils/seed');
 const logger = require('./src/utils/logger');
 
 // Validate required environment variables
-const requiredEnvVars = ['JWT_SECRET', 'DB_URL', 'PORT'];
+const requiredEnvVars = ['JWT_SECRET', 'DB_USER', 'DB_PASSWORD', 'DB_NAME', 'DB_HOST', 'PORT'];
 const missing = requiredEnvVars.filter(v => !process.env[v]);
 
 if (missing.length > 0) {

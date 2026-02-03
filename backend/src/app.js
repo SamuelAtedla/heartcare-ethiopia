@@ -11,6 +11,8 @@ const path = require('path');
 
 const app = express();
 
+//IMPORTANT, INSTEAD OF SEEING THE IP OF THE DOCKER CONTAINER, IT WILL SHOW THE IP OF THE CLIENT
+app.set('trust proxy', 1);
 // --- GLOBAL MIDDLEWARE & SECURITY ---
 app.use(helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" }
