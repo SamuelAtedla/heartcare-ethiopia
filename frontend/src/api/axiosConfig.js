@@ -40,7 +40,7 @@ export const getFileUrl = (path) => {
   if (path.startsWith('http')) return path;
 
   // Get base URL without the /v1 suffix
-  const baseUrl = (import.meta.env.VITE_API_URL || 'http://localhost:5000/v1').replace('/v1', '');
+  const baseUrl = (import.meta.env.REACT_APP_API_URL || 'http://localhost:5000/v1').replace('/v1', '');
 
   // Clean the path and prepend /storage/
   const cleanPath = path.startsWith('/') ? path.slice(1) : path;
