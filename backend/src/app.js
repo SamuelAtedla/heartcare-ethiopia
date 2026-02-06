@@ -18,9 +18,10 @@ app.use(helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 const allowedOrigins = [
-    /*  'https://heartcareethiopia.com',
-      'https://www.heartcareethiopia.com'*/
-    'http://localhost:5173'
+    'https://heartcareethiopia.com',
+    'https://www.heartcareethiopia.com',
+    'http://localhost:5173',
+    'http://localhost:5000'
 ];
 // CORS Configuration - Only allow frontend origin
 const corsOptions = {

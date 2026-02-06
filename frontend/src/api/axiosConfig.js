@@ -34,17 +34,30 @@ apiClient.interceptors.response.use(
   }
 );
 
-// 4. File URL Utility
+// 4. File URL Utility - Returns Absolute URLs
 export const getFileUrl = (path) => {
   if (!path) return null;
   if (path.startsWith('http')) return path;
 
-  // Get base URL without the /v1 suffix
-  const baseUrl = (import.meta.env.REACT_APP_API_URL || 'http://localhost:5000/v1').replace('/v1', '');
+  // Determine Base URL purely for storage access
+  // Priority: 
+  // 1. Env Var (VITE_API_URL) - logic strips /v1 if present
+  // 2. Default Localhost
+  let apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000/v1';
 
-  // Clean the path and prepend /storage/
+  // If apiBase is relative (e.g. '/v1'), construct absolute URL using current origin
+  if (apiBase.startsWith('/')) {
+    apiBase = `${window.location.origin}${apiBase}`;
+  }
+
+  // Remove the API suffix (/v1) to get the root server URL
+  // This assumes storage is at {SERVER_ROOT}/storage
+  const serverRoot = apiBase.replace('/v1', '');
+
+  // Clean the path to ensure no double slashes
   const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-  return `${baseUrl}/storage/${cleanPath}`;
+
+  return `${serverRoot}/storage/${cleanPath}`;
 };
 
 export default apiClient;
