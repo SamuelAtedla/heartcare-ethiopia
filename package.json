@@ -5,9 +5,13 @@
     "scripts": {
         "start-frontend": "cd frontend && npm run dev",
         "start-backend": "cd backend && npm start",
-        "start-all": "concurrently \"npm run start-backend\" \"npm run start-frontend\""
+        "start-all": "concurrently \"npm run start-backend\" \"npm run start-frontend\"",
+        "build:css": "tailwindcss -i ./static-styles.css -o ./dist/static-styles.css --minify"
     },
     "devDependencies": {
-        "concurrently": "^8.2.2"
+        "@tailwindcss/cli": "^4.1.18",
+        "autoprefixer": "^10.4.24",
+        "concurrently": "^8.2.2",
+        "tailwindcss": "^4.1.18"
     }
 }
