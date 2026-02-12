@@ -43,7 +43,7 @@ export const getFileUrl = (path) => {
   // Priority: 
   // 1. Env Var (VITE_API_URL) - logic strips /v1 if present
   // 2. Default Localhost
-  let apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000/v1';
+  let apiBase = import.meta.env.VITE_API_URL || 'https://www.heartcareethiopia.com/api/v1';
 
   // If apiBase is relative (e.g. '/v1'), construct absolute URL using current origin
   if (apiBase.startsWith('/')) {
