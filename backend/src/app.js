@@ -44,6 +44,7 @@ app.use(cors(corsOptions));
 app.use(compression());
 app.use(express.json());
 app.use('/storage', express.static(path.join(__dirname, '../storage')));
+app.use('/api/storage', express.static(path.join(__dirname, '../storage')));
 
 // Request Logging Middleware
 app.use((req, res, next) => {
