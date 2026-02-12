@@ -9,9 +9,23 @@ const FinanceManager = () => {
     const [statusFilter, setStatusFilter] = useState('all');
     const [dateRange, setDateRange] = useState({ start: '', end: '' });
 
+    const [professionalFee, setProfessionalFee] = useState(3000);
+
     useEffect(() => {
         fetchFinanceData();
+        fetchDoctorProfile();
     }, [statusFilter, dateRange]);
+
+    const fetchDoctorProfile = async () => {
+        try {
+            const response = await apiClient.get('/doctor/profile');
+            if (response.data && response.data.professionalFee) {
+                setProfessionalFee(response.data.professionalFee);
+            }
+        } catch (error) {
+            console.error('Error fetching doctor profile:', error);
+        }
+    };
 
     const fetchFinanceData = async () => {
         setLoading(true);
@@ -43,7 +57,7 @@ const FinanceManager = () => {
         }
     };
 
-    const totalRevenue = records.reduce((acc, curr) => curr.status !== 'cancelled' ? acc + 500 : acc, 0);
+    const totalRevenue = records.reduce((acc, curr) => curr.status !== 'cancelled' ? acc + professionalFee : acc, 0);
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
@@ -192,7 +206,7 @@ const FinanceManager = () => {
                                                 </div>
                                             </td>
                                             <td className="px-8 py-6">
-                                                <span className="font-black text-gray-900">500</span>
+                                                <span className="font-black text-gray-900">{professionalFee}</span>
                                                 <span className="text-[10px] text-gray-400 ml-1 font-black">ETB</span>
                                             </td>
                                             <td className="px-8 py-6">
