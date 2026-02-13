@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +9,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Noto+Sans+Ethiopic:wght@300;400;700&display=swap');
-        body { font-family: 'Inter', 'Noto Sans Ethiopic', sans-serif; scroll-behavior: smooth; }
-        .step-active { color: #dc2626; border-bottom: 2px solid #dc2626; }
-        .glass-morphism { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+
+        body {
+            font-family: 'Inter', 'Noto Sans Ethiopic', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .step-active {
+            color: #dc2626;
+            border-bottom: 2px solid #dc2626;
+        }
+
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
     </style>
 </head>
+
 <body class="bg-gray-50 text-gray-900">
 
     <!-- Header -->
@@ -22,22 +36,27 @@
                 <div class="bg-red-600 p-2 rounded-lg">
                     <i class="fas fa-heartbeat text-white text-2xl"></i>
                 </div>
-                <span class="text-xl font-bold tracking-tight text-gray-800 uppercase">HEART CARE <span class="text-red-600">ETHIOPIA</span></span>
+                <span class="text-xl font-bold tracking-tight text-gray-800 uppercase">HEART CARE <span
+                        class="text-red-600">ETHIOPIA</span></span>
             </div>
-            
+
             <div class="flex items-center space-x-4">
                 <nav class="hidden md:flex space-x-6 font-medium mr-4">
                     <a href="#home" data-key="navHome" class="hover:text-red-600 transition">Home</a>
-                    <a href="#register-section" data-key="navServices" class="hover:text-red-600 transition">Services</a>
+                    <a href="#register-section" data-key="navServices"
+                        class="hover:text-red-600 transition">Services</a>
                 </nav>
-                
+
                 <!-- Language Toggle -->
                 <div class="flex bg-gray-100 p-1 rounded-lg border border-gray-200 mr-2">
-                    <button onclick="setLanguage('en')" id="lang-en" class="px-3 py-1 text-xs font-bold rounded-md transition bg-white shadow-sm text-red-600">EN</button>
-                    <button onclick="setLanguage('am')" id="lang-am" class="px-3 py-1 text-xs font-bold rounded-md transition text-gray-500 hover:text-gray-700">አማ</button>
+                    <button onclick="setLanguage('en')" id="lang-en"
+                        class="px-3 py-1 text-xs font-bold rounded-md transition bg-white shadow-sm text-red-600">EN</button>
+                    <button onclick="setLanguage('am')" id="lang-am"
+                        class="px-3 py-1 text-xs font-bold rounded-md transition text-gray-500 hover:text-gray-700">አማ</button>
                 </div>
 
-                <button onclick="scrollToRegister()" data-key="btnBook" class="bg-red-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-red-700 transition shadow-lg shadow-red-200 text-sm">
+                <button onclick="scrollToRegister()" data-key="btnBook"
+                    class="bg-red-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-red-700 transition shadow-lg shadow-red-200 text-sm">
                     Book Appointment
                 </button>
             </div>
@@ -48,7 +67,8 @@
     <section id="home" class="relative bg-white pt-12 pb-20 overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 lg:flex items-center">
             <div class="lg:w-1/2 mb-12 lg:mb-0">
-                <span data-key="heroBadge" class="bg-red-100 text-red-700 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4 inline-block">
+                <span data-key="heroBadge"
+                    class="bg-red-100 text-red-700 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4 inline-block">
                     Trusted Cardiology Experts
                 </span>
                 <h1 data-key="heroTitle" class="text-4xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
@@ -56,25 +76,33 @@
                     <span class="text-red-600">In the Palm of Your Hand.</span>
                 </h1>
                 <p data-key="heroDesc" class="text-lg text-gray-600 mb-8 max-w-lg">
-                    Specialized consultancy for hypertension, heart failure, and lifestyle prevention. Connect with top cardiologists via WhatsApp & Telegram.
+                    Specialized consultancy for hypertension, heart failure, and lifestyle prevention. Connect with top
+                    cardiologists via WhatsApp & Telegram.
                 </p>
                 <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                    <button onclick="scrollToRegister()" data-key="btnRegister" class="bg-gray-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-gray-800 transition">
+                    <button onclick="scrollToRegister()" data-key="btnRegister"
+                        class="bg-gray-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-gray-800 transition">
                         Register Now
                     </button>
                     <div class="flex items-center space-x-2 px-4 py-4">
                         <div class="flex -space-x-2">
-                            <img src="https://i.pravatar.cc/100?u=1" class="w-10 h-10 rounded-full border-2 border-white" alt="User">
-                            <img src="https://i.pravatar.cc/100?u=2" class="w-10 h-10 rounded-full border-2 border-white" alt="User">
-                            <img src="https://i.pravatar.cc/100?u=3" class="w-10 h-10 rounded-full border-2 border-white" alt="User">
+                            <img src="https://i.pravatar.cc/100?u=1"
+                                class="w-10 h-10 rounded-full border-2 border-white" alt="User">
+                            <img src="https://i.pravatar.cc/100?u=2"
+                                class="w-10 h-10 rounded-full border-2 border-white" alt="User">
+                            <img src="https://i.pravatar.cc/100?u=3"
+                                class="w-10 h-10 rounded-full border-2 border-white" alt="User">
                         </div>
-                        <span data-key="heroStats" class="text-sm font-semibold text-gray-500">500+ Patients Helped</span>
+                        <span data-key="heroStats" class="text-sm font-semibold text-gray-500">500+ Patients
+                            Helped</span>
                     </div>
                 </div>
             </div>
             <div class="lg:w-1/2 relative">
-                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=800" alt="Doctor Consultation" class="rounded-3xl shadow-2xl relative z-10">
-                <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl z-20 flex items-center space-x-4">
+                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=800"
+                    alt="Doctor Consultation" class="rounded-3xl shadow-2xl relative z-10">
+                <div
+                    class="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl z-20 flex items-center space-x-4">
                     <div class="bg-green-100 p-3 rounded-full text-green-600">
                         <i class="fab fa-whatsapp text-2xl"></i>
                     </div>
@@ -93,9 +121,15 @@
             <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
                 <!-- Stepper -->
                 <div class="flex border-b">
-                    <div id="step-header-1" data-key="step1" class="flex-1 text-center py-6 font-bold text-sm uppercase tracking-wider step-active">1. Registration</div>
-                    <div id="step-header-2" data-key="step2" class="flex-1 text-center py-6 font-bold text-sm uppercase tracking-wider text-gray-400">2. Payment</div>
-                    <div id="step-header-3" data-key="step3" class="flex-1 text-center py-6 font-bold text-sm uppercase tracking-wider text-gray-400">3. Connect</div>
+                    <div id="step-header-1" data-key="step1"
+                        class="flex-1 text-center py-6 font-bold text-sm uppercase tracking-wider step-active">1.
+                        Registration</div>
+                    <div id="step-header-2" data-key="step2"
+                        class="flex-1 text-center py-6 font-bold text-sm uppercase tracking-wider text-gray-400">2.
+                        Payment</div>
+                    <div id="step-header-3" data-key="step3"
+                        class="flex-1 text-center py-6 font-bold text-sm uppercase tracking-wider text-gray-400">3.
+                        Connect</div>
                 </div>
 
                 <!-- Step 1: Registration Form -->
@@ -104,17 +138,25 @@
                     <form id="regForm" class="space-y-6">
                         <div class="grid md:grid-cols-2 gap-6">
                             <div>
-                                <label data-key="labelName" class="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
-                                <input type="text" id="patientName" required class="w-full border-gray-200 border rounded-xl p-3 focus:ring-2 focus:ring-red-500 outline-none" placeholder="">
+                                <label data-key="labelName" class="block text-sm font-bold text-gray-700 mb-2">Full
+                                    Name</label>
+                                <input type="text" id="patientName" required
+                                    class="w-full border-gray-200 border rounded-xl p-3 focus:ring-2 focus:ring-red-500 outline-none"
+                                    placeholder="">
                             </div>
                             <div>
-                                <label data-key="labelPhone" class="block text-sm font-bold text-gray-700 mb-2">Phone Number</label>
-                                <input type="tel" id="patientPhone" required class="w-full border-gray-200 border rounded-xl p-3 focus:ring-2 focus:ring-red-500 outline-none" placeholder="09xxxxxxxx">
+                                <label data-key="labelPhone" class="block text-sm font-bold text-gray-700 mb-2">Phone
+                                    Number</label>
+                                <input type="tel" id="patientPhone" required
+                                    class="w-full border-gray-200 border rounded-xl p-3 focus:ring-2 focus:ring-red-500 outline-none"
+                                    placeholder="09xxxxxxxx">
                             </div>
                         </div>
                         <div>
-                            <label data-key="labelConcern" class="block text-sm font-bold text-gray-700 mb-2">Heart Concern / Symptoms</label>
-                            <select id="concern" class="w-full border-gray-200 border rounded-xl p-3 focus:ring-2 focus:ring-red-500 outline-none">
+                            <label data-key="labelConcern" class="block text-sm font-bold text-gray-700 mb-2">Heart
+                                Concern / Symptoms</label>
+                            <select id="concern"
+                                class="w-full border-gray-200 border rounded-xl p-3 focus:ring-2 focus:ring-red-500 outline-none">
                                 <option value="Hypertension" data-key="opt1">Hypertension (High BP)</option>
                                 <option value="Chest Pain" data-key="opt2">Chest Pain / Discomfort</option>
                                 <option value="Irregular Heartbeat" data-key="opt3">Irregular Heartbeat</option>
@@ -124,24 +166,32 @@
                         </div>
                         <div class="grid md:grid-cols-2 gap-6">
                             <div>
-                                <label data-key="labelPlatform" class="block text-sm font-bold text-gray-700 mb-2">Preferred Platform</label>
+                                <label data-key="labelPlatform"
+                                    class="block text-sm font-bold text-gray-700 mb-2">Preferred Platform</label>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <label class="cursor-pointer border-2 border-red-600 bg-red-50 rounded-xl p-4 flex items-center justify-center space-x-2 transition" id="label-whatsapp">
+                                    <label
+                                        class="cursor-pointer border-2 border-red-600 bg-red-50 rounded-xl p-4 flex items-center justify-center space-x-2 transition"
+                                        id="label-whatsapp">
                                         <input type="radio" name="platform" value="WhatsApp" checked class="hidden">
                                         <i class="fab fa-whatsapp text-green-500"></i> <span>WhatsApp</span>
                                     </label>
-                                    <label class="cursor-pointer border-2 border-gray-100 rounded-xl p-4 flex items-center justify-center space-x-2 transition" id="label-telegram">
+                                    <label
+                                        class="cursor-pointer border-2 border-gray-100 rounded-xl p-4 flex items-center justify-center space-x-2 transition"
+                                        id="label-telegram">
                                         <input type="radio" name="platform" value="Telegram" class="hidden">
                                         <i class="fab fa-telegram text-blue-500"></i> <span>Telegram</span>
                                     </label>
                                 </div>
                             </div>
                             <div>
-                                <label data-key="labelDate" class="block text-sm font-bold text-gray-700 mb-2">Appointment Date</label>
-                                <input type="date" required id="appDate" class="w-full border-gray-200 border rounded-xl p-3 focus:ring-2 focus:ring-red-500 outline-none">
+                                <label data-key="labelDate"
+                                    class="block text-sm font-bold text-gray-700 mb-2">Appointment Date</label>
+                                <input type="date" required id="appDate"
+                                    class="w-full border-gray-200 border rounded-xl p-3 focus:ring-2 focus:ring-red-500 outline-none">
                             </div>
                         </div>
-                        <button type="button" onclick="goToStep2()" data-key="btnProceed" class="w-full bg-red-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-red-700 transition">
+                        <button type="button" onclick="goToStep2()" data-key="btnProceed"
+                            class="w-full bg-red-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-red-700 transition">
                             Proceed to Payment
                         </button>
                     </form>
@@ -150,45 +200,53 @@
                 <!-- Step 2: Payment -->
                 <div id="step-2" class="p-8 md:p-12 hidden text-center">
                     <h2 data-key="payTitle" class="text-2xl font-bold mb-4">Confirm & Pay</h2>
-                    <p class="text-gray-500 mb-8 text-lg"><span data-key="payFee">Consultancy Fee:</span> <span class="font-bold text-gray-900">500 ETB</span></p>
-                    
+                    <p class="text-gray-500 mb-8 text-lg"><span data-key="payFee">Consultancy Fee:</span> <span
+                            class="font-bold text-gray-900" id="consultationFeeDisplay">3000 ETB</span></p>
+
                     <div class="space-y-4 max-w-sm mx-auto">
-                        <button onclick="simulatePayment('Telebirr')" class="w-full bg-blue-500 text-white p-4 rounded-2xl flex items-center justify-between hover:bg-blue-600 transition group">
+                        <button onclick="simulatePayment('Telebirr')"
+                            class="w-full bg-blue-500 text-white p-4 rounded-2xl flex items-center justify-between hover:bg-blue-600 transition group">
                             <span class="font-bold">Pay with Telebirr</span>
                             <i class="fas fa-chevron-right group-hover:translate-x-1 transition"></i>
                         </button>
-                        <button onclick="simulatePayment('CBE Birr')" class="w-full bg-purple-600 text-white p-4 rounded-2xl flex items-center justify-between hover:bg-purple-700 transition group">
+                        <button onclick="simulatePayment('CBE Birr')"
+                            class="w-full bg-purple-600 text-white p-4 rounded-2xl flex items-center justify-between hover:bg-purple-700 transition group">
                             <span class="font-bold">Pay with CBE Birr</span>
                             <i class="fas fa-chevron-right group-hover:translate-x-1 transition"></i>
                         </button>
                     </div>
                     <p class="mt-8 text-sm text-gray-400">
-                        <i class="fas fa-lock mr-2"></i> <span data-key="paySecure">Secure Transaction powered by Chapa/SantimPay</span>
+                        <i class="fas fa-lock mr-2"></i> <span data-key="paySecure">Secure Transaction powered by
+                            Chapa/SantimPay</span>
                     </p>
                 </div>
 
                 <!-- Step 3: Confirmation -->
                 <div id="step-3" class="p-8 md:p-12 hidden text-center">
-                    <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <div
+                        class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-check text-4xl"></i>
                     </div>
                     <h2 data-key="confTitle" class="text-3xl font-bold mb-2">Booking Confirmed!</h2>
                     <p class="text-gray-600 mb-8" id="confirmationText"></p>
-                    
+
                     <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200 mb-8">
                         <p data-key="commNow" class="font-bold text-gray-800 mb-4">Start Communication Now:</p>
                         <div class="flex flex-col space-y-4">
-                            <a id="waLink" href="#" target="_blank" class="bg-green-500 text-white py-4 rounded-xl font-bold flex items-center justify-center space-x-3 hover:bg-green-600 transition">
+                            <a id="waLink" href="#" target="_blank"
+                                class="bg-green-500 text-white py-4 rounded-xl font-bold flex items-center justify-center space-x-3 hover:bg-green-600 transition">
                                 <i class="fab fa-whatsapp text-2xl"></i>
                                 <span data-key="btnWA">Connect via WhatsApp</span>
                             </a>
-                            <a id="tgLink" href="#" target="_blank" class="bg-blue-500 text-white py-4 rounded-xl font-bold flex items-center justify-center space-x-3 hover:bg-blue-600 transition">
+                            <a id="tgLink" href="#" target="_blank"
+                                class="bg-blue-500 text-white py-4 rounded-xl font-bold flex items-center justify-center space-x-3 hover:bg-blue-600 transition">
                                 <i class="fab fa-telegram text-2xl"></i>
                                 <span data-key="btnTG">Connect via Telegram</span>
                             </a>
                         </div>
                     </div>
-                    <p data-key="confNote" class="text-sm text-gray-500 italic">Please have your previous medical reports ready to share.</p>
+                    <p data-key="confNote" class="text-sm text-gray-500 italic">Please have your previous medical
+                        reports ready to share.</p>
                 </div>
             </div>
         </div>
@@ -299,13 +357,13 @@
 
         function setLanguage(lang) {
             currentLang = lang;
-            
+
             // Update toggle styles
-            document.getElementById('lang-en').className = lang === 'en' 
-                ? "px-3 py-1 text-xs font-bold rounded-md transition bg-white shadow-sm text-red-600" 
+            document.getElementById('lang-en').className = lang === 'en'
+                ? "px-3 py-1 text-xs font-bold rounded-md transition bg-white shadow-sm text-red-600"
                 : "px-3 py-1 text-xs font-bold rounded-md transition text-gray-500 hover:text-gray-700";
-            document.getElementById('lang-am').className = lang === 'am' 
-                ? "px-3 py-1 text-xs font-bold rounded-md transition bg-white shadow-sm text-red-600" 
+            document.getElementById('lang-am').className = lang === 'am'
+                ? "px-3 py-1 text-xs font-bold rounded-md transition bg-white shadow-sm text-red-600"
                 : "px-3 py-1 text-xs font-bold rounded-md transition text-gray-500 hover:text-gray-700";
 
             // Update all elements with data-key
@@ -320,6 +378,32 @@
             document.getElementById('patientName').placeholder = lang === 'am' ? "ስምዎን ያስገቡ" : "Enter your name";
         }
 
+        // Fetch Consultation Fee
+        async function fetchConsultationFee() {
+            try {
+                // Assuming the API is available at this endpoint relative to the domain
+                // If the frontend is served separately, we might need the full URL or a proxy
+                // For this static file usage, we'll try to hit the backend API if we know the URL
+                // Or fallback to 3000.
+                // Since this is index.html, it might be running on a different port than backend in dev.
+                // But in prod, it's same origin.
+                // Let's try to fetch from /api/v1/public/doctors
+                const response = await fetch('/api/v1/public/doctors');
+                if (response.ok) {
+                    const doctors = await response.json();
+                    if (doctors && doctors.length > 0) {
+                        const fee = doctors[0].professionalFee || 3000;
+                        document.getElementById('consultationFeeDisplay').innerText = fee + " ETB";
+                    }
+                }
+            } catch (e) {
+                console.log("Using default fee");
+            }
+        }
+
+        // Call it on load
+        fetchConsultationFee();
+
         function scrollToRegister() {
             document.getElementById('register-section').scrollIntoView({ behavior: 'smooth' });
         }
@@ -332,7 +416,7 @@
             const concernText = concernEl.options[concernEl.selectedIndex].text;
             const platform = document.querySelector('input[name="platform"]:checked').value;
 
-            if(!name || !phone || !date) {
+            if (!name || !phone || !date) {
                 alert(translations[currentLang].alertFill);
                 return;
             }
@@ -367,11 +451,11 @@
             document.getElementById('step-header-3').classList.remove('text-gray-400');
 
             const t = translations[currentLang];
-            document.getElementById('confirmationText').innerText = 
+            document.getElementById('confirmationText').innerText =
                 `${t.confPrefix}${patientData.name}${t.confBody}${patientData.concern} (${patientData.date})${t.confSuffix}`;
 
             const message = encodeURIComponent(`Heart Care Ethiopia: ${patientData.name}, Concern: ${patientData.concern}, Date: ${patientData.date}`);
-            const clinicPhone = "251912345678"; 
+            const clinicPhone = "251912345678";
             const clinicTG = "HeartCareEthiopiaBot";
 
             document.getElementById('waLink').href = `https://wa.me/${clinicPhone}?text=${message}`;
@@ -383,7 +467,7 @@
             input.addEventListener('change', (e) => {
                 document.getElementById('label-whatsapp').className = "cursor-pointer border-2 border-gray-100 rounded-xl p-4 flex items-center justify-center space-x-2 transition";
                 document.getElementById('label-telegram').className = "cursor-pointer border-2 border-gray-100 rounded-xl p-4 flex items-center justify-center space-x-2 transition";
-                
+
                 const selectedLabel = e.target.value === 'WhatsApp' ? 'label-whatsapp' : 'label-telegram';
                 document.getElementById(selectedLabel).classList.add('border-red-600', 'bg-red-50');
             });
@@ -393,4 +477,5 @@
         setLanguage('en');
     </script>
 </body>
+
 </html>

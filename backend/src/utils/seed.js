@@ -18,7 +18,7 @@ const seedInitialData = async () => {
                 isAdmin: true, // Admin Privileges
                 isApproved: true, // Pre-approved
                 specialty: "Adult Cardiologist | Internal Medicine Specialist",
-                profileImage: "https://i.pravatar.cc/300?u=dr_yibeltal",
+                profileImage: "profiles/yeme.png",
                 bio: "Adult Cardiologist committed to academic excellence, procedural competence, and evidence-based cardiovascular care. Currently aiming to advance interventional cardiology services in Ethiopia.",
                 credentials: "MD, FACC, CCKE (ACC Certified)"
             },
@@ -30,7 +30,7 @@ const seedInitialData = async () => {
                 role: 'doctor',
                 isApproved: true,
                 specialty: "Pediatric Cardiologist",
-                profileImage: "https://i.pravatar.cc/300?u=dr_selam",
+                profileImage: "profiles/dr_female.png",
                 bio: "Specializing in congenital heart diseases and pediatric cardiac care with over 10 years of experience.",
                 credentials: "MD, Pediatric Cardiology Specialist"
             },
@@ -42,7 +42,7 @@ const seedInitialData = async () => {
                 role: 'doctor',
                 isApproved: true,
                 specialty: "Cardiac Surgeon",
-                profileImage: "https://i.pravatar.cc/300?u=dr_kebede",
+                profileImage: "profiles/dr_male.png",
                 bio: "Expert in open-heart surgery and minimally invasive cardiac procedures.",
                 credentials: "MD, PhD, Cardiothoracic Surgeon"
             }

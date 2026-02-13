@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import apiClient from '../api/axiosConfig';
 import { useTranslation } from 'react-i18next';
 import { Check, Loader2 } from 'lucide-react';
 // import { FaWhatsapp, FaTelegram } from 'react-icons/fa'; // We'll use simple SVGs or lucide icons if possible, or just text for now to match style
@@ -10,6 +11,24 @@ const BookingForm = () => {
     const { notify } = useNotification();
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [consultationFee, setConsultationFee] = useState(3000);
+
+    useEffect(() => {
+        const fetchFee = async () => {
+            try {
+                const response = await apiClient.get('/public/doctors');
+                if (response.data && response.data.length > 0) {
+                    // Use the fee of the first doctor or a specific logic. 
+                    // For now, defaulting to the first doctor's fee or 3000.
+                    const fee = response.data[0].professionalFee || 3000;
+                    setConsultationFee(fee);
+                }
+            } catch (error) {
+                console.error('Failed to fetch fee', error);
+            }
+        };
+        fetchFee();
+    }, []);
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
@@ -128,7 +147,7 @@ const BookingForm = () => {
                         <div className="p-8 md:p-12 text-center">
                             <h2 className="text-2xl font-bold mb-4">{t('payTitle', 'Confirm & Pay')}</h2>
                             <p className="text-gray-500 mb-8 text-lg">
-                                <span>{t('payFee', 'Consultancy Fee:')}</span> <span className="font-bold text-gray-900">500 ETB</span>
+                                <span>{t('payFee', 'Consultancy Fee:')}</span> <span className="font-bold text-gray-900">{consultationFee} ETB</span>
                             </p>
 
                             <div className="space-y-4 max-w-sm mx-auto">

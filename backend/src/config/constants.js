@@ -8,7 +8,7 @@ module.exports = {
             START: 9,  // 9 AM
             END: 17    // 5 PM
         },
-        CONSULTATION_FEE: 500 // ETB
+        CONSULTATION_FEE: 3000 // ETB
     },
 
     // Authentication Configuration

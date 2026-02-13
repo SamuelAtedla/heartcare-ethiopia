@@ -16,7 +16,7 @@ const getDoctors = async (req, res) => {
     try {
         const doctors = await User.findAll({
             where: { role: 'doctor' },
-            attributes: ['id', 'fullName', 'specialty', 'bio', 'credentials', 'profileImage']
+            attributes: ['id', 'fullName', 'specialty', 'bio', 'credentials', 'profileImage', 'professionalFee']
         });
         res.json(doctors);
     } catch (error) {

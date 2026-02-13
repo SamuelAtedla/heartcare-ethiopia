@@ -211,7 +211,7 @@ const DoctorDashboard = () => {
                   <div>
                     <h3 className="font-extrabold text-gray-900">{item.patient.fullName}</h3>
                     <div className="flex items-center gap-4 mt-1">
-                      <span className="text-sm font-black text-gray-900">500 ETB</span>
+                      <span className="text-sm font-black text-gray-900">{user?.professionalFee || 3000} ETB</span>
                       {item.labResults && item.labResults.length > 0 && (
                         <a
                           href={getFileUrl(item.labResults[0].filePath)}
