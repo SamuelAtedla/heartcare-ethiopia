@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import apiClient from '../api/axiosConfig';
+import { APPOINTMENT } from '../config/constants';
 import { useTranslation } from 'react-i18next';
 import { Check, Loader2 } from 'lucide-react';
 // import { FaWhatsapp, FaTelegram } from 'react-icons/fa'; // We'll use simple SVGs or lucide icons if possible, or just text for now to match style
@@ -11,7 +12,7 @@ const BookingForm = () => {
     const { notify } = useNotification();
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
-    const [consultationFee, setConsultationFee] = useState(3000);
+    const [consultationFee, setConsultationFee] = useState(APPOINTMENT.CONSULTATION_FEE);
 
     useEffect(() => {
         const fetchFee = async () => {
@@ -20,7 +21,7 @@ const BookingForm = () => {
                 if (response.data && response.data.length > 0) {
                     // Use the fee of the first doctor or a specific logic. 
                     // For now, defaulting to the first doctor's fee or 3000.
-                    const fee = response.data[0].professionalFee || 3000;
+                    const fee = response.data[0].professionalFee || APPOINTMENT.CONSULTATION_FEE;
                     setConsultationFee(fee);
                 }
             } catch (error) {

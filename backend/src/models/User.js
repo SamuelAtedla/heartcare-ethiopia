@@ -2,6 +2,8 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
+const CONSTANTS = require('../config/constants');
+
 const User = sequelize.define('User', {
   id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
   phone: { type: DataTypes.STRING, unique: true, allowNull: false },
@@ -17,7 +19,7 @@ const User = sequelize.define('User', {
   bio: { type: DataTypes.TEXT },
   credentials: { type: DataTypes.TEXT },
   profileImage: { type: DataTypes.STRING },
-  professionalFee: { type: DataTypes.INTEGER, defaultValue: 3000 },
+  professionalFee: { type: DataTypes.INTEGER, defaultValue: CONSTANTS.APPOINTMENT.CONSULTATION_FEE },
   passwordResetToken: { type: DataTypes.STRING },
   passwordResetExpires: { type: DataTypes.DATE }
 });

@@ -7,6 +7,7 @@ const { Appointment, User, MedicalAttachment, Payment, Availability } = require(
 const { Op } = require('sequelize');
 const moment = require('moment'); // Use moment for easier time manipulation
 const { getRelativeStoragePath } = require('../../utils/fileHelper');
+const CONSTANTS = require('../../config/constants');
 
 const appointmentController = {
   // 1. PUBLIC: Fetch available time slots
@@ -143,7 +144,7 @@ const appointmentController = {
         return res.status(404).json({ error: 'Appointment not found.' });
       }
 
-      const professionalFee = appointment.doctor?.professionalFee || 3000;
+      const professionalFee = appointment.doctor?.professionalFee || CONSTANTS.APPOINTMENT.CONSULTATION_FEE;
 
       // 2. Create Payment Record (Receipt Based)
       await Payment.create({

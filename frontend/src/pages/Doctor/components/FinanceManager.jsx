@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { APPOINTMENT } from '../../../config/constants';
 import { Wallet, Search, Filter, Calendar, FileText, ChevronDown, Download, CheckCircle2, AlertCircle, Clock, XCircle, Loader2, User } from 'lucide-react';
 import apiClient, { getFileUrl } from '../../../api/axiosConfig';
 
@@ -9,7 +10,7 @@ const FinanceManager = () => {
     const [statusFilter, setStatusFilter] = useState('all');
     const [dateRange, setDateRange] = useState({ start: '', end: '' });
 
-    const [professionalFee, setProfessionalFee] = useState(3000);
+    const [professionalFee, setProfessionalFee] = useState(APPOINTMENT.CONSULTATION_FEE);
 
     useEffect(() => {
         fetchFinanceData();

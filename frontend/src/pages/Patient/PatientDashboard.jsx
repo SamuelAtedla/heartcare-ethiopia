@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { APPOINTMENT } from '../../config/constants';
 import { Plus, Upload, FileText, Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import apiClient from '../../api/axiosConfig';
@@ -160,7 +161,7 @@ const PatientDashboard = () => {
                                                     <p className="text-xs font-black text-gray-500 uppercase tracking-widest">{t('paymentInstructionsTitle')}</p>
                                                     <div className="flex items-center gap-1.5 bg-red-50 text-red-600 px-4 py-1.5 rounded-xl border border-red-100 shadow-sm">
                                                         <span className="text-[10px] font-bold uppercase tracking-tight opacity-70">{t('consultation')}</span>
-                                                        <span className="text-sm font-black tracking-tight">{apt.doctor?.professionalFee || 3000} ETB</span>
+                                                        <span className="text-sm font-black tracking-tight">{apt.doctor?.professionalFee || APPOINTMENT.CONSULTATION_FEE} ETB</span>
                                                     </div>
                                                 </div>
                                                 <div className="space-y-3">

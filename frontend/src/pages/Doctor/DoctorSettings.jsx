@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { APPOINTMENT } from '../../config/constants';
 import { User, Phone, Briefcase, FileText, Award, Save, Loader2, Camera, CheckCircle2 } from 'lucide-react';
 import apiClient, { getFileUrl } from '../../api/axiosConfig';
 import { useAuth } from '../../context/AuthContext';
@@ -21,7 +22,7 @@ const DoctorSettings = () => {
         specialty: user?.specialty || '',
         bio: user?.bio || '',
         credentials: user?.credentials || '',
-        professionalFee: user?.professionalFee || 3000
+        professionalFee: user?.professionalFee || APPOINTMENT.CONSULTATION_FEE
     });
 
     useEffect(() => {
@@ -39,7 +40,7 @@ const DoctorSettings = () => {
                     specialty: currentDoc.specialty || '',
                     bio: currentDoc.bio || '',
                     credentials: currentDoc.credentials || '',
-                    professionalFee: currentDoc.professionalFee || 3000
+                    professionalFee: currentDoc.professionalFee || APPOINTMENT.CONSULTATION_FEE
                 });
             }
         } catch (error) {

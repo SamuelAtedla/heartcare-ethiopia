@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Calendar, Clock, Video, MessageCircle, Send, Phone } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import apiClient from '../api/axiosConfig';
+import { APPOINTMENT } from '../config/constants';
 
 import { useNotification } from '../context/NotificationContext';
 
@@ -114,7 +115,7 @@ const BookingModal = ({ onClose, onSuccess }) => {
                                         <div className="flex justify-between items-start">
                                             <div className="font-bold text-gray-900">{doc.fullName}</div>
                                             <div className="text-[10px] font-black bg-red-100 text-red-600 px-2 py-0.5 rounded-lg border border-red-200 uppercase tracking-tighter shadow-sm">
-                                                {doc.professionalFee || 3000} ETB
+                                                {doc.professionalFee || APPOINTMENT.CONSULTATION_FEE} ETB
                                             </div>
                                         </div>
                                         <div className="text-xs font-medium text-gray-500 uppercase tracking-tight">{doc.specialty || t('cardiologist')}</div>
